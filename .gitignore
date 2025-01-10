@@ -1,0 +1,41 @@
+# Python
+*.pyc
+*.pyo
+__pycache__/
+codigo-unificado.py
+
+# Entorno virtual
+.venv/
+
+# Archivos de configuración del entorno
+.env
+*.env
+
+# Archivos de bases de datos locales
+*.sqlite3
+*.db
+
+# Archivos creados por el sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de logs
+*.log
+logs/
+
+# Archivos generados por Flask/Werkzeug (uploads, cache, etc.)
+instance/
+*.bak
+*.swp
+
+# Archivos de desarrollo o herramientas específicas
+.idea/
+.vscode/
+*.code-workspace
+
+# Archivos de compilación
+dist/
+build/
+*.egg-info/
+
+styles.css

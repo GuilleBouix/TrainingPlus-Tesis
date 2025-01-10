@@ -1,0 +1,235 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Mi Perfil - Training+
+{% endblock %}
+
+{% block content %}
+
+{% if usuario_data['rol'] == 1 %}
+<!-- Modal de Perfil -->
+<dialog class="dialog-social-media" id="dialog-social-media">
+    <i class='bx bx-x' id="close-modal"></i>
+    <form id="formRedes">
+        <input type="hidden" name="form_type" value="redes">
+        <h1>Contacto</h1>
+        <p>Agrega enlaces a tus redes sociales.</p>
+
+        <div class="input-container">
+            <label for="instagram"><i class='bx bxl-instagram'></i> Instagram</label>
+            <input type="text" id="instagram" name="instagram" value="{{ usuario_data['instagram'] or '' }}" placeholder="URL de tu perfil de Instagram">
+        </div>
+
+        <div class="input-container">
+            <label for="facebook"><i class='bx bxl-facebook-circle'></i> Facebook</label>
+            <input type="text" id="facebook" name="facebook" value="{{ usuario_data['facebook'] or '' }}" placeholder="URL de tu perfil de Facebook">
+        </div>
+
+        <div class="input-container">
+            <label for="telefono"><i class='bx bxs-phone'></i> Número de Teléfono</label>
+            <input type="text" id="telefono" name="telefono" value="{{ usuario_data['telefono'] or '' }}" placeholder="Número de Teléfono">
+        </div>
+
+        <button type="submit" id="guardarRedes" class="btn-guardar-redes">Guardar</button>
+    </form>
+</dialog>
+
+<div class="profile-container">
+    <div class="sections section-1">
+        <div class="profile-photo">
+            <img id="profile-image" src="{{ url_for('static', filename='uploads/users/' + (usuario_data['foto_perfil'] if usuario_data['foto_perfil'] else 'profile.webp')) }}" alt="Foto de Perfil">
+        </div>
+
+        <div class="user-info">
+            <h1 class="name">{{ usuario_data['nombre'] | default('.') | upper }} {{ usuario_data['apellido'] | default('.') | upper }}</h1>
+            <p class="username">@{{ usuario_data['nombre_usuario'] | default('Usuario') }}</p>
+            <p class="role">
+                {% if usuario_data['rol'] == 1 %}
+                    <i class='bx bxs-user'></i>Usuario
+                {% elif usuario_data['rol'] == 2 %}
+                    <i class='bx bxs-medal'></i>Entrenador
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="links">
+            <p class="instagram open-modal" target="_blank"><i class='bx bxl-instagram'></i></p>
+            <p class="facebook open-modal" target="_blank"><i class='bx bxl-facebook'></i></p>
+            <p class="phone open-modal" target="_blank"><i class='bx bxs-phone'></i></p>
+        </div>
+
+        <!-- Mensajes Flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flash-messages">
+            {% for category, message in messages %}
+                <li class="flash {{ category }}">
+                <i class="{{ 'bx bxs-error-circle' if category == 'error' else 'bx bxs-check-circle' }}"></i>
+                {{ message }}
+                </li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+        {% endwith %}
+    </div>
+
+    <div class="sections section-2">
+        <div class="title">
+            <h1>Editar Perfil</h1>
+        </div>
+
+        <form action="{{ url_for('perfil.perfil', nombre_usuario=nombre_usuario) }}" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="form_type" value="datos_personales">
+            <div class="input-container">
+                <div class="input-box">
+                    <label for="apellido">Apellido:</label>
+                    <input type="text" name="apellido" id="apellido" value="{{ usuario_data['apellido'] or '' }}" placeholder="Ingresa tu apellido">                
+                </div>
+                
+                <div class="input-box">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" name="nombre" id="nombre" value="{{ usuario_data['nombre'] or '' }}" placeholder="Ingresa tu nombre">
+                </div>
+            </div>
+
+            <div class="input-container">
+                <div class="input-box">
+                    <label for="nombre_usuario">Nombre de Usuario:</label>
+                    <input type="text" name="nombre_usuario" id="nombre_usuario" value="{{ usuario_data['nombre_usuario'] or '' }}" placeholder="Ingresa tu usuario" maxlength="16" oninput="eliminarEspacios(this)">                </div>
+                
+                <div class="input-box">
+                    <label for="email">Email:</label>
+                    <input type="email" name="email" id="email" value="{{ usuario_data['email'] or '' }}" placeholder="Ingresa tu email">
+                </div>
+            </div>
+
+            <div class="input-container">
+                <!-- Fecha de Nacimiento -->
+                <div class="input-box">
+                    <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
+                    <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" value="{{ usuario_data['fecha_nacimiento'] or '' }}">
+                </div>
+
+                <!-- Edad -->
+                <div class="input-box">
+                    <label for="edad">Edad:</label>
+                    <input type="number" name="edad" id="edad" value="{{ usuario_data['edad'] or '' }}" placeholder="Ingresa tu edad">
+                </div>
+            </div>
+
+            <div class="input-container">
+                <div class="input-box">
+                    <label for="pais">País:</label>
+                    <select name="pais" id="pais">
+                        <option value="">Seleccionar País</option>
+                        {% for id_pais, nombre_pais in paises %}
+                            <option value="{{ id_pais }}" {% if id_pais == usuario_data['id_pais'] %}selected{% endif %}>
+                                {{ nombre_pais }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="input-box">
+                    <label for="sexo">Sexo:</label>
+                    <select name="sexo" id="sexo">
+                        <option value="">Seleccionar Sexo</option>
+                        <option value="masculino" {% if usuario_data['sexo'] == 'masculino' %}selected{% endif %}>Masculino</option>
+                        <option value="femenino" {% if usuario_data['sexo'] == 'femenino' %}selected{% endif %}>Femenino</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-container">
+                <div class="input-box">
+                    <label for="biografia">Biografía:</label>
+                    <textarea name="biografia" id="biografia" maxlength="200" placeholder="Escribe una breve biografía">{{ usuario_data['biografia'] or '' }}</textarea>
+                </div>
+
+                <div class="input-box">
+                    <label>Foto de Perfil:</label>
+
+                    <label for="file" id="archivo">
+                        <i class='bx bx-upload'></i>
+                        <span>Subir Imagen</span>
+                    </label>
+                    
+                    <input type="file" name="file" id="file" accept="image/*" style="display: none;">
+                </div>
+            </div>
+
+            <button type="submit" class="btn-guardar">Guardar</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Función para eliminar espacios en blanco del input
+    function eliminarEspacios(input) {
+        // Eliminar espacios al principio y al final
+        input.value = input.value.trim();
+        
+        // Reemplazar espacios en medio del texto por nada
+        input.value = input.value.replace(/\s+/g, '');
+    }
+
+
+
+    // Seleccionar todos los elementos con la clase 'open-modal'
+    const modal = document.querySelector('#dialog-social-media');
+    const btnOpenList = document.querySelectorAll('.open-modal');
+
+    // Agregar el evento click a cada botón
+    btnOpenList.forEach(btnOpen => {
+        btnOpen.addEventListener('click', () => {
+            modal.showModal();
+        });
+    });
+
+    const btnClose = document.querySelector('#close-modal');
+    btnClose.addEventListener('click', () => {
+        modal.close();
+    });
+
+
+
+    document.getElementById('guardarRedes').addEventListener('click', () => {
+        const form = document.getElementById('formRedes');
+        const formData = new FormData(form);
+        const data = {};
+
+        // Convertir los datos del formulario en un objeto JSON
+        formData.forEach((value, key) => {
+            data[key] = value;
+        });
+
+        // Enviar los datos con fetch
+        fetch('/actualizar_redes', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    alert('Redes sociales actualizadas correctamente.');
+                    document.getElementById('dialog-social-media').close(); // Cerrar el modal
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    });
+
+</script>
+
+{% elif usuario_data['rol'] == 2 %}
+
+    <!--SECCION ENTRENADOR-->
+
+{% endif %}
+
+
+{% endblock %}

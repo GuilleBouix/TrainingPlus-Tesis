@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Training+{% endblock %}</title>
+
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}"> -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/rutina.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/perfil.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/buscar.css') }}">
+
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="icon" href="/static/images/trainingplus-icon.ico" type="image/x-icon">
+    
+    <script src="{{ url_for('static', filename='javascript/script.js') }}" defer></script>
+</head>
+<body class="base-body">
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="spinner"></div>
+    </div>
+
+    <nav class="nav">
+        <i class='bx bx-menu navOpenBtn'></i>
+        <img src="/static/images/logo.png" alt="" class="logo-image" width="50px" height="auto">
+        <ul class="nav-links">
+            <i class='bx bx-x navCloseBtn'></i>
+            <li><a href="{{ url_for('entrenamiento.entrenamiento') }}">ENTRENAMIENTO</a></li>
+            <li><a href="#">PROGRESO</a></li>
+            <li><a href="{{ url_for('perfil.perfil', nombre_usuario=session['nombre_usuario']) }}">PERFIL</a></li>
+            <li><a href="#">CONFIGURACIÓN</a></li>
+            <li><a href="{{ url_for('auth.logout') }}">LOGOUT</a></li>
+        </ul>
+        <i class='bx bx-search icono-busqueda' id="iconoBusqueda"></i>
+
+        <div class="busqueda-box" id="busquedaBox">
+            <i class="bx bx-search icono-busqueda" id="iconoBusqueda2"></i>
+            <input type="text" id="busquedaInput" onkeyup="buscarUsuarios()" placeholder="Buscar usuarios o entrenadores">
+            <div id="resultadosBusqueda" class="resultados-busqueda"></div>
+        </div>
+    </nav>
+    <main id="main-content">
+        {% block content %}
+
+        {% endblock %}
+    </main>
+
+    <script>
+        const loadingScreen = document.getElementById('loading-screen');
+        const content = document.getElementById('content');
+
+        // Espera a que la página cargue completamente
+        window.onload = () => {
+            loadingScreen.style.display = 'none'; // Oculta el loading
+            content.style.display = 'block'; // Muestra el contenido
+        };
+    </script>
+
+</body>
+</html>

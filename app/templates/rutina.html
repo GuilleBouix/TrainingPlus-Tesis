@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Rutina - Training+
+{% endblock %}
+
+{% block content %}
+
+    <div class="routine-container">
+        <div class="routine-header">
+            <div class="title">
+                <h1>Plan de Entrenamiento</h1>
+                <p>Sigue tu progreso y mantente en forma.</p>
+            </div>
+        </div>
+
+
+
+        <div class="plan-container">
+            <div class="weeks">
+                <button class="previous-week" title="Anterior"><i class='bx bx-chevrons-left'></i></button>
+                <h1>Semana 1</h1>
+                <button class="next-week" title="Siguiente"><i class='bx bx-chevrons-right'></i></i></button>
+            </div>
+        </div>
+
+
+
+        <div class="accordion">
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <h1><span>Día 1</span> - Pecho y Tríceps</h1>
+                    <span class="icon"><i class='bx bx-chevron-down'></i></span>
+                </div>
+                <div class="accordion-content">
+                    <div class="excercise">
+                        <div class="excercise-title">
+                            <h3>Press de Banco Plano</h3>
+                            <h3>#1</h3>
+                        </div>
+
+                        <div class="parameters">
+                            <p class="sets"><i class='bx bx-dumbbell'></i> 4  Series</p>
+
+                            <p class="reps">8 Repeticiones</p>
+
+                            <p class="rest"><i class='bx bx-time-five'></i> 90s Descanso</p>
+                        </div>
+
+                        <button class="btn-see-exercise"><i class='bx bxs-show'></i> Ver Demostración</button>
+
+                        <p class="observations">Observaciones:</p>
+
+                        <textarea name="observations" id="observations" placeholder="Escribe aquí tus sensaciones o dificultades al realizar este ejercicio..." maxlength="500"></textarea>
+                    
+                    </div>
+
+                    <div class="excercise">
+                        <div class="excercise-title">
+                            <h3>Press Inclinado c/ Mancuernas</h3>
+                            <h3>#2</h3>
+                        </div>
+
+                        <div class="parameters">
+                            <p class="sets"><i class='bx bx-dumbbell'></i> 3  Series</p>
+
+                            <p class="reps">10 Repeticiones</p>
+
+                            <p class="rest"><i class='bx bx-time-five'></i> 90s Descanso</p>
+                        </div>
+
+                        <button class="btn-see-exercise"><i class='bx bx-show'></i> Ver Demostración</button>
+
+                        <p class="observations">Observaciones:</p>
+
+                        <textarea name="observations" id="observations" placeholder="Escribe aquí tus sensaciones o dificultades al realizar este ejercicio..." maxlength="500"></textarea>
+                    
+                    </div>
+
+                    <div class="excercise">
+                        <div class="excercise-title">
+                            <h3>Fondos en Paralelas</h3>
+                            <h3>#3</h3>
+                        </div>
+
+                        <div class="parameters">
+                            <p class="sets"><i class='bx bx-dumbbell'></i> 4  Series</p>
+
+                            <p class="reps">Al Fallo</p>
+
+                            <p class="rest"><i class='bx bx-time-five'></i> 90s Descanso</p>
+                        </div>
+
+                        <button class="btn-see-exercise"><i class='bx bx-show'></i> Ver Demostración</button>
+
+                        <p class="observations">Observaciones:</p>
+
+                        <textarea name="observations" id="observations" placeholder="Escribe aquí tus sensaciones o dificultades al realizar este ejercicio..." maxlength="500"></textarea>
+                    
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+    <script>
+        // Seleccionar todas las cabeceras del acordeón
+        const headers = document.querySelectorAll('.accordion-header');
+    
+        headers.forEach(header => {
+            header.addEventListener('click', () => {
+                // Alternar la clase 'active' para girar el ícono
+                header.classList.toggle('active');
+    
+                // Mostrar u ocultar el contenido asociado
+                const content = header.nextElementSibling;
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                } else {
+                    content.style.display = "block";
+                }
+            });
+        });
+    </script>
+
+{% endblock %}

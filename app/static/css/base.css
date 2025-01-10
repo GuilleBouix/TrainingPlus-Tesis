@@ -1,0 +1,606 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Saira:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Saira', sans-serif;
+    font-weight: 400;
+}
+
+:root {
+    /* ------ MAIN COLORS ------ */
+    --color-primary: #DC2626;
+    --color-secondary: #EDEDED;
+    --color-background: #F7F7F7;
+    /* ------ TEXT COLORS ------ */
+    --color-text-primary: #222222;
+    --color-text-secondary: #5b5b5b;
+    /* ------ BUTTON COLORS ------ */
+    --color-button-primary: #EF4444;
+    --color-button-hover: #DC2626;
+    --color-button-active: #B91C1C;
+    /* ------ OTHERS COLORS ------ */
+    --color-border: #DFDFDF;
+    --color-flash-bg: #EEC8C5;
+    --color-flash-text: #CA0000;
+}
+
+body {
+    background-color: var(--color-background);
+}
+
+
+
+/* -------------------------- PANTALLA DE CARGA -------------------------- */
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco semitransparente */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Asegura que esté encima de todo */
+}
+/* Spinner */
+.spinner {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 9px solid;
+    border-color: #ededed;
+    border-right-color: #dc2626;
+    animation: spin .75s infinite linear;
+}
+/* Texto de carga */
+#loading-screen p {
+    margin-top: 20px;
+    font-size: 1.2rem;
+    color: #333;
+    font-weight: bold;
+}
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+
+
+.nav {
+    position: fixed;
+    background-color: var(--color-background);
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px 200px;
+    z-index: 100;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.logo-image {
+    width: 50px;
+}
+
+.nav,
+.nav .nav-links {
+    display: flex;
+    align-items: center;
+}
+.nav {
+    justify-content: space-between;
+}
+
+a {
+    color: var(--color-text-primary);
+    text-decoration: none;
+}
+
+a span {
+    font-weight: 300;
+    color: var(--color-primary);
+}
+
+.nav .logo {
+    font-size: 22px;
+    font-weight: 500;
+}
+
+.nav .nav-links {
+    column-gap: 20px;
+    list-style: none;
+}
+
+.nav .nav-links a {
+    padding: 5px 8px 5px 8px;
+    border-radius: 5px;
+    font-size: 16px !important;
+    font-weight: 400;
+    transition: all .2s linear;
+}
+
+.nav .nav-links a:hover {
+    color: var(--color-primary);
+}
+
+.nav.abrirBusqueda .nav-links a {
+    opacity: 0;
+    pointer-events: none; 
+}
+
+.nav .icono-busqueda {
+    color: var(--color-text-primary);
+    font-size: 20px;
+    cursor: pointer;
+    transition: all .2s linear;
+}
+.icono-busqueda:hover {
+    color: var(--color-primary);
+}
+
+/* BARRA DE BUSQUEDA */
+.nav .busqueda-box {
+    position: absolute;
+    right: 250px;
+    height: 45px;
+    max-width: 700px;
+    width: 100%;
+    opacity: 0;
+    pointer-events: none;
+    transition: all .1s linear;
+    border-radius: 5px;
+    border: 1px solid var(--color-border);
+}
+.nav .busqueda-box:focus-within {
+    border: 1px solid var(--color-text-secondary);
+}
+.busqueda-box #resultadosBusqueda {
+    display: none;
+}
+
+.nav.abrirBusqueda .busqueda-box {
+    opacity: 1;
+    pointer-events: auto; 
+}
+
+.busqueda-box .icono-busqueda {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    left: 15px;
+    color: var(--color-text-primary);
+    transform: translateY(-50%);
+
+}
+
+.busqueda-box input {
+    height: 100%;
+    width: 100%;
+    border: none;
+    outline: none;
+    border-radius: 6px;
+    background: var(--color-background);
+    padding: 0 15px 0 45px;
+    font-size: 1rem;
+}
+
+.nav .navOpenBtn,
+.nav .navCloseBtn {
+    color: var(--color-hover-text);
+    display: none;
+    transition: all .2s linear;
+}
+
+
+
+/* MAIN */
+main {
+    font-size: 24px;
+    height: 100vh;
+    color: #202020;
+    margin-top: 70px;
+    padding: 0 200px;
+    background: rgb(255, 255, 255);
+    z-index: -1;
+}
+
+.training-container .training-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+.title h1 {
+    font-weight: 600;
+    font-size: 2rem;
+    color: var(--color-text-primary);
+}
+.title p {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+}
+.btn-new-training {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 400;
+    cursor: pointer;
+    height: 40px;
+    background-color: var(--color-button-primary);
+    border: none;
+    border-radius: 5px;
+    color: var(--color-background);
+    padding: 0px 20px;
+    font-size: .9rem;
+    transition: all .1s ease-in-out;
+}
+.btn-new-training i {
+    font-size: 1.3rem;
+    margin-right: 5px;
+}
+.btn-new-training:hover {
+    background-color: var(--color-button-hover);
+}
+.btn-new-training:active {
+    background-color: var(--color-button-active);
+}
+
+
+
+.filters-box {
+    display: flex;
+    margin-top: 2rem;
+    border-radius: 10px;
+}
+.filters-box button {
+    width: 150px;
+    border: none;
+    outline: none;
+    background-color: var(--color-secondary);
+    padding: 5px;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    transition: all .2s linear;
+    font-size: 1rem;
+    font-weight: 500;
+}
+.filters-box .active {
+    background-color: var(--color-button-primary);
+    color: var(--color-background);
+}
+.filters-box .filter:nth-child(1) {
+    border-top-left-radius: 5px;  /* Esquina superior izquierda */
+    border-bottom-left-radius: 5px; /* Esquina inferior izquierda */
+}
+
+.filters-box .filter:nth-child(3) {
+    border-top-right-radius: 5px;  /* Esquina superior izquierda */
+    border-bottom-right-radius: 5px; /* Esquina inferior izquierda */
+}
+
+.training-box {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+    justify-content: center; /* Centra el contenido horizontalmente */
+    align-content: center; /* Centra el contenido verticalmente si hay espacio extra */
+    margin-top: 1rem;
+}
+
+.training-box .training {
+    background-color: var(--color-background);
+    max-width: 300px;
+    border-radius: 10px;
+    border: 1px solid var(--color-border);
+    padding: 10px;
+}
+.training .tipo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: .5rem;
+}
+.training .tipo h3 {
+    font-size: .8rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    background-color: var(--color-button-primary);
+    padding: 3px 10px;
+    border-radius: 5px;
+    color: var(--color-background);
+}
+.training .tipo i {
+    background-color: var(--color-secondary);
+    padding: 5px;
+    border-radius: 50%;
+}
+
+.training h1 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.training .duration {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 1rem;
+}
+.duration p {
+    font-size: .9rem;
+    color: var(--color-text-secondary);
+}
+
+.training .trainer-content {
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.trainer-content img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.trainer-content .trainer-info h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    line-height: 0%;
+}
+.trainer-content .trainer-info p {
+    font-size: .9rem;
+    color: var(--color-text-secondary);
+    line-height: 0%;
+    margin-top: 1.2rem;
+}
+
+.progress {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+}
+.progress p,
+.progress span {
+    font-size: 1rem;
+}
+.progress span {
+    font-weight: 500;
+    color: var(--color-text-secondary);
+}
+
+/* Barra de progreso contenedora */
+.progress-bar-container {
+    width: 100%;
+    height: 10px;
+    background-color: var(--color-secondary);
+    border-radius: 3px;
+    margin-top: 10px;
+}
+
+/* Barra de progreso estilizada */
+.progress-bar {
+    height: 100%;
+    background-color: var(--color-primary);
+    border-radius: 3px;
+    transition: width 0.2s ease-in-out;
+}
+
+.progress-percentage {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--color-primary);
+    margin-left: 10px;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
+    margin-top: 1rem;
+}
+
+.actions button,
+.actions a {
+    background-color: var(--color-button-primary);
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all .1s linear;
+    padding: 10px 5px;
+    color: var(--color-background);
+}
+
+.actions .btn-view-training {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    transition: all .1s linear;
+}
+.actions .btn-view-training i{
+    transition: all .1s linear;
+}
+.btn-view-training:hover {
+    background-color: var(--color-button-hover);
+    
+    i {
+        margin-left: .3rem;
+    }
+}
+
+.actions .btn-delete-training {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 15px;
+    background: none;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-primary);
+}
+.btn-delete-training i {
+    font-size: 1.3rem;
+}
+
+
+
+
+
+/* RESPONSIVE */
+@media screen and (max-width: 1160px) {
+    .nav {
+        padding: 15px 100px;
+    }
+
+    .nav .busqueda-box {
+        right: 150px;
+    }
+
+    main {
+        padding: 0 100px;
+    }
+
+    .training-box .training {
+        background-color: var(--color-background);
+        max-width: 500px;
+        border-radius: 10px;
+        border: 1px solid var(--color-border);
+        padding: 10px;
+    }
+
+}
+
+@media screen and (max-width: 950px) {
+    .nav {
+        padding: 15px 20px;
+    }
+
+    .nav .busqueda-box {
+        right: 100px;
+        max-width: 400px;
+    }
+
+    main {
+        padding: 0 20px;
+    }
+
+    .btn-new-training i {
+        font-size: 1rem;
+        margin-right: 3px;
+    }
+
+    .training-box .training {
+        max-width: 400px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .nav .navOpenBtn,
+    .nav .navCloseBtn {
+        display: block;
+    }
+
+    .nav .nav-links {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        height: 100%;
+        max-width: 280px;
+        width: 100%;
+        padding-top: 100px;
+        row-gap: 30px;
+        flex-direction: column;
+        background-color: var(--color-background);
+        border-right: 1px solid var(--color-secondary);
+        transition: all 0.3s ease;
+        z-index: 100;
+    }
+
+    .nav .nav-links li a {
+        text-align: left;
+    }
+
+    .nav.openNav .nav-links {
+        left: 0;
+    }
+
+    .nav.openNav .nav-links a {
+        text-align: left;
+    }
+
+    .nav .navOpenBtn {
+        color: var(--color-text-primary);
+        font-size: 28px;
+        cursor: pointer;
+    }
+
+    .nav .navCloseBtn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        color: var(--color-text-primary);
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    .nav .busqueda-box {
+        position: fixed; /* Ensures it's positioned relative to the viewport */
+        top: 90px; /* Adjust according to your nav height */
+        right: 20px;
+        height: 45px;
+        max-width: 600px;
+        width: calc(100% - 40px); /* Adjust width as needed */
+        opacity: 0;
+        pointer-events: none;
+        transition: all .2s linear;
+        z-index: 110; /* Ensure it's above nav and other elements */
+    }
+
+    main {
+        padding: 0px 20px;
+    }
+
+    .training-container .training-header {
+        flex-direction: column;
+        align-items:flex-start;
+        justify-content: center;
+    }
+
+    .title h1 {
+        font-size: 1.8rem;
+    }
+    .title p {
+        font-size: .9rem;
+    }
+
+    .btn-new-training {
+        width: 100%;
+        margin-top: 1rem;
+    }
+    .filters-box button {
+        width: 100%;
+    }
+
+    .training-box .training {
+        max-width: 100%;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .training-box {
+        grid-template-columns: 1fr;
+    }
+}

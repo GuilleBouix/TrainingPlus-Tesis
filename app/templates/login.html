@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="icon" href="/static/images/trainingplus-icon.ico" type="image/x-icon">
+    <title>Ingresar - Training+</title>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="spinner"></div>
+    </div>
+
+    <div class="login-container">
+        <div class="image">
+            <!--  Imagen de Fondo  -->
+        </div>
+
+        <div class="login-form">
+            <form action="{{ url_for('auth.login') }}" method="POST">
+                <div class="logo-image">
+                    <img src="/static/images/logo.png">
+                </div>
+                
+                <div class="title">
+                    <h1>Iniciar Sesión</h1>
+                    <p>Ingresa con tu cuenta de <span>Training+</span></p>
+                </div>
+    
+                <!-- Mensajes Flash -->
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <ul class="flash-messages">
+                    {% for category, message in messages %}
+                        <li class="flash {{ category }}">
+                        <i class="{{ 'bx bxs-error-circle' if category == 'error' else 'bx bxs-check-circle' }}"></i>
+                        {{ message }}
+                        </li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+                {% endwith %}
+
+                <div class="input-box">
+                    <input type="text" name="email" placeholder="Email" required>
+                    <i class='bx bxs-envelope'></i>
+                </div>
+    
+                <div class="input-box">
+                    <input type="password" name="contrasena" placeholder="Contraseña" required>
+                    <i class='bx bxs-lock-alt'></i>
+                </div>
+    
+                <div class="forgot-password">
+                    <a href="#">¿Olvidaste tu contraseña?</a>
+                </div>
+    
+                <button type="submit" class="btn">Ingresar</button>
+    
+                <div class="register">
+                    <p>¿No tienes una cuenta? <a href="{{ url_for('auth.signup') }}">Regístrate</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const loadingScreen = document.getElementById('loading-screen');
+        const content = document.getElementById('content');
+
+        // Espera a que la página cargue completamente
+        window.onload = () => {
+            loadingScreen.style.display = 'none'; // Oculta el loading
+            content.style.display = 'block'; // Muestra el contenido
+        };
+    </script>
+
+</body>
+</html>
+

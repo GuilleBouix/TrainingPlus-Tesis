@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/form_entrenador.css') }}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="icon" href="/static/images/trainingplus-icon.ico" type="image/x-icon">
+    <title>Formulario Entrenador - Training+</title>
+</head>
+<body>
+    <main>
+        <header>
+            <div class="title">
+                <h1>Formulario Entrenador</h1>
+                <p>Por favor, complete todos los campos del formulario.</p>
+            </div>
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Training+ Logo">
+        </header>
+
+        <form action="" method="POST" enctype="multipart/form-data">
+            <h3>Información Personal</h3>
+            <div class="form-container">
+                <div class="input-box">
+                    <label for="apellido">Apellido <span>*</span></label>
+                    <input type="text" name="apellido" id="apellido" placeholder="Ingresa tu apellido" required>
+                </div>
+
+                <div class="input-box">
+                    <label for="nombre">Nombre <span>*</span></label>
+                    <input type="text" name="nombre" id="nombre" placeholder="Ingresa tu nombre" required>
+                </div>
+
+                <div class="input-box">
+                    <label for="sexo">Género <span>*</span></label>
+                    <select name="sexo" id="sexo" required placeholder="Seleccionar" required>
+                        <option value="">Seleccionar</option>
+                        <option value="masculino">Masculino</option>
+                        <option value="femenino">Femenino</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-container">
+                <div class="input-box">
+                    <label for="fecha_nacimiento">Fecha de Nacimiento <span>*</span></label>
+                    <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" required>
+                </div>
+
+                <div class="input-box">
+                    <label for="edad">Edad <span>*</span></label>
+                    <input type="number" name="edad" id="edad" placeholder="Ingresa tu edad" required>
+                </div>
+
+                <div class="input-box">
+                    <label for="pais">País <span>*</span></label>
+                    <select name="pais" id="pais" required placeholder="Seleccionar">
+                        <option value="">Seleccionar</option>
+                        {% for id_pais, nombre_pais in paises %}
+                            <option value="{{ id_pais }}">{{ nombre_pais }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <h3>Información Profesional</h3>
+            <div class="form-container">
+                <div class="input-box">
+                    <label for="especializacion">Especialización <span>*</span></label>
+                    <input type="text" name="especializacion" id="especializacion" placeholder="¿En qué te especializas?" required>
+                </div>
+
+                <div class="input-box">
+                    <label for="disciplina">Disciplina <span>*</span></label>
+                    <select name="disciplina" id="disciplina" required placeholder="Seleccionar">
+                        <option value="">Seleccionar</option>
+                        <option value="Calistenia">Calistenia</option>
+                        <option value="Culturismo">Culturismo</option>
+                        <option value="CrossFit">CrossFit</option>
+                        <option value="Fitness">Fitness</option>
+                        <option value="HIIT">HIIT</option>
+                        <option value="Funcional">Entrenamiento Funcional</option>
+                        <option value="Yoga">Yoga</option>
+                    </select>
+                </div>
+
+                <div class="input-box">
+                    <label for="experiencia">Experiencia <span>*</span></label>
+                    <select name="experiencia" id="experiencia" required placeholder="Seleccionar">
+                        <option value="">Seleccionar</option>
+                        <option value="1 Año">1 Año</option>
+                        <option value="2 Años">2 Años</option>
+                        <option value="3 Años">3 Años</option>
+                        <option value="4 Años">4 Años</option>
+                        <option value="+5 Años">+5 Años</option>
+                        <option value="+10 Años">+10 Años</option>
+                        <option value="+20 Años">+20 Años</option>
+                    </select>
+                </div>
+            </div>
+
+            <label for="biografia" id="biografia">Biografía</label>
+            <textarea name="biografia" id="biografia" maxlength="200" placeholder="Escribe una breve biografía sobre ti"></textarea>
+
+            <div class="form-container">
+                <div class="input-box">
+                    <label for="titulo_imagen">Título/Certificado <span>*</span></label>
+                    <input type="file" name="titulo_imagen" id="titulo_imagen" accept="image/*" required>
+                </div>
+
+                <div class="input-box">
+                    <label for="titulo">Nombre <span>*</span></label>
+                    <input type="text" name="titulo" id="titulo" placeholder="¿Cual es tu título o certificado?" required>
+                </div>
+
+                <div class="input-box">
+                    <label for="instituto">Universidad/Institución <span>*</span></label>
+                    <input type="text" name="instituto" id="instituto" placeholder="¿Donde lo obtuviste?" required>
+                </div>
+            </div>
+
+            <div class="form-container">
+                <div class="input-box button-input">
+                    <button type="submit"><i class='bx bx-check'></i> Finalizar</button>
+                </div>
+            </div>
+        </form>
+    </main>
+</body>
+</html>
