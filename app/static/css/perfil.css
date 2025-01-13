@@ -437,7 +437,7 @@ form .btn-guardar-redes {
     }
 
     form .input-container {
-        gap: 0;
+        gap: .5rem;
     }
 }
 

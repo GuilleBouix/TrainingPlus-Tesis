@@ -12,7 +12,11 @@ perfil_bp = Blueprint('perfil', __name__)
 
 
 # Configuración de la carpeta de subida de fotos
-UPLOAD_FOLDER = 'app/static/uploads/users'
+UPLOAD_FOLDERS = {
+    'users': 'app/static/uploads/users',
+    'trainers': 'app/static/uploads/users',
+    'studies': 'app/static/uploads/titles'
+}
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}
 DEFAULT_PROFILE_PICTURE = 'profile.webp'
 
@@ -25,33 +29,48 @@ def allowed_file(filename):
 
 
 # Función para comprimir y convertir a .webp
-def compress_and_convert_to_webp(file, id_usuario):
-    # Define el directorio de almacenamiento
-    uploads_dir = os.path.join('app', 'static', 'uploads', 'users')
+def compress_and_convert_to_webp(file, id_usuario, folder_type, filename_format):
+    """
+    Comprime y convierte una imagen a formato WEBP.
+    
+    :param file: Archivo de imagen subido.
+    :param id_usuario: ID del usuario o entrenador asociado.
+    :param folder_type: Tipo de carpeta (users, trainers, studies).
+    :param filename_format: Formato para el nombre del archivo.
+    :return: Nombre del archivo guardado o None si falla.
+    """
+    # Verifica que el tipo de carpeta sea válido
+    uploads_dir = UPLOAD_FOLDERS.get(folder_type)
+    if not uploads_dir:
+        raise ValueError("Tipo de carpeta no válido")
 
-    # Genera el nombre de archivo basado en el id_usuario
-    filename = f'user{id_usuario}-profile.webp'
+    # Genera el nombre de archivo basado en el formato proporcionado
+    filename = filename_format.format(id=id_usuario)
 
     # Define el camino completo donde se guardará la imagen
     file_path = os.path.join(uploads_dir, filename)
 
-    # Abre la imagen con PIL y comprímela a formato webp
-    image = Image.open(file)
+    try:
+        # Abre la imagen con PIL
+        image = Image.open(file)
 
-    # Obtener las dimensiones originales
-    width, height = image.size
+        # Obtener las dimensiones originales
+        width, height = image.size
 
-    # Redimensionar la imagen a la mitad del tamaño original
-    new_width = width // 2
-    new_height = height // 2
+        # Redimensionar la imagen a la mitad del tamaño original
+        new_width = width // 2
+        new_height = height // 2
 
-    # Redimensionar la imagen
-    image = image.resize((new_width, new_height))
+        # Redimensionar la imagen
+        image = image.resize((new_width, new_height))
 
-    image = image.convert("RGB")  # Convertir la imagen a RGB si es necesario
-    image.save(file_path, format="WEBP", quality=60)  # Guarda con calidad 60%
-
-    return filename
+        image = image.convert("RGB")  # Convertir la imagen a RGB si es necesario
+        image.save(file_path, format="WEBP", quality=60)  # Guarda con calidad 60%
+        
+        return filename
+    except Exception as e:
+        print(f"Error al procesar la imagen: {e}")
+        return None
 
 
 
@@ -74,85 +93,186 @@ def perfil(nombre_usuario):
     conn = conexion_basedatos()
     cursor = conn.cursor()
 
-    # Consultar datos del usuario (usuarios y alumno, incluyendo el rol)
+    # Consultar datos del usuario
     cursor.execute("""
-        SELECT u.email, u.nombre_usuario, a.id_usuario, a.apellido, a.nombre, 
-               a.fecha_nacimiento, a.edad, a.id_pais, a.sexo, a.biografia, a.foto_perfil,
-               a.instagram, a.facebook, a.telefono, u.rol
+        SELECT u.email, u.nombre_usuario, u.rol,
+            -- Datos de Alumno
+            a.id_usuario AS alumno_id_usuario, a.apellido AS alumno_apellido, a.nombre AS alumno_nombre, 
+            a.fecha_nacimiento AS alumno_fecha_nacimiento, a.edad AS alumno_edad, a.id_pais AS alumno_id_pais, 
+            a.sexo AS alumno_sexo, a.biografia AS alumno_biografia, a.foto_perfil AS alumno_foto_perfil,
+            a.instagram AS alumno_instagram, a.facebook AS alumno_facebook, a.telefono AS alumno_telefono,
+                   
+            -- Datos de Entrenador
+            e.id_usuario AS entrenador_id_usuario, e.apellido AS entrenador_apellido, e.nombre AS entrenador_nombre, 
+            e.fecha_nacimiento AS entrenador_fecha_nacimiento, e.edad AS entrenador_edad, e.id_pais AS entrenador_id_pais, 
+            e.sexo AS entrenador_sexo, e.biografia AS entrenador_biografia, e.foto_perfil AS entrenador_foto_perfil, 
+            e.especializacion, e.disciplina, e.experiencia, e.titulo_foto, e.titulo, e.instituto, 
+            e.instagram AS entrenador_instagram, e.facebook AS entrenador_facebook, e.telefono AS entrenador_telefono
         FROM usuario u
         LEFT JOIN alumno a ON u.id_usuario = a.id_usuario
+        LEFT JOIN entrenador e ON u.id_usuario = e.id_usuario
         WHERE u.nombre_usuario = ?
     """, (nombre_usuario,))
     usuario_data = cursor.fetchone()
+
+    print("CLAVES DE usuario_data:", usuario_data.keys())
+
+    # Verificar el rol del usuario
+    rol_usuario = usuario_data['rol']
+    id_usuario = usuario_data['alumno_id_usuario'] if rol_usuario == 1 else usuario_data['entrenador_id_usuario']
+
 
     if not usuario_data:
         flash("Usuario no encontrado.", 'error')
         return redirect(url_for('entrenamiento.entrenamiento'))
 
     # Datos del formulario
-    if request.method == 'POST':
-        email = request.form['email']
-        nuevo_nombre_usuario = request.form['nombre_usuario']
-        apellido = request.form['apellido']
-        nombre = request.form['nombre']
-        fecha_nacimiento = request.form['fecha_nacimiento']
-        edad = request.form['edad']
-        pais = request.form['pais']
-        sexo = request.form['sexo']
-        biografia = request.form['biografia']
+    if rol_usuario == 1:  # Rol de alumno
+        if request.method == 'POST':
+            email = request.form['email']
+            nuevo_nombre_usuario = request.form['nombre_usuario']
+            apellido = request.form['apellido']
+            nombre = request.form['nombre']
+            fecha_nacimiento = request.form['fecha_nacimiento']
+            edad = request.form['edad']
+            pais = request.form['pais']
+            sexo = request.form['sexo']
+            biografia = request.form['biografia']
 
-        # Procesar la foto de perfil
-        if 'file' in request.files:
-            file = request.files['file']
-            if file and allowed_file(file.filename):
-                # Accede correctamente al 'id_usuario'
-                id_usuario = usuario_data['id_usuario']  # Acceso correcto con nombre de columna
-
-                if id_usuario:
-                    foto_perfil_filename = compress_and_convert_to_webp(file, id_usuario)
-
+            # Procesar la foto de perfil
+            if 'file' in request.files:
+                file = request.files['file']
+                if file and allowed_file(file.filename):
+                    foto_perfil_filename = compress_and_convert_to_webp(
+                        file, id_usuario, 'users', 'user{id}-profile.webp'
+                    )
                     if foto_perfil_filename:
+                        # Guardar en la base de datos
                         cursor.execute("""
                             UPDATE alumno
                             SET foto_perfil = ?
                             WHERE id_usuario = ?
                         """, (foto_perfil_filename, id_usuario))
                         conn.commit()
+
+            try:
+                # Actualizar los datos del usuario
+                cursor.execute("""
+                    UPDATE usuario 
+                    SET email = ?, nombre_usuario = ?
+                    WHERE nombre_usuario = ?
+                """, (email, nuevo_nombre_usuario, nombre_usuario))
+
+                # Actualizar la tabla `alumno`
+                cursor.execute("""
+                    UPDATE alumno
+                    SET apellido = ?, nombre = ?, fecha_nacimiento = ?, 
+                        edad = ?, id_pais = ?, sexo = ?, biografia = ?
+                    WHERE id_usuario = (SELECT id_usuario FROM usuario WHERE nombre_usuario = ?)
+                """, (apellido, nombre, fecha_nacimiento, edad, pais, sexo, biografia, nombre_usuario))
+
+                conn.commit()
+
+                flash("Perfil actualizado correctamente.", 'success')
+
+                session['nombre_usuario'] = nuevo_nombre_usuario  # Actualizar la sesión si cambia el nombre de usuario
+                
+                return redirect(url_for('perfil.perfil', nombre_usuario=nuevo_nombre_usuario))
+            except Exception as e:
+                conn.rollback()
+                flash("Ocurrió un error al actualizar el perfil: " + str(e), 'error')
+            finally:
+                cursor.close()
+                conn.close()
+
+    elif rol_usuario == 2:  # Rol de entrenador
+        if request.method == 'POST':
+            email = request.form['entrenador_email']
+            nuevo_nombre_usuario = request.form['entrenador_nombre_usuario']
+            apellido = request.form['entrenador_apellido']
+            nombre = request.form['entrenador_nombre']
+            fecha_nacimiento = request.form['entrenador_fecha_nacimiento']
+            edad = request.form['entrenador_edad']
+            pais = request.form['entrenador_pais']
+            sexo = request.form['entrenador_sexo']
+            biografia = request.form['entrenador_biografia']
+            especializacion = request.form['entrenador_especializacion']
+            disciplina = request.form['entrenador_disciplina']
+            experiencia = request.form['entrenador_experiencia']
+            titulo = request.form['entrenador_titulo']
+            instituto = request.form['entrenador_instituto']
+
+            print(f"...........................................................................")
+            print(f"Datos recibidos en el formulario: {request.form}")  # Esto imprimirá los datos recibidos en el terminal o consolarequest.form)  # Esto imprimirá los datos recibidos en el terminal o consola
+            print(f"...........................................................................")
+
+
+            # Procesar la foto de perfil
+            if 'file' in request.files:
+                file = request.files['file']
+                if file and allowed_file(file.filename):
+                    foto_perfil_filename = compress_and_convert_to_webp(
+                        file, id_usuario, 'trainers', 'trainer{id}-profile.webp'
+                    )
+                    if foto_perfil_filename:
+                        cursor.execute("""
+                            UPDATE entrenador
+                            SET foto_perfil = ?
+                            WHERE id_usuario = ?
+                        """, (foto_perfil_filename, id_usuario))
                     else:
-                        flash('Error al procesar la foto de perfil', 'error')
-                else:
-                    flash('No se encontró el id del usuario', 'error')
+                        flash("Error al procesar la imagen. Asegúrate de que es un archivo válido.", 'error')
+
+            # Procesar la imagen de título
+            if 'titulo_foto' in request.files:
+                file = request.files['titulo_foto']
+                if file and allowed_file(file.filename):
+                    titulo_foto_filename = compress_and_convert_to_webp(
+                        file, id_usuario, 'studies', 'trainer{id}-title.webp'
+                    )
+                    if titulo_foto_filename:
+                        # Guardar en la base de datos
+                        cursor.execute("""
+                            UPDATE entrenador
+                            SET titulo_foto = ?
+                            WHERE id_usuario = ?
+                        """, (titulo_foto_filename, id_usuario))
+                        conn.commit()
 
 
-        try:
-            # Actualizar los datos del usuario
-            cursor.execute("""
-                UPDATE usuario 
-                SET email = ?, nombre_usuario = ?
-                WHERE nombre_usuario = ?
-            """, (email, nuevo_nombre_usuario, nombre_usuario))
+            try:
+                # Actualizar los datos del usuario
+                cursor.execute("""
+                    UPDATE usuario 
+                    SET email = ?, nombre_usuario = ?
+                    WHERE nombre_usuario = ?
+                """, (email, nuevo_nombre_usuario, nombre_usuario))
 
-            # Actualizar la tabla `alumno`
-            cursor.execute("""
-                UPDATE alumno
-                SET apellido = ?, nombre = ?, fecha_nacimiento = ?, 
-                    edad = ?, id_pais = ?, sexo = ?, biografia = ?
-                WHERE id_usuario = (SELECT id_usuario FROM usuario WHERE nombre_usuario = ?)
-            """, (apellido, nombre, fecha_nacimiento, edad, pais, sexo, biografia, nombre_usuario))
+                # Actualizar la tabla `entrenador`
+                cursor.execute("""
+                    UPDATE entrenador
+                    SET apellido = ?, nombre = ?, fecha_nacimiento = ?, edad = ?, 
+                        id_pais = ?, sexo = ?, biografia = ?, especializacion = ?, 
+                        disciplina = ?, experiencia = ?, titulo = ?, instituto = ?
+                    WHERE id_usuario = (SELECT id_usuario FROM usuario WHERE nombre_usuario = ?)
+                """, (apellido, nombre, fecha_nacimiento, edad, pais, sexo, biografia,
+                    especializacion, disciplina, experiencia, titulo, instituto, nombre_usuario))
+                conn.commit()
 
-            conn.commit()
-            flash("Perfil actualizado correctamente.", 'success')
-            session['nombre_usuario'] = nuevo_nombre_usuario  # Actualizar la sesión si cambia el nombre de usuario
-            return redirect(url_for('perfil.perfil', nombre_usuario=nuevo_nombre_usuario))
-        except Exception as e:
-            conn.rollback()
-            flash("Ocurrió un error al actualizar el perfil: " + str(e), 'error')
-        finally:
-            cursor.close()
-            conn.close()
+                flash("Perfil actualizado correctamente.", 'success')
+
+                session['nombre_usuario'] = nuevo_nombre_usuario
+                
+                return redirect(url_for('perfil.perfil', nombre_usuario=nuevo_nombre_usuario))
+            except Exception as e:
+                conn.rollback()
+                flash("Ocurrió un error al actualizar el perfil: " + str(e), 'error')
+            finally:
+                cursor.close()
+                conn.close()
 
     # Renderizar plantilla con los datos actuales del usuario
-    return render_template('perfil.html', nombre_usuario=nombre_usuario, usuario_data=usuario_data, paises=paises)
+    return render_template('perfil.html', rol_usuario=rol_usuario, nombre_usuario=nombre_usuario, usuario_data=usuario_data, paises=paises)
 
 
 

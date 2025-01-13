@@ -11,7 +11,7 @@ form_entrenador_bp = Blueprint('form_entrenador', __name__)
 
 
 # Configuración de la carpeta de subida de fotos para entrenadores
-UPLOAD_TRAINER_FOLDER = 'static/uploads/trainers'
+UPLOAD_TRAINER_FOLDER = 'static/uploads/users'
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}
 DEFAULT_PROFILE_PICTURE = 'profile.webp'
 DEFAULT_TITLE_IMAGE = 'title.webp'
@@ -26,7 +26,7 @@ def allowed_file(filename):
 def compress_and_convert_to_webp(file, id_usuario, file_type):
     # Define el directorio de almacenamiento
     if file_type == 'title':
-        uploads_dir = os.path.join('app', 'static', 'uploads', 'trainers', 'studies')
+        uploads_dir = os.path.join('app', 'static', 'uploads', 'titles')
         filename = f'trainer{id_usuario}-title.webp'
     else:
         raise ValueError("Tipo de archivo no soportado.")

@@ -6,7 +6,6 @@
 
 {% block content %}
 
-{% if usuario_data['rol'] == 1 %}
 <!-- Modal de Perfil -->
 <dialog class="dialog-social-media" id="dialog-social-media">
     <i class='bx bx-x' id="close-modal"></i>
@@ -17,17 +16,17 @@
 
         <div class="input-container">
             <label for="instagram"><i class='bx bxl-instagram'></i> Instagram</label>
-            <input type="text" id="instagram" name="instagram" value="{{ usuario_data['instagram'] or '' }}" placeholder="URL de tu perfil de Instagram">
+            <input type="text" id="instagram" name="instagram" value="{% if rol_usuario == 2 %}{{ usuario_data['entrenador_instagram'] or '' }}{% else %}{{ usuario_data['alumno_instagram'] or '' }}{% endif %}" placeholder="URL de tu perfil de Instagram">
         </div>
 
         <div class="input-container">
             <label for="facebook"><i class='bx bxl-facebook-circle'></i> Facebook</label>
-            <input type="text" id="facebook" name="facebook" value="{{ usuario_data['facebook'] or '' }}" placeholder="URL de tu perfil de Facebook">
+            <input type="text" id="facebook" name="facebook" value="{% if rol_usuario == 2 %}{{ usuario_data['entrenador_facebook'] or '' }}{% else %}{{ usuario_data['alumno_facebook'] or '' }}{% endif %}" placeholder="URL de tu perfil de Facebook">
         </div>
 
         <div class="input-container">
             <label for="telefono"><i class='bx bxs-phone'></i> Número de Teléfono</label>
-            <input type="text" id="telefono" name="telefono" value="{{ usuario_data['telefono'] or '' }}" placeholder="Número de Teléfono">
+            <input type="text" id="telefono" name="telefono" value="{% if rol_usuario == 2 %}{{ usuario_data['entrenador_telefono'] or '' }}{% else %}{{ usuario_data['alumno_telefono'] or '' }}{% endif %}" placeholder="Número de Teléfono">
         </div>
 
         <button type="submit" id="guardarRedes" class="btn-guardar-redes">Guardar</button>
@@ -37,11 +36,17 @@
 <div class="profile-container">
     <div class="sections section-1">
         <div class="profile-photo">
-            <img id="profile-image" src="{{ url_for('static', filename='uploads/users/' + (usuario_data['foto_perfil'] if usuario_data['foto_perfil'] else 'profile.webp')) }}" alt="Foto de Perfil">
+            <img id="profile-image" src="{{ url_for('static', filename='uploads/users/' + (usuario_data['entrenador_foto_perfil'] if rol_usuario == 2 and usuario_data['entrenador_foto_perfil'] else (usuario_data['alumno_foto_perfil'] if usuario_data['alumno_foto_perfil'] else 'profile.webp'))) }}" alt="Foto de Perfil">
         </div>
 
         <div class="user-info">
-            <h1 class="name">{{ usuario_data['nombre'] | default('.') | upper }} {{ usuario_data['apellido'] | default('.') | upper }}</h1>
+            <h1 class="name">
+                {% if rol_usuario == 2 %}
+                    {{ (usuario_data['entrenador_nombre'] | default('No disponible')) | upper }} {{ (usuario_data['entrenador_apellido'] | default('No disponible')) | upper }}
+                {% else %}
+                    {{ (usuario_data['alumno_nombre'] | default('No disponible')) | upper }} {{ (usuario_data['alumno_apellido'] | default('No disponible')) | upper }}
+                {% endif %}
+            </h1>
             <p class="username">@{{ usuario_data['nombre_usuario'] | default('Usuario') }}</p>
             <p class="role">
                 {% if usuario_data['rol'] == 1 %}
@@ -78,88 +83,230 @@
             <h1>Editar Perfil</h1>
         </div>
 
-        <form action="{{ url_for('perfil.perfil', nombre_usuario=nombre_usuario) }}" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="form_type" value="datos_personales">
-            <div class="input-container">
-                <div class="input-box">
-                    <label for="apellido">Apellido:</label>
-                    <input type="text" name="apellido" id="apellido" value="{{ usuario_data['apellido'] or '' }}" placeholder="Ingresa tu apellido">                
-                </div>
-                
-                <div class="input-box">
-                    <label for="nombre">Nombre:</label>
-                    <input type="text" name="nombre" id="nombre" value="{{ usuario_data['nombre'] or '' }}" placeholder="Ingresa tu nombre">
-                </div>
-            </div>
+        {% if rol_usuario == 1 %}
 
-            <div class="input-container">
-                <div class="input-box">
-                    <label for="nombre_usuario">Nombre de Usuario:</label>
-                    <input type="text" name="nombre_usuario" id="nombre_usuario" value="{{ usuario_data['nombre_usuario'] or '' }}" placeholder="Ingresa tu usuario" maxlength="16" oninput="eliminarEspacios(this)">                </div>
-                
-                <div class="input-box">
-                    <label for="email">Email:</label>
-                    <input type="email" name="email" id="email" value="{{ usuario_data['email'] or '' }}" placeholder="Ingresa tu email">
-                </div>
-            </div>
-
-            <div class="input-container">
-                <!-- Fecha de Nacimiento -->
-                <div class="input-box">
-                    <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
-                    <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" value="{{ usuario_data['fecha_nacimiento'] or '' }}">
-                </div>
-
-                <!-- Edad -->
-                <div class="input-box">
-                    <label for="edad">Edad:</label>
-                    <input type="number" name="edad" id="edad" value="{{ usuario_data['edad'] or '' }}" placeholder="Ingresa tu edad">
-                </div>
-            </div>
-
-            <div class="input-container">
-                <div class="input-box">
-                    <label for="pais">País:</label>
-                    <select name="pais" id="pais">
-                        <option value="">Seleccionar País</option>
-                        {% for id_pais, nombre_pais in paises %}
-                            <option value="{{ id_pais }}" {% if id_pais == usuario_data['id_pais'] %}selected{% endif %}>
-                                {{ nombre_pais }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="input-box">
-                    <label for="sexo">Sexo:</label>
-                    <select name="sexo" id="sexo">
-                        <option value="">Seleccionar Sexo</option>
-                        <option value="masculino" {% if usuario_data['sexo'] == 'masculino' %}selected{% endif %}>Masculino</option>
-                        <option value="femenino" {% if usuario_data['sexo'] == 'femenino' %}selected{% endif %}>Femenino</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="input-container">
-                <div class="input-box">
-                    <label for="biografia">Biografía:</label>
-                    <textarea name="biografia" id="biografia" maxlength="200" placeholder="Escribe una breve biografía">{{ usuario_data['biografia'] or '' }}</textarea>
-                </div>
-
-                <div class="input-box">
-                    <label>Foto de Perfil:</label>
-
-                    <label for="file" id="archivo">
-                        <i class='bx bx-upload'></i>
-                        <span>Subir Imagen</span>
-                    </label>
+            <form action="{{ url_for('perfil.perfil', nombre_usuario=nombre_usuario) }}" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="form_type" value="datos_alumno">
+                <div class="input-container">
+                    <div class="input-box">
+                        <label for="apellido">Apellido:</label>
+                        <input type="text" name="apellido" id="apellido" value="{{ usuario_data['alumno_apellido'] or '' }}" placeholder="Ingresa tu apellido">                
+                    </div>
                     
-                    <input type="file" name="file" id="file" accept="image/*" style="display: none;">
+                    <div class="input-box">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" name="nombre" id="nombre" value="{{ usuario_data['alumno_nombre'] or '' }}" placeholder="Ingresa tu nombre">
+                    </div>
                 </div>
-            </div>
 
-            <button type="submit" class="btn-guardar">Guardar</button>
-        </form>
+                <div class="input-container">
+                    <div class="input-box">
+                        <label for="nombre_usuario">Nombre de Usuario:</label>
+                        <input type="text" name="nombre_usuario" id="nombre_usuario" value="{{ usuario_data['nombre_usuario'] or '' }}" placeholder="Ingresa tu usuario" maxlength="16" oninput="eliminarEspacios(this)">                </div>
+                    
+                    <div class="input-box">
+                        <label for="email">Email:</label>
+                        <input type="email" name="email" id="email" value="{{ usuario_data['email'] or '' }}" placeholder="Ingresa tu email">
+                    </div>
+                </div>
+
+                <div class="input-container">
+                    <!-- Fecha de Nacimiento -->
+                    <div class="input-box">
+                        <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
+                        <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" value="{{ usuario_data['alumno_fecha_nacimiento'] or '' }}">
+                    </div>
+
+                    <!-- Edad -->
+                    <div class="input-box">
+                        <label for="edad">Edad:</label>
+                        <input type="number" name="edad" id="edad" value="{{ usuario_data['alumno_edad'] or '' }}" placeholder="Ingresa tu edad">
+                    </div>
+                </div>
+
+                <div class="input-container">
+                    <div class="input-box">
+                        <label for="pais">País:</label>
+                        <select name="pais" id="pais">
+                            <option value="">Seleccionar País</option>
+                            {% for id_pais, nombre_pais in paises %}
+                                <option value="{{ id_pais }}" {% if id_pais == usuario_data['alumno_id_pais'] %}selected{% endif %}>
+                                    {{ nombre_pais }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="input-box">
+                        <label for="sexo">Género:</label>
+                        <select name="sexo" id="sexo">
+                            <option value="">Seleccionar Género</option>
+                            <option value="masculino" {% if usuario_data['alumno_sexo'] == 'masculino' %}selected{% endif %}>Masculino</option>
+                            <option value="femenino" {% if usuario_data['alumno_sexo'] == 'femenino' %}selected{% endif %}>Femenino</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-container">
+                    <div class="input-box">
+                        <label for="biografia">Biografía:</label>
+                        <textarea name="biografia" id="biografia" maxlength="200" placeholder="Escribe una breve biografía">{{ usuario_data['alumno_biografia'] or '' }}</textarea>
+                    </div>
+
+                    <div class="input-box">
+                        <label>Foto de Perfil:</label>
+
+                        <label for="file" id="archivo">
+                            <i class='bx bx-upload'></i>
+                            <span>Subir Imagen</span>
+                        </label>
+                        
+                        <input type="file" name="file" id="file" accept="image/*" style="display: none;">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-guardar">Guardar</button>
+            </form>
+
+        {% elif rol_usuario == 2 %}
+
+            <form action="{{ url_for('perfil.perfil', nombre_usuario=nombre_usuario) }}" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="form_type" value="datos_entrenador">
+                <div class="input-container">
+                    <div class="input-box">
+                        <label for="entrenador_apellido">Apellido:</label>
+                        <input type="text" name="entrenador_apellido" id="entrenador_apellido" value="{{ usuario_data['entrenador_apellido'] or '' }}" placeholder="Ingresa tu apellido">                
+                    </div>
+                    
+                    <div class="input-box">
+                        <label for="entrenador_nombre">Nombre:</label>
+                        <input type="text" name="entrenador_nombre" id="entrenador_nombre" value="{{ usuario_data['entrenador_nombre'] or '' }}" placeholder="Ingresa tu nombre">
+                    </div>
+                </div>
+
+                <div class="input-container">
+                    <div class="input-box">
+                        <label for="entrenador_nombre_usuario">Nombre de Usuario:</label>
+                        <input type="text" name="entrenador_nombre_usuario" id="entrenador_nombre_usuario" value="{{ usuario_data['nombre_usuario'] or '' }}" placeholder="Ingresa tu usuario" maxlength="16" oninput="eliminarEspacios(this)">                </div>
+                    
+                    <div class="input-box">
+                        <label for="entrenador_email">Email:</label>
+                        <input type="email" name="entrenador_email" id="entrenador_email" value="{{ usuario_data['email'] or '' }}" placeholder="Ingresa tu email">
+                    </div>
+                </div>
+
+                <div class="input-container">
+                    <div class="input-box">
+                        <label for="entrenador_fecha_nacimiento">Fecha de Nacimiento:</label>
+                        <input type="date" name="entrenador_fecha_nacimiento" id="entrenador_fecha_nacimiento" value="{{ usuario_data['entrenador_fecha_nacimiento'] or '' }}">
+                    </div>
+
+                    <div class="input-box">
+                        <label for="entrenador_edad">Edad:</label>
+                        <input type="number" name="entrenador_edad" id="entrenador_edad" value="{{ usuario_data['entrenador_edad'] or '' }}" placeholder="Ingresa tu edad">
+                    </div>
+                </div>
+
+                <div class="input-container">
+                    <div class="input-box">
+                        <label for="entrenador_pais">País:</label>
+                        <select name="entrenador_pais" id="entrenador_pais">
+                            <option value="">Seleccionar País</option>
+                            {% for id_pais, nombre_pais in paises %}
+                                <option value="{{ id_pais }}" {% if id_pais == usuario_data['entrenador_id_pais'] %}selected{% endif %}>
+                                    {{ nombre_pais }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="input-box">
+                        <label for="entrenador_sexo">Género:</label>
+                        <select name="entrenador_sexo" id="entrenador_sexo">
+                            <option value="">Seleccionar Género</option>
+                            <option value="masculino" {% if usuario_data['entrenador_sexo'] == 'masculino' %}selected{% endif %}>Masculino</option>
+                            <option value="femenino" {% if usuario_data['entrenador_sexo'] == 'femenino' %}selected{% endif %}>Femenino</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-container">
+                    <div class="input-box">
+                        <label for="entrenador_biografia">Biografía:</label>
+                        <textarea name="entrenador_biografia" id="entrenador_biografia" maxlength="200" placeholder="Escribe una breve biografía">{{ usuario_data['entrenador_biografia'] or '' }}</textarea>
+                    </div>
+
+                    <div class="input-box">
+                        <label>Foto de Perfil:</label>
+
+                        <label for="file" id="archivo">
+                            <i class='bx bx-upload'></i>
+                            <span>Subir Imagen</span>
+                        </label>
+                        
+                        <input type="file" name="file" id="file" accept="image/*" style="display: none;">
+                    </div>
+                </div>
+
+                <div class="input-container">
+                    <div class="input-box">
+                        <label for="entrenador_especializacion">Especialización:</label>
+                        <input type="text" name="entrenador_especializacion" id="entrenador_especializacion" value="{{ usuario_data['especializacion'] or '' }}" placeholder="Ingresa tu Especialización" >
+                    </div>
+                    
+                    <div class="input-box">
+                        <label for="entrenador_disciplina">Disciplina:</label>
+                        <select name="entrenador_disciplina" id="entrenador_disciplina" placeholder="Seleccionar">
+                            <option value="">Seleccionar Disciplina</option>
+                            <option value="Calistenia" {% if usuario_data['disciplina'] == 'Calistenia' %}selected{% endif %}>Calistenia</option>
+                            <option value="Culturismo" {% if usuario_data['disciplina'] == 'Culturismo' %}selected{% endif %}>Culturismo</option>
+                            <option value="CrossFit" {% if usuario_data['disciplina'] == 'CrossFit' %}selected{% endif %}>CrossFit</option>
+                            <option value="Fitness" {% if usuario_data['disciplina'] == 'Fitness' %}selected{% endif %}>Fitness</option>
+                            <option value="HIIT" {% if usuario_data['disciplina'] == 'HIIT' %}selected{% endif %}>HIIT</option>
+                            <option value="Entrenamiento Funcional" {% if usuario_data['disciplina'] == 'Entrenamiento Funcional' %}selected{% endif %}>Entrenamiento Funcional</option>
+                            <option value="Yoga" {% if usuario_data['disciplina'] == 'Yoga' %}selected{% endif %}>Yoga</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-container">
+                    <div class="input-box">
+                        <label for="entrenador_experiencia">Experiencia:</label>
+                        <select name="entrenador_experiencia" id="entrenador_experiencia" placeholder="Seleccionar">
+                            <option value="">Seleccionar Experiencia</option>
+                            <option value="1 Año" {% if usuario_data['experiencia'] == '1 Año' %}selected{% endif %}>1 Año</option>
+                            <option value="2 Años" {% if usuario_data['experiencia'] == '2 Años' %}selected{% endif %}>2 Años</option>
+                            <option value="3 Años" {% if usuario_data['experiencia'] == '3 Años' %}selected{% endif %}>3 Años</option>
+                            <option value="4 Años" {% if usuario_data['experiencia'] == '4 Años' %}selected{% endif %}>4 Años</option>
+                            <option value="+5 Años" {% if usuario_data['experiencia'] == '+5 Años' %}selected{% endif %}>+5 Años</option>
+                            <option value="+10 Años" {% if usuario_data['experiencia'] == '+10 Años' %}selected{% endif %}>+10 Años</option>
+                            <option value="+20 Años" {% if usuario_data['experiencia'] == '+20 Años' %}selected{% endif %}>+20 Años</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-container">
+                    <div class="input-box">
+                        <label for="titulo_foto">Título/Certificado:</label>
+                        <input type="file" name="titulo_foto" id="titulo_foto" accept="image/*">
+                    </div>
+
+                    <div class="input-box">
+                        <label for="entrenador_titulo">Nombre del Título:</label>
+                        <input type="text" name="entrenador_titulo" id="entrenador_titulo" value="{{ usuario_data['titulo'] or '' }}" placeholder="¿Cual es tu título o certificado?">
+                    </div>
+                </div>
+
+                <div class="input-container">
+                    <div class="input-box">
+                        <label for="entrenador_instituto">Universidad/Institución:</label>
+                        <input type="text" name="entrenador_instituto" id="entrenador_instituto" value="{{ usuario_data['instituto'] or '' }}" placeholder="¿Donde lo obtuviste?">    
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-guardar">Guardar</button>
+            </form>
+        {% endif %}
     </div>
 </div>
 
@@ -224,12 +371,5 @@
     });
 
 </script>
-
-{% elif usuario_data['rol'] == 2 %}
-
-    <!--SECCION ENTRENADOR-->
-
-{% endif %}
-
 
 {% endblock %}
