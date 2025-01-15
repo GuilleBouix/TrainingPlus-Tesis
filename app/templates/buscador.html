@@ -6,56 +6,6 @@
 
 {% block content %}
 
-
-
-<!-- Modal de Perfil -->
-<dialog class="dialog" id="dialog">
-    <i class='bx bx-x' id="close-modal"></i>
-    <div class="profile-card">
-        <div class="left-side">
-            <img id="profile-image" src="" alt="Foto de Perfil">
-
-            <div class="user-info">
-                <h2 class="name"></h2>
-                <p class="username"></p>
-            </div>
-
-            <p class="role"><i class='bx bxs-user'></i></p>
-        </div>
-
-        <div class="right-side">
-            <p class="bio"><i></i></p>
-
-            <div class="details">
-                <div class="detail">
-                    <i class='bx bxs-map'></i>
-                    <p></p>
-                </div>
-                <div class="detail">
-                    <i class='bx bxs-envelope'></i>
-                    <p></p>
-                </div>
-                <div class="detail">
-                    <p></p>
-                </div>
-            </div>
-
-            <div class="links-container">
-                <div class="links">
-                    <a href="" class="instagram" target="_blank"><i class='bx bxl-instagram'></i></a>
-                    <a href="" class="facebook" target="_blank"><i class='bx bxl-facebook'></i></a>
-                    <a href="" class="phone" target="_blank"><i class='bx bxs-phone'></i></a>
-                </div>
-
-                <button class="btn-connect"><i class='bx bxs-group'></i> Conectar</button>
-            </div>
-
-        </div>
-    </div>
-</dialog>
-
-
-
 <!-- Título y Filtros -->
 <div class="title">
     <h1>Resultados de Búsqueda</h1>
@@ -84,23 +34,34 @@
     </form>
 </div>
 
-
-
 <!-- Mostrar Resultados -->
 {% if resultados %}
-    {% for id_usuario, nombre_usuario, rol, nombre, apellido, foto_perfil, nombre_pais, codigo_iso, sexo in resultados %}
+    {% for id_usuario, nombre_usuario, rol, nombre, apellido, foto_perfil, nombre_pais, codigo_iso, sexo_alumno, nombre_entrenador, apellido_entrenador, foto_entrenador, sexo_entrenador in resultados %}
     <div class="results-container open-modal" id="open-modal" data-id="{{ id_usuario }}">
         <div class="user-data">
             <div class="photo">
-                <img src="{{ url_for('static', filename='uploads/users/' + (foto_perfil or 'profile.webp')) }}" alt="Foto de Perfil">
+                {% if rol == 1 %}
+                    <img src="{{ url_for('static', filename='uploads/users/' + (foto_perfil or 'profile.webp')) }}" alt="Foto de Perfil">
+                {% else %}
+                    <img src="{{ url_for('static', filename='uploads/users/' + (foto_entrenador or 'profile.webp')) }}" alt="Foto de Perfil">
+                {% endif %}
             </div>
             <div class="user">
-                <h2>{{ nombre|upper }} {{ apellido|upper }} 
-                    <i class="bx {% if rol == 1 %}bx-user{% else %}bx-medal{% endif %}"></i>
-                </h2>
-                <p>@{{ nombre_usuario }}</p>
-                <p>{{ nombre_pais }}</p>
+                {% if rol == 1 %}
+                    <h2>{{ nombre|upper }} {{ apellido|upper }} 
+                        <i class="bx bx-user"></i>
+                    </h2>
+                    <p>@{{ nombre_usuario }}</p>
+                    <p>{{ nombre_pais }}</p>
+                {% else %}
+                    <h2>{{ nombre_entrenador|upper }} {{ apellido_entrenador|upper }} 
+                        <i class="bx bx-medal"></i>
+                    </h2>
+                    <p>@{{ nombre_usuario }}</p>
+                    <p>{{ nombre_pais }}</p>
+                {% endif %}
             </div>
+            <i class='bx bx-chevron-right open-profile'></i>
         </div>
     </div>
     {% endfor %}
@@ -112,74 +73,18 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Obtener todos los botones de abrir la modal (contenedores de resultados)
-        const btnsOpen = document.querySelectorAll('.open-modal');
-        const modal = document.querySelector('#dialog');
-        const btnClose = document.querySelector('#close-modal');
+        const userDivs = document.querySelectorAll('.results-container');
 
-        // Agregar un evento de clic a cada uno
-        btnsOpen.forEach(btn => {
-            btn.addEventListener('click', async function() {
-                const idUsuario = this.getAttribute('data-id');  // Obtener el id_usuario del contenedor
-
-                try {
-                    const response = await fetch(`/datos_usuario/${idUsuario}`);
-
-                    if (response.ok) {
-                        const datos = await response.json();
-
-                        // Rellenar los campos de la modal con los datos del usuario
-                        document.querySelector('#profile-image').src = `/static/uploads/users/${datos.foto_perfil || 'profile.webp'}`;
-                        document.querySelector('.name').textContent = `${datos.nombre.toUpperCase()} ${datos.apellido.toUpperCase()}`;
-                        document.querySelector('.username').textContent = `@${datos.nombre_usuario}`;
-
-                        // Mostrar el ícono de acuerdo al rol
-                        const roleIcon = datos.rol === 2 ? "<i class='bx bx-medal'></i>" : "<i class='bx bxs-user'></i>";
-                        document.querySelector('.role').innerHTML = `${roleIcon} ${datos.rol === 2 ? "Entrenador" : "Usuario"}`;
-
-                        // Mostrar la biografía con comillas dobles y en cursiva
-                        const bio = `"${datos.biografia || "No hay biografía disponible"}"`;
-                        document.querySelector('.bio').innerHTML = `<i>${bio}</i>`;
-
-                        // Cargar el nombre del país, sexo, email, instagram, facebook, teléfono
-                        document.querySelector('.details .detail:nth-child(1) p').textContent = datos.id_pais;  // Aquí mostramos el nombre del país
-                        document.querySelector('.details .detail:nth-child(2) p').textContent = datos.email;
-
-                        // Mostrar el sexo con el ícono correspondiente
-                        let sexoIcon = '';
-                        let sexoTexto = '';
-                        if (datos.sexo === 'masculino') {
-                            sexoIcon = "<i class='bx bx-male-sign'></i>";
-                            sexoTexto = "Hombre";
-                        } else if (datos.sexo === 'femenino') {
-                            sexoIcon = "<i class='bx bx-female-sign'></i>";
-                            sexoTexto = "Mujer";
-                        }
-                        document.querySelector('.details .detail:nth-child(3) p').innerHTML = `${sexoIcon} ${sexoTexto}`;
-
-                        document.querySelector('.links .instagram').href = datos.instagram || '#';
-                        document.querySelector('.links .facebook').href = datos.facebook || '#';
-                        document.querySelector('.links .phone').href = `tel:${datos.telefono || '#'}`;
-
-                        // Mostrar la modal con los datos del usuario
-                        modal.showModal();
-                    } else {
-                        console.error('Error al obtener los datos del usuario');
-                    }
-                } catch (error) {
-                    console.error('Error de red:', error);
+        userDivs.forEach(div => {
+            div.addEventListener('click', () => {
+                const userId = div.getAttribute('data-id');
+                if (userId) {
+                    // Redirige a la ruta del usuario
+                    window.location.href = `/usuario/${userId}`;
                 }
             });
         });
-
-        // Cerrar la modal
-        btnClose.addEventListener('click', () => {
-            modal.close();
-        });
     });
 </script>
-
-
-    
 
 {% endblock %}

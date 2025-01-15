@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Usuario - Training+
+{% endblock %}
+
+{% block content %}
+
+    <div class="usuario-container">
+        <div class="section-1">
+            <div class="photo-container">
+                <img src="{{ url_for('static', filename='uploads/users/' + (info.foto_perfil if info.foto_perfil else 'profile.webp')) }}" alt="Foto de perfil">
+            </div>
+
+            <div class="user-name">
+                <h1>{{ info.nombre.upper() }} {{ info.apellido.upper() }}</h1>
+                <p>@{{ usuario.nombre_usuario }}</p>
+                <span class="user-type">
+                    {% if usuario.rol == 1 %}
+                        <i class='bx bxs-user'></i> 
+                        Alumno
+                    {% elif usuario.rol == 2 %}
+                        <i class='bx bxs-medal'></i> 
+                        Entrenador
+                    {% else %}
+                        Desconocido
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+
+        <div class="section-2">
+            <div class="biography">
+                <h3><i class='bx bxs-message-square-detail'></i> Biografía</h3>
+                <p><i>"{{ info.biografia or 'No se ha proporcionado biografía.' }}"</i></p>
+            </div>
+
+            <div class="user-info">
+                <div class="side-1">
+                    <div class="info-item item-1">
+                        <i class='bx bxs-map'></i>
+                        <div class="item">
+                            <h3>País</h3>
+                            <p>{{ info.id_pais }}</p>  <!-- Aquí puedes traducir el id_pais si es necesario -->
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <i class='bx bxs-envelope'></i>
+                        <div class="item">
+                            <h3>Email</h3>
+                            <p>{{ usuario.email }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="side-2">
+                    <div class="info-item item-1">
+                        {% if info.sexo|lower == 'masculino' %}
+                            <i class='bx bx-male-sign'></i>
+                        {% else %}
+                            <i class='bx bx-female-sign'></i>
+                        {% endif %}
+                        <div class="item">
+                            <h3>Género</h3>
+                            <p>{{ info.sexo|capitalize }}</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <i class='bx bxs-cake'></i>
+                        <div class="item">
+                            <h3>Fecha de Nacimiento</h3>
+                            <p>{{ info.fecha_nacimiento }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="connect-container">
+                <div class="links">
+                    <div class="link-items">
+                        <a class="instagram" href="{{ info.instagram }}" target="_blank"><i class='bx bxl-instagram'></i></a>
+                    </div>
+
+                    <div class="link-items">
+                        <a class="facebook" href="{{ info.facebook }}" target="_blank"><i class='bx bxl-facebook'></i></a>
+                    </div>
+
+                    <div class="link-items">
+                        <a class="phone" href="tel:{{ info.telefono }}"><i class='bx bxs-phone'></i></a>
+                    </div>
+                </div>
+
+                {% if es_entrenador %}
+                    <form action="" method="POST">
+                        <button type="submit"><i class='bx bxs-group'></i> Conectar</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

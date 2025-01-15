@@ -13,7 +13,7 @@
     /* ------ MAIN COLORS ------ */
     --color-primary: #DC2626;
     --color-secondary: #EDEDED;
-    --color-background: #F7F7F7;
+    --color-background: #FFFFFF;
     /* ------ TEXT COLORS ------ */
     --color-text-primary: #222222;
     --color-text-secondary: #5B5B5B;
@@ -64,6 +64,7 @@ main {
 }
 
 .results-container {
+    position: relative; /* Necesario para posicionar el ícono dentro del contenedor */
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -155,233 +156,18 @@ main {
     color: var(--color-text-secondary);
 }
 
-
-/* Modal de Perfil */
-.dialog {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 0;
-    background: white;
-    border-radius: 10px;
-    max-width: 90%;
-    width: 800px;
-    max-height: 90vh;
-    overflow-y: auto;
-    border: none;
-    outline: none;
-}
-
-/* Botón para cerrar la modal */
-#close-modal {
-    position: absolute; /* Para posicionarlo dentro del contenedor relativo */
-    top: 1rem; /* Distancia desde el borde superior */
-    right: 1rem; /* Distancia desde el borde derecho */
-    font-size: 1.5rem; /* Tamaño del ícono */
-    cursor: pointer; /* Cambia el cursor al pasar sobre el ícono */
-    color: var(--color-text-primary); /* Color del ícono */
-    transition: color 0.1s ease-in-out; /* Animación de hover */
-}
-
-/* Hover para el botón de cerrar */
-#close-modal:hover {
-    transform: scale(1.1); /* Escala el botón al pasar el mouse */
-    color: var(--color-primary); /* Cambia el color del ícono al pasar el mouse */
-}
-
-.dialog::backdrop {
-    background-color: rgba(0, 0, 0, 0.5);
-}
-
-.dialog .profile-card {
-    display: flex;
-    flex-direction: row;
-}
-
-.dialog .profile-card .left-side {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, var(--color-primary), var(--color-button-primary));
-    padding: 2rem 3rem;
-}
-
-.left-side img {
-    width: 150px;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 50%;
-}
-
-.left-side .user-info {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-top: 1rem;
-    color: var(--color-background);
-}
-.left-side .user-info .name {
-    font-size: 1.3rem;
-    font-weight: 700;
-    text-align: center;
-}
-.left-side .user-info .username {
-    color: var(--color-background);
-    font-size: 1rem;
-    font-weight: 300;
-}
-
-.left-side .role {
-    margin-top: 1rem;
-    color: var(--color-primary);
-    background-color: var(--color-background);
-    border-radius: 5px;
-    font-size: 1rem;
-    font-weight: 300;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 3px 7px;
-}
-.role i {
-    margin-right: .25rem;
-    font-size: 1.2rem;
-}
-
-
-.dialog .profile-card .right-side {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: start;
-    background: var(--color-background);
-    padding: 1rem;
-    width: 100%;
-}
-
-.right-side .bio {
-    color: var(--color-text-secondary);
-    font-size: 1rem;
-    font-weight: 300;
-    text-align: left;
-    line-height: 1.5;
-    margin-top: 1rem;
-}
-
-.right-side .details {
-    display: flex;
-    flex-direction: column;
-    margin-top: 1rem;
-    width: 100%;
-    padding: .5rem;
-    border-top: 1px solid var(--color-border);
-    border-bottom: 1px solid var(--color-border);
-}
-.details .detail {
-    display: flex;
-    align-items: center;
-    margin-bottom: .5rem;
-    color: var(--color-text-secondary);
-    font-size: 1rem;
-    font-weight: 400;
-    text-align: left;
-}
-.detail i {
-    margin-right: .5rem;
-    font-size: 1.3rem;
-    color: var(--color-primary);
-}
-
-.right-side .links-container {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    margin-top: 1rem;
-}
-
-.links {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.links a {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: transparent;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    border: 1px solid var(--color-border);
-    outline: none;
-}
-
-.links a.instagram {
-    color: #FF426D;
-}
-
-.links a.facebook {
-    color: #0866FF;
-}
-
-.links a.phone {
-    color: #00FF88;
-}
-
-.links a.instagram:hover {
-    background-color: #FF426D;
-    color: white;
-    border: 1px solid #FF426D;
-}
-
-.links a.facebook:hover {
-    background-color: #0866FF;
-    color: white;
-    border: 1px solid #0866FF;
-}
-
-.links a.phone:hover {
-    background-color: #00FF88;
-    color: white;
-    border: 1px solid #00FF88;
-}
-
-.links a i {
+.results-container .open-profile {
+    position: absolute;
+    right: 1rem;
     font-size: 1.5rem;
+    color: var(--color-text-secondary);
+    transition: all 0.1s ease-in-out;
 }
 
-.links-container .btn-connect {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 40px;
-    border-radius: 5px;
-    background-color: var(--color-button-primary);
-    color: var(--color-background);
-    text-decoration: none;
-    transition: all 0.3s ease;
-    border: none;
-    outline: none;
-    font-size: 1rem;
-    padding: 0 10px;
-    cursor: pointer;
-}
-.btn-connect i {
-    font-size: 1.3rem;
-    margin-right: 0.25rem;
-}
-.btn-connect:hover {
-    background-color: var(--color-button-hover);
-    color: var(--color-background);
-}
-.btn-connect:active {
-    background-color: var(--color-button-active);
-    color: var(--color-background);
+.results-container:hover .open-profile {
+    color: var(--color-primary);
+    rotate: -45deg;
+    transform: scale(1.1);
 }
 
 
