@@ -150,6 +150,7 @@ main {
     padding-top: 1rem;
     border-top: 1px solid var(--color-border);
 }
+
 .side-1 .info-item,
 .side-2 .info-item  {
     display: flex;
@@ -157,6 +158,9 @@ main {
     margin-bottom: .5rem;
 }
 
+.item-1 {
+    margin-bottom: 2rem !important;
+}
 
 .info-item i {
     font-size: 1.5rem;
@@ -341,11 +345,13 @@ main {
     .user-info .side-2 {
         margin: 0 !important ;
     }
-    .user-info .item-1 {
-        margin: 0;
-    }
+
     .user-info .item {
         margin: 1rem 0;
+    }
+
+    .item-1 {
+        margin-bottom: 0 !important;
     }
 
     .section-2 .connect-container {

@@ -18,7 +18,7 @@
                 <span class="user-type">
                     {% if usuario.rol == 1 %}
                         <i class='bx bxs-user'></i> 
-                        Alumno
+                        Usuario
                     {% elif usuario.rol == 2 %}
                         <i class='bx bxs-medal'></i> 
                         Entrenador
@@ -41,7 +41,7 @@
                         <i class='bx bxs-map'></i>
                         <div class="item">
                             <h3>País</h3>
-                            <p>{{ info.id_pais }}</p>  <!-- Aquí puedes traducir el id_pais si es necesario -->
+                            <p>{{ info.id_pais }}</p>
                         </div>
                     </div>
 
@@ -91,8 +91,8 @@
                     </div>
                 </div>
 
-                {% if es_entrenador %}
-                    <form action="" method="POST">
+                {% if es_entrenador and usuario['id_usuario'] != id_usuario_sesion %}
+                    <form action="{{ url_for('notificaciones.enviar_solicitud', id_usuario_destino=usuario.id_usuario) }}" method="POST">
                         <button type="submit"><i class='bx bxs-group'></i> Conectar</button>
                     </form>
                 {% endif %}
