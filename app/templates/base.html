@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/perfil.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/buscar.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/usuario.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/notificaciones.css') }}">
 
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
@@ -49,11 +50,7 @@
             <li><a href="{{ url_for('perfil.perfil', nombre_usuario=session['nombre_usuario']) }}">PERFIL</a></li>
             <li><a href="#">CONFIGURACIÓN</a></li>
             <li><a href="{{ url_for('auth.logout') }}">LOGOUT</a></li>
-            <li>
-                <button class="btn-notificaciones btn-notificaciones-nav open-modal-notification" id="openModalBtn">
-                    NOTIFICACIONES <span id="notification-count-nav"></span>
-                </button>
-            </li>
+            <li><a href="{{ url_for('notificaciones.listar_solicitudes') }}">NOTIFICACIONES</a></li>
         </ul>
         
         <i class='bx bx-search icono-busqueda' id="iconoBusqueda"></i>
@@ -91,132 +88,6 @@
                 loadingScreen.style.display = 'none'; // Oculta el loading
                 content.style.display = 'block'; // Muestra el contenido
             };
-
-
-
-
-            // Notificaciones
-            const modalNotificaciones = document.querySelector('#modalNotificaciones');
-            const btnOpenNotificationList = document.querySelectorAll('.open-modal-notification');
-            const btnCloseNotification = document.querySelector('#close-modal-notification');
-            const notificationSpan = document.getElementById("notification-count");
-
-            // Abrir la modal
-            btnOpenNotificationList.forEach(btnOpen => {
-                btnOpen.addEventListener('click', () => {
-                    fetch('/obtener_notificaciones')  // Realizar la solicitud AJAX para obtener las notificaciones
-                        .then(response => response.json())
-                        .then(data => {
-                            const notificationsList = document.getElementById('notifications-list');
-                            notificationsList.innerHTML = '';  // Limpiar las notificaciones previas
-
-                            // Si hay notificaciones, mostrar
-                            if (data.length > 0) {
-                                data.forEach(notificacion => {
-                                    const div = document.createElement('div');
-                                    div.classList.add('notification');
-                                    div.innerHTML = `
-                                        <div class="notification-content">
-                                            <h3>${notificacion.usuario_origen}</h3> <!-- Nombre del usuario origen -->
-                                            <p>${notificacion.mensaje}</p> <!-- Mensaje -->
-                                            <span class="date">${notificacion.fecha}</span> <!-- Fecha -->
-                                            ${notificacion.estado === 'pendiente' ? `
-                                                <form method="POST" action="/notificaciones/actualizar_notificacion/${notificacion.id}">
-                                                    <input type="hidden" name="id_notificacion" value="${notificacion.id}">
-                                                    <button type="submit" name="accion" value="aceptar" class="btn btn-success">Aceptar</button>
-                                                    <button type="submit" name="accion" value="rechazar" class="btn btn-danger">Rechazar</button>
-                                                </form>
-                                            ` : `<span class="estado">Estado: ${notificacion.estado}</span>`}
-                                        </div>
-                                    `;
-                                    notificationsList.appendChild(div);
-                                });
-                            } else {
-                                notificationsList.innerHTML = '<p>No hay notificaciones.</p>';
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error al obtener notificaciones:', error);
-                        });
-
-                    modalNotificaciones.showModal();  // Mostrar la modal
-                });
-            });
-
-            // Cerrar la modal
-            btnCloseNotification.addEventListener('click', () => {
-                modalNotificaciones.close();
-            });
-
-            // Actualizar la cantidad de notificaciones
-            const notificationValue = parseInt(notificationSpan.textContent);
-            if (notificationValue <= 0) {
-                notificationSpan.style.display = "none";
-            } else {
-                notificationSpan.style.display = "flex";
-                notificationSpan.textContent = notificationValue > 9 ? "+9" : notificationValue;
-            }
-
-
-
-            // NOTIFICACIONES
-            const notificationCountElement = document.getElementById("notification-count");
-
-            // Función para obtener el conteo de notificaciones
-            function obtenerNotificaciones() {
-                fetch('/obtener_count_notificaciones')
-                    .then(response => response.json())
-                    .then(data => {
-                        const count = data.count; // El número de notificaciones pendientes
-                        notificationCountElement.textContent = count; // Actualizar el texto del span
-
-                        // Si no hay notificaciones, ocultar el span
-                        if (count <= 0) {
-                            notificationCountElement.style.display = "none";
-                        } else {
-                            notificationCountElement.style.display = "flex"; // Mostrar el número
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Error al obtener el conteo de notificaciones:", error);
-                    });
-            }
-
-            // Obtener notificaciones al cargar la página
-            obtenerNotificaciones();
-
-            // Actualizar el número de notificaciones cada 1 segundo (1000 ms)
-            setInterval(obtenerNotificaciones, 1000);
-
-            
-            const notificationCountElementNav = document.getElementById("notification-count-nav");
-
-            // Función para obtener el conteo de notificaciones
-            function obtenerNotificacionesNav() {
-                fetch('/obtener_count_notificaciones')
-                    .then(response => response.json())
-                    .then(data => {
-                        const count = data.count; // El número de notificaciones pendientes
-                        notificationCountElementNav.textContent = count; // Actualizar el texto del span
-
-                        // Si no hay notificaciones, ocultar el span
-                        if (count <= 0) {
-                            notificationCountElementNav.style.display = "none";
-                        } else {
-                            notificationCountElementNav.style.display = "flex"; // Mostrar el número
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Error al obtener el conteo de notificaciones:", error);
-                    });
-            }
-
-            // Obtener notificaciones al cargar la página
-            obtenerNotificacionesNav();
-
-            // Actualizar el número de notificaciones cada 1 segundo (1000 ms)
-            setInterval(obtenerNotificacionesNav, 1000);
-
         })
     </script>
 </body>

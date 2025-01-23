@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Notificaciones - Training+
+{% endblock %}
+
+{% block content %}
+
+    <ul class="notificacion-container">
+        {% for solicitud in solicitudes %}
+            <div>
+                <h1>Solicitud de Conexión</h1>
+                <li>
+                    <div class="message">
+                        <strong>El entrenador <span>@{{ solicitud['nombre_usuario'] }}</span> ha solicitado conectarse contigo.</strong>
+                        <p class="fecha">{{ solicitud['fecha_solicitud'] }}</p>
+                    </div>
+                    <form action="{{ url_for('notificaciones.responder_solicitud', id_vinculacion=solicitud['id_vinculacion']) }}" method="POST" style="display: inline;">
+                        <button name="respuesta" value="aceptar" type="submit">Aceptar</button>
+                        <button name="respuesta" value="rechazar" type="submit">Rechazar</button>
+                    </form>
+                </li>
+            </div>
+
+        {% endfor %}
+    </ul>
+
+{% endblock %}

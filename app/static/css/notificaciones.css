@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Saira:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Saira', sans-serif;
+    font-weight: 400;
+}
+
+:root {
+    /* ------ MAIN COLORS ------ */
+    --color-primary: #DC2626;
+    --color-secondary: #EDEDED;
+    --color-background: #FFFFFF;
+    /* ------ TEXT COLORS ------ */
+    --color-text-primary: #222222;
+    --color-text-secondary: #5B5B5B;
+    /* ------ BUTTON COLORS ------ */
+    --color-button-primary: #EF4444;
+    --color-button-hover: #DC2626;
+    --color-button-active: #B91C1C;
+    /* ------ OTHERS COLORS ------ */
+    --color-border: #DFDFDF;
+    --color-flash-error-bg: #EEC8C5;
+    --color-flash-error-text: #CA0000;
+    --color-flash-success-bg: #C6ECC6;
+    --color-flash-success-text: #37A437;
+}
+
+body {
+    background-color: var(--color-background);
+}
+
+
+
+/* MAIN */
+main {
+    font-size: 24px;
+    height: 100vh;
+    color: #202020;
+    margin-top: 70px;
+    padding: 0 200px;
+    z-index: -1;
+}
+
+.notificacion-container {
+    list-style: none;
+    font-size: 1rem;
+    gap: 5rem;
+    margin-top: 1rem;
+    border: 1px solid var(--color-border);
+    padding: 1rem;
+    border-radius: 10px;
+    border-bottom: 1px solid var(--color-border);
+    border-right: 1px solid var(--color-border);
+    border-top: 1px solid var(--color-border);
+    border-left: 3px solid var(--color-primary);
+    cursor: pointer;
+    transition: all 0.1s ease-in-out;
+}
+
+.notificacion-container h1 {
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.notificacion-container li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.notificacion-container li .message {
+    display: flex;
+    flex-direction: column;
+}
+
+.notificacion-container li .message strong {
+    font-size: 1rem;
+    color: var(--color-text-primary);
+}
+.notificacion-container li .message strong span {
+    font-weight: 500;
+}
+
+.notificacion-container li .message .fecha {
+    font-size: 0.9rem;  
+    color: var(--color-text-secondary);
+    margin-top: .5rem;
+}
+
+.notificacion-container li form button {
+    border: none;
+    background: var(--color-button-primary);
+    cursor: pointer;
+    transition: all 0.1s ease-in-out;
+    font-size: 1.1rem;
+    padding: 5px 10px;
+    border-radius: 5px;
+    width: 100px;
+    color: var(--color-background);
+}
