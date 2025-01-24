@@ -45,60 +45,208 @@ main {
     z-index: -1;
 }
 
-.notificacion-container {
-    list-style: none;
-    font-size: 1rem;
-    gap: 5rem;
-    margin-top: 1rem;
-    border: 1px solid var(--color-border);
-    padding: 1rem;
-    border-radius: 10px;
-    border-bottom: 1px solid var(--color-border);
-    border-right: 1px solid var(--color-border);
-    border-top: 1px solid var(--color-border);
-    border-left: 3px solid var(--color-primary);
-    cursor: pointer;
-    transition: all 0.1s ease-in-out;
-}
-
-.notificacion-container h1 {
-    font-size: 1.3rem;
-    font-weight: 600;
-}
-
-.notificacion-container li {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.notificacion-container li .message {
+main .notificactions-title {
     display: flex;
     flex-direction: column;
 }
 
-.notificacion-container li .message strong {
-    font-size: 1rem;
+.notificactions-title h1 {
+    font-weight: 600;
+    font-size: 2rem;
     color: var(--color-text-primary);
 }
-.notificacion-container li .message strong span {
-    font-weight: 500;
+.notificactions-title p {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
 }
 
-.notificacion-container li .message .fecha {
-    font-size: 0.9rem;  
-    color: var(--color-text-secondary);
+.notifications-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    gap: 1rem;
+    height: auto;
+}
+
+
+.notifications-sections {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
     margin-top: .5rem;
 }
 
-.notificacion-container li form button {
+.section-filter {
+    width: 50%;
+    height: 50%;
+}
+.section-filter h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.section-filter form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 1rem;
+}
+.section-filter form select {
+    width: 100%;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid var(--color-border);
+    font-size: 1rem;
+    color: var(--color-text-primary);
+    cursor: pointer;
+}
+
+.section-filter form button {
+    width: 100%;
+    padding: 5px 10px;
+    border-radius: 5px;
     border: none;
     background: var(--color-button-primary);
     cursor: pointer;
     transition: all 0.1s ease-in-out;
-    font-size: 1.1rem;
-    padding: 5px 10px;
-    border-radius: 5px;
-    width: 100px;
+    font-size: 1rem;
     color: var(--color-background);
+    margin-bottom: 1rem;
+}
+.section-filter form button:hover {
+    background: var(--color-button-hover);
+}
+.section-filter form button:active {
+    background: var(--color-button-active);
+}
+
+
+.section-notificaction .notificacion {
+    list-style: none;
+    font-size: 1rem;
+    gap: 5rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--color-border);
+    padding: .5rem 1rem;
+    border-radius: 5px;
+    border-bottom: 1px solid var(--color-border);
+    border-right: 1px solid var(--color-border);
+    border-top: 1px solid var(--color-border);
+    border-left: 3px solid var(--color-primary);
+    transition: all 0.1s ease-in-out;
+}
+
+.notificacion h3 {
+    display: flex;
+    align-items: center;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+.notificacion h3 i {
+    margin-left: .3rem;
+    font-size: 1.5rem;
+    color: var(--color-primary);
+}
+
+.notificacion .message {
+    display: flex;
+    flex-direction: column;
+}
+.message strong {
+    font-size: 1rem;
+    color: var(--color-text-primary);
+}
+.message strong a {
+    font-weight: 500;
+    transition: all 0.1s ease-in-out;
+}
+.message strong a:hover {
+    text-decoration: underline;
+    color: var(--color-primary);
+}
+.message .fecha {
+    font-size: .9rem;
+    color: var(--color-text-secondary);
+}
+
+.notificacion form {
+    display: flex;
+    gap: .5rem;
+    margin-top: 1rem;
+}
+.notificacion form button {
+    padding: 3px 10px;
+    border-radius: 5px;
+    border: none;
+    background: var(--color-button-primary);
+    cursor: pointer;
+    transition: all 0.1s ease-in-out;
+    font-size: 1rem;
+    color: var(--color-background);
+    width: 100px;
+}
+.notificacion form button:hover {
+    background: var(--color-button-hover);
+}
+.notificacion form button:active {
+    background: var(--color-button-active);
+}
+
+
+
+
+
+
+/* RESPONSIVE */
+@media screen and (max-width: 1160px) {
+    main {
+        padding: 0 100px;
+    }
+
+    form .input-container {
+        gap: .5rem;
+    }
+}
+
+@media screen and (max-width: 950px) {
+    main {
+        padding: 0 20px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    main {
+        padding: 0px 20px;
+    }
+
+    .notifications-container {
+        flex-direction: column;
+    }
+
+    .notifications-container .notifications-sections {
+        border: none;
+        padding: 0;
+        margin-top: 1rem;
+    }
+
+    .notifications-container .section-filter {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .input-box input {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .input-container  {
+        display: flex;
+        flex-direction: column !important;
+        gap: none;
+    }
 }

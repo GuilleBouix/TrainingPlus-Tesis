@@ -5,24 +5,62 @@
 {% endblock %}
 
 {% block content %}
+    <div class="notificactions-title">
+        <h1>Tus Notificaciones</h1>
+        <p>Visualiza y gestiona tus notificaciones para mantenerte al día.</p>
+    </div>
 
-    <ul class="notificacion-container">
-        {% for solicitud in solicitudes %}
-            <div>
-                <h1>Solicitud de Conexión</h1>
-                <li>
-                    <div class="message">
-                        <strong>El entrenador <span>@{{ solicitud['nombre_usuario'] }}</span> ha solicitado conectarse contigo.</strong>
-                        <p class="fecha">{{ solicitud['fecha_solicitud'] }}</p>
+    <div class="notifications-container">
+        <div class="notifications-sections section-filter">
+            <h2>Filtros</h2>
+
+            <form action="" method="POST">
+                <select name="tipo" id="tipo">
+                    <option value="">Filtrar por Tipo</option>
+                    <option value="conexiones">Conexiones</option>
+                    <option value="mensajes">Mensajes</option>
+                </select>
+
+                <button type="submit">Eliminar Todas</button>
+            </form>
+        </div>
+
+
+
+        <div class="notifications-sections section-notificaction">
+            {% for solicitud in solicitudes %}
+                <ul class="notificacion">
+                    <li>
+                        <h3>Solicitud de Conexión <i class='bx bxs-group'></i></h3>
+                        <div class="message">
+                            <strong>El entrenador @<a href="#">{{ solicitud['nombre_usuario'] }}</a> ha solicitado conectarse contigo.</strong>
+                            <p class="fecha">{{ solicitud['fecha_solicitud'] }}</p>
+                        </div>
+                        <form action="{{ url_for('notificaciones.responder_solicitud', id_vinculacion=solicitud['id_vinculacion']) }}" method="POST">
+                            <button name="respuesta" value="aceptar" type="submit">Aceptar</button>
+                            <button name="respuesta" value="rechazar" type="submit">Rechazar</button>
+                        </form>
+                    </li>
+                </ul>
+                <!-- <ul class="notificacion">
+                    <div>
+                        <h1>Solicitud de Conexión</h1>
+                        <li>
+                            <div class="message">
+                                <strong>El entrenador <span>@{{ solicitud['nombre_usuario'] }}</span> ha solicitado conectarse contigo.</strong>
+                                <p class="fecha">{{ solicitud['fecha_solicitud'] }}</p>
+                            </div>
+                            <form action="{{ url_for('notificaciones.responder_solicitud', id_vinculacion=solicitud['id_vinculacion']) }}" method="POST" style="display: inline;">
+                                <button name="respuesta" value="aceptar" type="submit"><i class='bx bx-check'></i></button>
+                                <button name="respuesta" value="rechazar" type="submit"><i class='bx bx-trash'></i></button>
+                            </form>
+                        </li>
                     </div>
-                    <form action="{{ url_for('notificaciones.responder_solicitud', id_vinculacion=solicitud['id_vinculacion']) }}" method="POST" style="display: inline;">
-                        <button name="respuesta" value="aceptar" type="submit">Aceptar</button>
-                        <button name="respuesta" value="rechazar" type="submit">Rechazar</button>
-                    </form>
-                </li>
-            </div>
+                </ul> -->
+            {% endfor %}
+        </div>
+    </div>
 
-        {% endfor %}
-    </ul>
+
 
 {% endblock %}

@@ -46,11 +46,11 @@
         <ul class="nav-links">
             <i class='bx bx-x navCloseBtn'></i>
             <li><a href="{{ url_for('entrenamiento.entrenamiento') }}">ENTRENAMIENTO</a></li>
-            <li><a href="#">PROGRESO</a></li>
+            <!-- <li><a href="#">PROGRESO</a></li> -->
             <li><a href="{{ url_for('perfil.perfil', nombre_usuario=session['nombre_usuario']) }}">PERFIL</a></li>
             <li><a href="#">CONFIGURACIÓN</a></li>
             <li><a href="{{ url_for('auth.logout') }}">LOGOUT</a></li>
-            <li><a href="{{ url_for('notificaciones.listar_solicitudes') }}">NOTIFICACIONES</a></li>
+            <li><a href="{{ url_for('notificaciones.listar_solicitudes') }}" class="menu-notificacion">NOTIFICACIONES</a></li>
         </ul>
         
         <i class='bx bx-search icono-busqueda' id="iconoBusqueda"></i>
@@ -71,9 +71,9 @@
     </main>
 
 
-    <button class="btn-notification open-modal-notification">
-        <i class='bx bxs-bell'></i><span id="notification-count"></span>
-    </button>
+    <a href="{{ url_for('notificaciones.listar_solicitudes') }}" class="btn-notification open-modal-notification" title="Notificaciones">
+        <i class='bx bxs-bell'></i>
+    </a>
 
 
 

@@ -127,6 +127,10 @@ a span {
     transition: all .2s linear;
 }
 
+.nav .nav-links .menu-notificacion {
+    display: none;
+}
+
 .nav .nav-links a:hover {
     color: var(--color-primary);
 }
@@ -623,6 +627,10 @@ main {
         text-align: left;
     }
 
+    .nav .nav-links .menu-notificacion {
+        display: block;
+    }
+    
     .btn-notificaciones-nav {
         display: block;
     }
