@@ -10,6 +10,7 @@ notificaciones_bp = Blueprint('notificaciones', __name__)
 
 
 
+# Ruta de Enviar Solicitud
 @notificaciones_bp.route('/enviar_solicitud/<int:id_usuario_destino>', methods=['POST'])
 @login_required
 def enviar_solicitud(id_usuario_destino):
@@ -59,6 +60,7 @@ def enviar_solicitud(id_usuario_destino):
 
 
 
+# Ruta para listar las solicitudes pendientes
 @notificaciones_bp.route('/solicitudes', methods=['GET'])
 @login_required
 def listar_solicitudes():
@@ -74,11 +76,20 @@ def listar_solicitudes():
         JOIN usuario u ON v.id_usuario_origen = u.id_usuario
         WHERE v.id_usuario_destino = ? AND v.estado = 'pendiente'
     """, (id_usuario,))
-    
     solicitudes = cursor.fetchall()
+
+    # Obtener notificaciones
+    cursor.execute("""
+        SELECT id_notificacion, mensaje, fecha, leida
+        FROM notificaciones
+        WHERE id_usuario = ?
+        ORDER BY fecha DESC
+    """, (id_usuario,))
+    notificaciones = cursor.fetchall()
+
     conexion.close()
 
-    # Formatear la fecha antes de enviarla a la plantilla
+    # Formatear solicitudes pendientes
     solicitudes_formateadas = []
     for solicitud in solicitudes:
         id_vinculacion = solicitud[0]
@@ -87,9 +98,7 @@ def listar_solicitudes():
 
         # Convertir y formatear la fecha
         fecha_obj = datetime.strptime(fecha_solicitud, "%Y-%m-%d %H:%M")
-        fecha_formateada = fecha_obj.strftime("%d/%m/%Y - %H:%M")  # Formato d/m/Y - H:M
-        # Alternativamente, formato "D de M de YYYY"
-        # fecha_formateada = fecha_obj.strftime("%d de %B de %Y")
+        fecha_formateada = fecha_obj.strftime("%d/%m/%Y - %H:%M")
 
         solicitudes_formateadas.append({
             'id_vinculacion': id_vinculacion,
@@ -97,11 +106,34 @@ def listar_solicitudes():
             'fecha_solicitud': fecha_formateada
         })
 
-    return render_template('notificaciones.html', solicitudes=solicitudes_formateadas)
+    # Formatear notificaciones
+    notificaciones_formateadas = []
+    for notificacion in notificaciones:
+        id_notificacion = notificacion[0]
+        mensaje = notificacion[1]
+        fecha = notificacion[2]
+        leida = bool(notificacion[3])  # Convertir 0/1 a False/True
+
+        # Convertir y formatear la fecha
+        fecha_obj = datetime.strptime(fecha, "%Y-%m-%d %H:%M:%S")
+        fecha_formateada = fecha_obj.strftime("%d/%m/%Y - %H:%M")
+
+        notificaciones_formateadas.append({
+            'id_notificacion': id_notificacion,
+            'mensaje': mensaje,
+            'fecha': fecha_formateada,
+            'leida': leida
+        })
+
+    return render_template(
+        'notificaciones.html',
+        solicitudes=solicitudes_formateadas,
+        notificaciones=notificaciones_formateadas
+    )
 
 
 
-
+# Ruta para aceptar una solicitud
 @notificaciones_bp.route('/aceptar_vinculo/<token>', methods=['GET', 'POST'])
 @login_required
 def aceptar_vinculo(token):
@@ -167,37 +199,99 @@ def aceptar_vinculo(token):
         return redirect(url_for('usuario.usuario', id_usuario=id_usuario))
     
 
+
+# Ruta para responder a una solicitud
 @notificaciones_bp.route('/responder_solicitud/<int:id_vinculacion>', methods=['POST'])
 @login_required
 def responder_solicitud(id_vinculacion):
-    respuesta = request.form['respuesta']
-    id_usuario = session['id_usuario']
-
-    conexion = conexion_basedatos()
-    cursor = conexion.cursor()
+    respuesta = request.form.get('respuesta')
+    id_usuario_destino = session['id_usuario']
 
     try:
+        conexion = conexion_basedatos()
+        cursor = conexion.cursor()
+
+        # Obtener el entrenador (origen) asociado a esta solicitud
+        cursor.execute("""
+            SELECT id_usuario_origen 
+            FROM vinculaciones 
+            WHERE id_vinculacion = ?
+        """, (id_vinculacion,))
+        resultado = cursor.fetchone()
+
+        if not resultado:
+            flash("Solicitud no encontrada.", "error")
+            return redirect(url_for('notificaciones.listar_solicitudes'))
+
+        id_usuario_origen = resultado[0]
+
         if respuesta == 'aceptar':
-            # Actualizar el estado a "aceptado"
+            # Cambiar el estado de la solicitud a 'aceptada'
             cursor.execute("""
                 UPDATE vinculaciones
-                SET estado = 'aceptado'
-                WHERE id_vinculacion = ? AND id_usuario_destino = ?
-            """, (id_vinculacion, id_usuario))
-            flash("Solicitud aceptada.", "success")
+                SET estado = 'aceptada'
+                WHERE id_vinculacion = ?
+            """, (id_vinculacion,))
+
+            # Crear notificación para el entrenador
+            mensaje = f"El usuario @{session['nombre_usuario']} aceptó tu solicitud de conexión."
+            cursor.execute("""
+                INSERT INTO notificaciones (id_usuario, mensaje)
+                VALUES (?, ?)
+            """, (id_usuario_origen, mensaje))
+
+            flash("Solicitud aceptada y notificación enviada al entrenador.", "success")
+
         elif respuesta == 'rechazar':
-            # Actualizar el estado a "rechazado"
+            # Eliminar la solicitud de la tabla
             cursor.execute("""
-                UPDATE vinculaciones
-                SET estado = 'rechazado'
-                WHERE id_vinculacion = ? AND id_usuario_destino = ?
-            """, (id_vinculacion, id_usuario))
-            flash("Solicitud rechazada.", "info")
+                DELETE FROM vinculaciones
+                WHERE id_vinculacion = ?
+            """, (id_vinculacion,))
+
+            # Crear notificación para el entrenador sobre el rechazo
+            mensaje_rechazo = f"El usuario @{session['nombre_usuario']} rechazó tu solicitud de conexión."
+            cursor.execute("""
+                INSERT INTO notificaciones (id_usuario, mensaje)
+                VALUES (?, ?)
+            """, (id_usuario_origen, mensaje_rechazo))
+
+            flash("Solicitud rechazada y notificación enviada al entrenador.", "info")
 
         conexion.commit()
+        conexion.close()
+        return redirect(url_for('notificaciones.listar_solicitudes'))
+
     except Exception as e:
-        flash(f"Error al responder la solicitud: {e}", "error")
-    finally:
+        print(f"Error al procesar la solicitud: {e}")
+        flash("Error al procesar la solicitud.", "error")
+        return redirect(url_for('notificaciones.listar_solicitudes'))
+
+
+
+@notificaciones_bp.route('/eliminar_notificaciones', methods=['POST'])
+@login_required
+def eliminar_notificaciones():
+    tipo = request.form.get('tipo')
+    id_usuario = session['id_usuario']
+
+    try:
+        conexion = conexion_basedatos()
+        cursor = conexion.cursor()
+
+        # Eliminar notificaciones
+        cursor.execute("""
+            DELETE FROM notificaciones
+            WHERE id_usuario = ?
+        """, (id_usuario,))
+
+        conexion.commit()
         conexion.close()
 
-    return redirect(url_for('notificaciones.listar_solicitudes'))
+        flash("Notificaciones y vinculaciones eliminadas correctamente.", "success")
+        return redirect(url_for('notificaciones.listar_solicitudes'))
+
+    except Exception as e:
+        print(f"Error al eliminar notificaciones y vinculaciones: {e}")
+        flash("Error al eliminar las notificaciones y vinculaciones.", "error")
+        return redirect(url_for('notificaciones.listar_solicitudes'))

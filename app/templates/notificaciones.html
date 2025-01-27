@@ -14,7 +14,7 @@
         <div class="notifications-sections section-filter">
             <h2>Filtros</h2>
 
-            <form action="" method="POST">
+            <form action="{{ url_for('notificaciones.eliminar_notificaciones') }}" method="POST">
                 <select name="tipo" id="tipo">
                     <option value="">Filtrar por Tipo</option>
                     <option value="conexiones">Conexiones</option>
@@ -42,25 +42,23 @@
                         </form>
                     </li>
                 </ul>
-                <!-- <ul class="notificacion">
-                    <div>
-                        <h1>Solicitud de Conexión</h1>
-                        <li>
-                            <div class="message">
-                                <strong>El entrenador <span>@{{ solicitud['nombre_usuario'] }}</span> ha solicitado conectarse contigo.</strong>
-                                <p class="fecha">{{ solicitud['fecha_solicitud'] }}</p>
-                            </div>
-                            <form action="{{ url_for('notificaciones.responder_solicitud', id_vinculacion=solicitud['id_vinculacion']) }}" method="POST" style="display: inline;">
-                                <button name="respuesta" value="aceptar" type="submit"><i class='bx bx-check'></i></button>
-                                <button name="respuesta" value="rechazar" type="submit"><i class='bx bx-trash'></i></button>
-                            </form>
-                        </li>
-                    </div>
-                </ul> -->
             {% endfor %}
+        
+            {% for notificacion in notificaciones %}
+                <ul class="notificacion">
+                    <li class="{% if notificacion['leida'] %}leida{% else %}no-leida{% endif %}">
+                        <h3>Notificación <i class='bx bxs-bell'></i></h3>
+                        <div class="message">
+                            <strong>{{ notificacion['mensaje'] }}</strong>
+                            <p class="fecha">{{ notificacion['fecha'] }}</p>
+                        </div>
+                    </li>
+                </ul>
+            {% endfor %}
+        
+            {% if not solicitudes and not notificaciones %}
+                <p>No tienes notificaciones ni solicitudes pendientes.</p>
+            {% endif %}
         </div>
-    </div>
-
-
 
 {% endblock %}

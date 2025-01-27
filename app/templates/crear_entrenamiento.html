@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Crear Entrenamiento - Training+
+{% endblock %}
+
+{% block content %}
+
+    <form id="form-entrenamiento" class="crear_entrenamiento" method="POST" action="/crear_entrenamiento">
+        <!-- Selección del alumno -->
+        <label for="alumno">Selecciona un Alumno:</label>
+        <select id="alumno" name="id_alumno" required>
+            <option value="">Seleccionar</option>
+            {% for alumno in alumnos %}
+            <option value="{{ alumno.id_alumno }}">{{ alumno.nombre }} {{ alumno.apellido }}</option>
+            {% endfor %}
+        </select>
+
+        <!-- Nombre del entrenamiento y disciplina -->
+        <label for="nombre_entrenamiento">Nombre del Entrenamiento:</label>
+        <input type="text" id="nombre_entrenamiento" name="nombre_entrenamiento" required>
+
+        <label for="disciplina">Disciplina:</label>
+        <select name="disciplina" id="disciplina" required placeholder="Seleccionar">
+            <option value="">Seleccionar</option>
+            <option value="Calistenia">Calistenia</option>
+            <option value="Culturismo">Culturismo</option>
+            <option value="CrossFit">CrossFit</option>
+            <option value="Fitness">Fitness</option>
+            <option value="HIIT">HIIT</option>
+            <option value="Funcional">Entrenamiento Funcional</option>
+            <option value="Yoga">Yoga</option>
+        </select>
+
+        <!-- Duración del entrenamiento (en semanas) -->
+        <label for="duracion_semanas">Duración (semanas):</label>
+        <input type="number" id="duracion_semanas" name="duracion_semanas" min="1" required>
+        <button type="button" id="agregar_semanas">Generar semanas</button>
+
+        <!-- Contenedor dinámico de semanas -->
+        <div id="semanas-contenedor"></div>
+
+        <!-- Botón de envío final -->
+        <button type="submit">Guardar Entrenamiento</button>
+    </form>
+    
+    <script>
+        document.getElementById('agregar_semanas').addEventListener('click', function () {
+            const semanasContenedor = document.getElementById('semanas-contenedor');
+            const duracionSemanas = parseInt(document.getElementById('duracion_semanas').value);
+
+            // Crear dinámicamente las semanas y días.
+            for (let semana = 1; semana <= duracionSemanas; semana++) {
+                const semanaDiv = document.createElement('div');
+                semanaDiv.classList.add('semana');
+                semanaDiv.innerHTML = `
+                    <h3>Semana ${semana}</h3>
+                    <label>Días en la semana ${semana}:</label>
+                    <input type="number" class="dias-semana" name="semanas[${semana}][dias]" min="1" required>
+                    <button type="button" class="agregar-dias" data-semana="${semana}">Agregar Días</button>
+                    <div id="dias-semana-${semana}" class="dias-contenedor"></div>
+                `;
+                semanasContenedor.appendChild(semanaDiv);
+            }
+
+            // Agregar eventos para los días de cada semana.
+            document.querySelectorAll('.agregar-dias').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    const semana = this.dataset.semana;
+                    const diasContenedor = document.getElementById(`dias-semana-${semana}`);
+                    const diasSemana = parseInt(document.querySelector(`.dias-semana[name="semanas[${semana}][dias]"]`).value);
+
+                    for (let dia = 1; dia <= diasSemana; dia++) {
+                        const diaDiv = document.createElement('div');
+                        diaDiv.classList.add('dia');
+                        diaDiv.innerHTML = `
+                            <h4>Día ${dia}</h4>
+                            <label for="nombre_rutina_${semana}_${dia}">Nombre de la rutina:</label>
+                            <input type="text" name="semanas[${semana}][dias][${dia}][nombre_rutina]" required>
+                            <label>Ejercicios para este día:</label>
+                            <input type="number" class="ejercicios-dia" name="semanas[${semana}][dias][${dia}][ejercicios]" min="1" required>
+                            <button type="button" class="agregar-ejercicios" data-semana="${semana}" data-dia="${dia}">Agregar Ejercicios</button>
+                            <div id="ejercicios-dia-${semana}-${dia}" class="ejercicios-contenedor"></div>
+                        `;
+                        diasContenedor.appendChild(diaDiv);
+                    }
+
+                    // Eventos para agregar ejercicios.
+                    document.querySelectorAll('.agregar-ejercicios').forEach(btnEjercicio => {
+                        btnEjercicio.addEventListener('click', function () {
+                            const semana = this.dataset.semana;
+                            const dia = this.dataset.dia;
+                            const ejerciciosContenedor = document.getElementById(`ejercicios-dia-${semana}-${dia}`);
+                            const numEjercicios = parseInt(document.querySelector(`.ejercicios-dia[name="semanas[${semana}][dias][${dia}][ejercicios]"]`).value);
+
+                            for (let ejercicio = 1; ejercicio <= numEjercicios; ejercicio++) {
+                                const ejercicioDiv = document.createElement('div');
+                                ejercicioDiv.classList.add('ejercicio');
+                                ejercicioDiv.innerHTML = `
+                                    <h5>Ejercicio ${ejercicio}</h5>
+                                    <label>Selecciona un ejercicio:</label>
+                                    <select name="semanas[${semana}][dias][${dia}][ejercicios][${ejercicio}][id_ejercicio]" required>
+                                        <option value="">Seleccionar</option>
+                                        {% for ejercicio in ejercicios %}
+                                        <option value="{{ ejercicio.id_ejercicio }}">{{ ejercicio.nombre_ejercicio }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <label>Series:</label>
+                                    <input type="number" name="semanas[${semana}][dias][${dia}][ejercicios][${ejercicio}][series]" required>
+                                    <label>Repeticiones:</label>
+                                    <input type="number" name="semanas[${semana}][dias][${dia}][ejercicios][${ejercicio}][repeticiones]" required>
+                                    <label>Peso:</label>
+                                    <input type="number" name="semanas[${semana}][dias][${dia}][ejercicios][${ejercicio}][peso]">
+                                    <label>Tiempo de descanso (segundos):</label>
+                                    <input type="number" name="semanas[${semana}][dias][${dia}][ejercicios][${ejercicio}][tiempo_descanso]" required>
+                                `;
+                                ejerciciosContenedor.appendChild(ejercicioDiv);
+                            }
+                        });
+                    });
+                });
+            });
+        });
+    </script>  
+
+{% endblock %}
