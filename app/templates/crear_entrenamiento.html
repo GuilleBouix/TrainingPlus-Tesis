@@ -6,24 +6,28 @@
 
 {% block content %}
 
-    <form id="form-entrenamiento" class="crear_entrenamiento" method="POST" action="/crear_entrenamiento">
+    <div class="crear-entrenamiento-title">
+        <h1>Crear Entrenamiento</h1>
+    </div>
+
+    <form id="form-entrenamiento" class="crear-entrenamiento" method="POST" action="/crear_entrenamiento">
         <!-- Selección del alumno -->
-        <label for="alumno">Selecciona un Alumno:</label>
+        <label for="alumno">Seleccionar Alumno:</label>
         <select id="alumno" name="id_alumno" required>
             <option value="">Seleccionar</option>
             {% for alumno in alumnos %}
-            <option value="{{ alumno.id_alumno }}">{{ alumno.nombre }} {{ alumno.apellido }}</option>
+            <option value="{{ alumno.id_alumno }}" selected>{{ alumno.nombre }} {{ alumno.apellido }}</option>
             {% endfor %}
         </select>
 
         <!-- Nombre del entrenamiento y disciplina -->
         <label for="nombre_entrenamiento">Nombre del Entrenamiento:</label>
-        <input type="text" id="nombre_entrenamiento" name="nombre_entrenamiento" required>
+        <input type="text" id="nombre_entrenamiento" name="nombre_entrenamiento" value="Aumento de fuerza" required placeholder="Ingresa el nombre del entrenamiento">
 
-        <label for="disciplina">Disciplina:</label>
+        <label for="disciplina">Seleccionar Disciplina:</label>
         <select name="disciplina" id="disciplina" required placeholder="Seleccionar">
             <option value="">Seleccionar</option>
-            <option value="Calistenia">Calistenia</option>
+            <option value="Calistenia" selected>Calistenia</option>
             <option value="Culturismo">Culturismo</option>
             <option value="CrossFit">CrossFit</option>
             <option value="Fitness">Fitness</option>
@@ -33,15 +37,16 @@
         </select>
 
         <!-- Duración del entrenamiento (en semanas) -->
-        <label for="duracion_semanas">Duración (semanas):</label>
-        <input type="number" id="duracion_semanas" name="duracion_semanas" min="1" required>
-        <button type="button" id="agregar_semanas">Generar semanas</button>
+        <label for="duracion_semanas">Duración (en semanas):</label>
+        <input type="number" id="duracion_semanas" name="duracion_semanas" min="1" value="1" required placeholder="Ingresa la duración en semanas">
+        
+        <button type="button" id="agregar_semanas">Generar Semanas</button>
 
         <!-- Contenedor dinámico de semanas -->
         <div id="semanas-contenedor"></div>
 
         <!-- Botón de envío final -->
-        <button type="submit">Guardar Entrenamiento</button>
+        <button type="submit">Crear Entrenamiento</button>
     </form>
     
     <script>
@@ -55,7 +60,7 @@
                 semanaDiv.classList.add('semana');
                 semanaDiv.innerHTML = `
                     <h3>Semana ${semana}</h3>
-                    <label>Días en la semana ${semana}:</label>
+                    <label>Días en la Semana ${semana}:</label>
                     <input type="number" class="dias-semana" name="semanas[${semana}][dias]" min="1" required>
                     <button type="button" class="agregar-dias" data-semana="${semana}">Agregar Días</button>
                     <div id="dias-semana-${semana}" class="dias-contenedor"></div>
@@ -98,7 +103,7 @@
                                 ejercicioDiv.classList.add('ejercicio');
                                 ejercicioDiv.innerHTML = `
                                     <h5>Ejercicio ${ejercicio}</h5>
-                                    <label>Selecciona un ejercicio:</label>
+                                    <label>Selecciona un Ejercicio:</label>
                                     <select name="semanas[${semana}][dias][${dia}][ejercicios][${ejercicio}][id_ejercicio]" required>
                                         <option value="">Seleccionar</option>
                                         {% for ejercicio in ejercicios %}
