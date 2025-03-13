@@ -14,6 +14,20 @@
             <a href="{{ url_for('entrenamiento.crear_entrenamiento') }}" class="btn-new-training"><i class='bx bx-plus'></i> Nuevo Entrenamiento</a>
         </div>
         
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flash-messages">
+                    {% for category, message in messages %}
+                        <li class="flash {{ category }}">
+                            <i class="{{ 'bx bxs-error-circle' if category == 'error' else 'bx bxs-check-circle' }}"></i>
+                            {{ message }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+
         <div class="filters-box">
             <button class="filter active">Todos</button>
             <button class="filter">Activos</button>
@@ -21,6 +35,48 @@
         </div>
 
         <div class="training-box">
+            {% for entrenamiento in entrenamientos %}
+                <div class="training">
+                    <div class="tipo">
+                        <h3>{{ entrenamiento.disciplina }}</h3>
+                        <i class='bx bx-dumbbell'></i>
+                    </div>
+                    
+                    <h1>{{ entrenamiento.nombre_entrenamiento }}</h1>
+        
+                    <div class="duration">
+                        <p><i class='bx bx-time-five'></i> {{ entrenamiento.duracion_semanas }} Semanas</p>
+                    </div>
+        
+                    <div class="trainer-content">
+                        <img src="{{ url_for('static', filename='uploads/users/trainer' ~ entrenamiento.id_entrenador ~ '-profile.webp') }}" alt="Trainer">
+                        <div class="trainer-info">
+                            <h3>Entrenador</h3>
+                            <p>{{ entrenamiento.entrenador_nombre }} {{ entrenamiento.entrenador_apellido }}</p>
+
+                        </div>
+                    </div>
+        
+                    <div class="progress">
+                        <p>Progreso</p>
+                        <span class="progress-percentage">{{ entrenamiento.progreso }}%</span>
+                    </div>
+        
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 100%"></div>
+                    </div>
+        
+                    <div class="actions">
+                        <a class="btn-view-training" href="{{ url_for('rutina.rutina', id=entrenamiento.id_entrenamiento) }}">
+                            Ir al Entrenamiento <i class='bx bx-chevron-right'></i>
+                        </a>
+                        <button class="btn-delete-training"><i class='bx bxs-pencil'></i></button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- <div class="training-box">
             <div class="training">
                 <div class="tipo">
                     <h3>Fitness</h3>
@@ -56,79 +112,6 @@
                 </div>
 
             </div>
-
-            <div class="training">
-                <div class="tipo">
-                    <h3 style="background-color: #cc66cc;">Crossfit</h3>
-                    <i class='bx bx-dumbbell'></i>
-                </div>
-                
-                <h1>WOD Intensivo</h1>
-
-                <div class="duration">
-                    <p><i class='bx bx-time-five'></i> 8 Semanas</p>
-                </div>
-
-                <div class="trainer-content">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2eXSX1ZyQcetKvMjML__XtfYfVuGNbsFISw&s" alt="Trainer">
-                    <div class="trainer-info">
-                        <h3>Entrenador</h3>
-                        <p>Roberto García</p>
-                    </div>
-                </div>
-
-                <div class="progress">
-                    <p>Progreso</p>
-                    <span class="progress-percentage">50%</span>
-                </div>
-
-                <div class="progress-bar-container">
-                    <div class="progress-bar" style="width: 50%;"></div>
-                </div>
-
-                <div class="actions">
-                    <a class="btn-view-training" href="{{ url_for('rutina.rutina', id=2) }}">Ir al Entrenamiento <i class='bx bx-chevron-right'></i></a>
-                    <button class="btn-delete-training"><i class='bx bxs-pencil'></i></button>
-                </div>
-            </div>
-
-            <div class="training">
-                <div class="tipo">
-                    <h3 style="background-color: #71cc66;">Yoga</h3>
-                    <i class='bx bx-dumbbell'></i>
-                </div>
-                
-                <h1>Flexibilidad y Balance</h1>
-
-                <div class="duration">
-                    <p><i class='bx bx-time-five'></i> 6 Semanas</p>
-                </div>
-
-                <div class="trainer-content">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQb3UIidM_lxE37bc_p5RI-rir-zNbnGuj2FQ&s" alt="Trainer">
-                    <div class="trainer-info">
-                        <h3>Entrenador</h3>
-                        <p>Irene González</p>
-                    </div>
-                </div>
-
-                <div class="progress">
-                    <p>Progreso</p>
-                    <span class="progress-percentage">25%</span>
-                </div>
-
-                <div class="progress-bar-container">
-                    <div class="progress-bar" style="width: 25%;"></div>
-                </div>
-
-                <div class="actions">
-                    <a class="btn-view-training" href="{{ url_for('rutina.rutina', id=3) }}">Ir al Entrenamiento <i class='bx bx-chevron-right'></i></a>
-                    <button class="btn-delete-training"><i class='bx bxs-pencil'></i></button>
-                </div>
-
-            </div>
-
-        </div>
-        
+        </div> -->
     </div>
 {% endblock %}

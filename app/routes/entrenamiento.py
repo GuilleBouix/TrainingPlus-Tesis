@@ -13,10 +13,33 @@ entrenamiento_bp = Blueprint('entrenamiento', __name__)
 @entrenamiento_bp.route('/entrenamiento')
 @login_required
 @verificar_formulario_completo
-def entrenamiento():    
-    user_role = session.get('rol')
-    
-    return render_template('entrenamiento.html', user_role=user_role)
+def entrenamiento():
+    user_id = session.get('id_usuario')
+
+    db = conexion_basedatos()
+
+    # Obtener id_alumno si el usuario es un alumno
+    alumno = db.execute("SELECT id_alumno FROM alumno WHERE id_usuario = ?", (user_id,)).fetchone()
+    id_alumno = alumno['id_alumno'] if alumno else None
+
+    # Buscar entrenamientos del usuario logueado
+    entrenamientos = []
+
+    # Si el usuario es entrenador, buscar entrenamientos donde id_entrenador = id_usuario
+    entrenamientos += db.execute("""
+        SELECT * FROM entrenamiento WHERE id_entrenador = ?
+    """, (user_id,)).fetchall()
+
+    # Si el usuario es alumno, buscar entrenamientos donde id_alumno = id_alumno
+    if id_alumno:
+        entrenamientos += db.execute("""
+            SELECT * FROM entrenamiento WHERE id_alumno = ?
+        """, (id_alumno,)).fetchall()
+
+    print(f"Entrenamientos obtenidos: {entrenamientos}")
+
+    return render_template('entrenamiento.html', entrenamientos=entrenamientos)
+
 
 
 
@@ -97,7 +120,7 @@ def crear_entrenamiento():
 
             # Confirmar cambios en la base de datos
             conexion.commit()
-            print("Entrenamiento creado exitosamente.", "success")
+            flash("¡Entrenamiento creado exitosamente!", "success")
             return redirect(url_for('entrenamiento.entrenamiento'))
 
         except Exception as e:

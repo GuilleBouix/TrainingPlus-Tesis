@@ -12,7 +12,7 @@
 :root {
     /* ------ MAIN COLORS ------ */
     --color-primary: #DC2626;
-    --color-secondary: #EDEDED;
+    --color-secondary: #f3f3f3;
     --color-background: #FFFFFF;
     /* ------ TEXT COLORS ------ */
     --color-text-primary: #222222;
@@ -38,33 +38,13 @@ body {
 /* MAIN */
 main {
     font-size: 16px;
-    min-height: 100vh;
-    color: #202020;
-    margin-top: 70px;
-    padding: 0 5%;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
-.crear-entrenamiento-title h1 {
-    font-weight: 600;
-    font-size: 2rem;
-    color: var(--color-text-primary);
-    margin-bottom: 0.5rem;
-}
-
-.crear-entrenamiento-title p {
-    font-size: 1rem;
-    color: var(--color-text-secondary);
-    margin-bottom: 1.5rem;
-}
 
 /* FORM */
 .crear-entrenamiento {
     display: flex;
     flex-direction: column;
-    align-items: start;
     justify-content: center;
     border-radius: 10px;
     border: 1px solid var(--color-border);
@@ -73,43 +53,112 @@ main {
     background-color: var(--color-background);
 }
 
-.crear-entrenamiento label {
-    font-size: 1rem;
-    color: var(--color-text-primary);
+.crear-entrenamiento .crear-entrenamiento-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
 }
 
-.crear-entrenamiento input,
-.crear-entrenamiento select {
-    width: 100%;
+.crear-entrenamiento-title h1 {
+    color: var(--color-text-primary);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/* BARRA DE PROGRESO */
+.progreso-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.step {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: white;
+    border: 2px solid var(--color-text-secondary);
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.line {
+    width: 100px;
+    height: 2px;
+    background: var(--color-text-secondary);
+    transition: all 0.3s ease;
+}
+
+.active {
+    background: var(--color-button-primary);
+    color: var(--color-background);
+    border-color: var(--color-button-primary);
+}
+
+.completed {
+    background: var(--color-button-primary);
+    color: var(--color-background);
+    border-color: var(--color-button-primary);
+}
+
+.completed::before {
+    content: "✓";
+    font-size: .9rem;
+}
+
+.line.completed {
+    background: var(--color-button-primary);
+}
+
+
+
+
+
+
+/* SECCION 1 */
+.crear-entrenamiento .seccion-1 {
+    display: flex;
+    flex-direction: column;
+}
+.seccion-1 .inputs {
+    display: flex;
+    flex-direction: column;
     margin-bottom: 1rem;
+}
+.seccion-1 .inputs label {
+    color: var(--color-text-primary);
+}
+.seccion-1 .inputs input,
+.seccion-1 .inputs select {
     outline: none;
-    padding: 0.7rem;
+    padding: 0.5rem;
     border: 1px solid var(--color-border);
     border-radius: 5px;
     font-size: 1rem;
     resize: none;
     background-color: var(--color-background);
-    transition: border-color 0.3s ease;
 }
-
-.crear-entrenamiento select:hover {
+.seccion-1 .inputs select {
     cursor: pointer;
 }
 
-.crear-entrenamiento button {
-    width: 30%;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--color-button-primary);
+.seccion-1 button,
+.seccion-2 button {
+    padding: 0.5rem 1rem;
     border: none;
     border-radius: 5px;
-    padding: 0.7rem 1.2rem;
-    font-size: 1rem;
+    background-color: var(--color-button-primary);
     color: var(--color-background);
+    font-size: 1rem;
     cursor: pointer;
     transition: all .1s ease-in-out;
-    margin-top: 1rem;
+    width: 200px;
 }
 button:hover {
     background-color: var(--color-button-hover);
@@ -118,96 +167,280 @@ button:active {
     background-color: var(--color-button-active);
 }
 
-/* Semanas */
-.semana {
-    width: 100%;
-    border-radius: 10px;
+
+/* SECCION 2 */
+.details-semana {
+    margin: 1rem 0;
+    border-radius: 5px;
+    background-color: var(--color-background);
     border: 1px solid var(--color-border);
-    padding: 1rem;
-    background-color: #f9f9f9;
+    transition: all 0.3s ease;
 }
-
-.semana h3 {
-    font-size: 1.3rem;
-    color: var(--color-text-primary);
-    margin-bottom: 1rem;
-    font-weight: 500;
-}
-
-.semana-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 1rem;
-}
-
-/* Días */
-.dia {
-    background-color: #ffffff;
+.details-semana[open] {
     border: 1px solid var(--color-border);
-    border-radius: 8px;
-    padding: 1.2rem;
 }
 
-.dia h4 {
-    font-size: 1.1rem;
-    color: var(--color-text-primary);
-    margin-bottom: 1rem;
-}
-
-.dia-content {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
-
-/* Ejercicios */
-.ejercicio {
-    background-color: #f5f5f5;
-    border: 1px solid #e0e0e0;
-    border-radius: 6px;
+summary {
+    font-weight: 600;
+    cursor: pointer;
     padding: 1rem;
-    margin-top: 1rem;
+    background-color: var(--color-button-primary);
+    color: var(--color-background);
+    border-radius: 5px;
+    list-style: none; /* Oculta el ícono por defecto */
+    display: flex; /* Usa Flexbox */
+    justify-content: space-between; /* Alinea el contenido y el ícono */
+    align-items: center; /* Centra verticalmente */
+    transition: background-color 0.1s ease-in-out;
+}
+summary::-webkit-details-marker {
+    display: none;
+}
+summary::after {
+    font-family: "boxicons"; /* Usa la fuente de Boxicons */
+    content: "\ea4a"; /* Código del ícono bx-chevron-down */
+    font-size: 20px;
+    transition: transform .1s ease-in-out;
 }
 
-.ejercicio h5 {
+details[open] summary::after {
+    transition: transform .1s ease-in-out;
+}
+summary:hover {
+    background-color: var(--color-button-hover);
+}
+
+/* Animación al desplegar el contenido */
+details div {
+    padding: 1rem;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+details[open] div {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.dias-container {
+    display: flex;
+    flex-direction: column;
+}
+.dias-container label {
+    color: var(--color-text-primary);
+}
+.dias-container input {
+    outline: none;
+    padding: 0.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 5px;
     font-size: 1rem;
+    resize: none;
+    background-color: var(--color-background);
+}
+
+
+/* SECCION 3 */
+.seccion-3 button,
+.seccion-2 button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--color-button-primary);
+    color: var(--color-background);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all .1s ease-in-out;
+    width: 200px;
+    margin-top: 1rem !important;
+}
+.seccion-3 button:hover,
+.seccion-2 button:hover {
+    background-color: var(--color-button-hover);
+}
+.seccion-3 button:active,
+.seccion-2 button:hover {
+    background-color: var(--color-button-active);
+}
+
+
+.details-dia {
+    margin: 1rem;
+    border-radius: 5px;
+    background-color: var(--color-background);
+    transition: all 0.3s ease;
+}
+.details-dia[open] {
+    border: 1px solid var(--color-border);
+}
+
+.rutina-container {
+    display: flex;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.rutina-container .rutina {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.rutina label {
     color: var(--color-text-primary);
-    margin-bottom: 0.8rem;
+}
+.rutina input {
+    outline: none;
+    padding: 0.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 5px;
+    font-size: 1rem;
+    resize: none;
+    background-color: var(--color-background);
 }
 
-.ejercicio-content {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
+.details-ejercicio {
+    margin: 1rem;
+    border-radius: 5px;
+    background-color: var(--color-background);
+    transition: all 0.3s ease;
+}
+.details-ejercicio[open] {
+    border: 1px solid var(--color-border);
 }
 
-/* Input groups */
-.input-group {
+.ejercicios-container {
     display: flex;
     flex-direction: column;
 }
 
-/* Responsive design */
+.inputs-container {
+    display: flex;
+    padding: 0;
+}
+
+.inputs-container .inputs {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.ejercicios-container select,
+.inputs-container .inputs input {
+    outline: none;
+    padding: 0.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 5px;
+    font-size: 1rem;
+    resize: none;
+    background-color: var(--color-background);
+}
+
+.btn-agregar-ejercicio {
+    margin: 1rem;
+}
+
+
+
+
+/* RESPONSIVE */
+@media screen and (max-width: 1160px) {
+    main {
+        padding: 0 100px;
+    }
+}
+
+@media screen and (max-width: 950px) {
+    main {
+        padding: 0 20px;
+    }
+}
+
 @media (max-width: 768px) {
     main {
         padding: 0 1rem;
     }
 
     .crear-entrenamiento {
-        padding: 0;
         border: none;
+        padding: 0;
     }
+
+    .crear-entrenamiento .crear-entrenamiento-title {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .progreso-container {
+        gap: 0;
+        margin-bottom: 1rem;
+    }
+
+    .line {
+        width: 75px;
+    }
+
+    .crear-entrenamiento .seccion-1 {
+        flex-direction: column;
+        gap: 0;
+    }
+
+
     .crear-entrenamiento button {
         width: 100%;
     }
 
-    .semana-content,
-    .dia-content {
-        flex-direction: column;
+    /* SECCION 2 */
+    .details-semana {
+        margin: 0.5rem 0; /* Menos margen */
+        padding: 0.5rem; /* Menos padding */
+    }
+    
+    .dias-container {
+        flex-direction: column; /* Asegura que todo quede en columna */
+        gap: 0.5rem;
     }
 
-    .ejercicio-content {
-        grid-template-columns: 1fr;
+    .dias-container input {
+        width: 100%; /* Ocupa todo el ancho */
+    }
+
+    /* SECCION 3 */
+    .details-dia {
+        margin: 0.5rem 0;
+        padding: 0.5rem;
+    }
+
+    .rutina-container {
+        flex-direction: column; /* Acomoda en columna */
+        gap: 0;
+    }
+
+    .rutina input {
+        width: 100%;
+    }
+
+    .details-ejercicio {
+        margin: 0.5rem 0;
+        padding: 0.5rem;
+    }
+
+    .inputs-container {
+        flex-direction: column; /* Hace que los inputs estén en columna */
+        gap: 0;
+    }
+
+    .inputs-container .inputs input,
+    .ejercicios-container select {
+        width: 100%;
+    }
+
+}
+
+@media (max-width: 480px) {
+    .crear-entrenamiento-title h1 {
+        font-size: 1.75rem;
+    }
+    .crear-entrenamiento-title p {
+        font-size: .95rem;
     }
 }
