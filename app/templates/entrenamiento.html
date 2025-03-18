@@ -53,13 +53,12 @@
                         <div class="trainer-info">
                             <h3>Entrenador</h3>
                             <p>{{ entrenamiento.entrenador_nombre }} {{ entrenamiento.entrenador_apellido }}</p>
-
                         </div>
                     </div>
         
                     <div class="progress">
                         <p>Progreso</p>
-                        <span class="progress-percentage">{{ entrenamiento.progreso }}%</span>
+                        <span class="progress-percentage">100{{ entrenamiento.progreso }}%</span>
                     </div>
         
                     <div class="progress-bar-container">
@@ -67,7 +66,7 @@
                     </div>
         
                     <div class="actions">
-                        <a class="btn-view-training" href="{{ url_for('rutina.rutina', id=entrenamiento.id_entrenamiento) }}">
+                        <a class="btn-view-training" href="{{ url_for('rutina.rutina', id_entrenamiento=entrenamiento.id_entrenamiento) }}">
                             Ir al Entrenamiento <i class='bx bx-chevron-right'></i>
                         </a>
                         <button class="btn-delete-training"><i class='bx bxs-pencil'></i></button>
@@ -76,42 +75,6 @@
             {% endfor %}
         </div>
 
-        <!-- <div class="training-box">
-            <div class="training">
-                <div class="tipo">
-                    <h3>Fitness</h3>
-                    <i class='bx bx-dumbbell'></i>
-                </div>
-                
-                <h1>Volumen de Masa Muscular</h1>
 
-                <div class="duration">
-                    <p><i class='bx bx-time-five'></i> 12 Semanas</p>
-                </div>
-
-                <div class="trainer-content">
-                    <img src="https://imgcdn.stablediffusionweb.com/2024/5/26/7c87c14a-9112-4dfb-98e6-749143527fbe.jpg" alt="Trainer">
-                    <div class="trainer-info">
-                        <h3>Entrenador</h3>
-                        <p>Carlos Pérez</p>
-                    </div>
-                </div>
-
-                <div class="progress">
-                    <p>Progreso</p>
-                    <span class="progress-percentage">75%</span>
-                </div>
-
-                <div class="progress-bar-container">
-                    <div class="progress-bar" style="width: 75%;"></div>
-                </div>
-
-                <div class="actions">
-                    <a class="btn-view-training" href="{{ url_for('rutina.rutina', id=1) }}">Ir al Entrenamiento <i class='bx bx-chevron-right'></i></a>
-                    <button class="btn-delete-training"><i class='bx bxs-pencil'></i></button>
-                </div>
-
-            </div>
-        </div> -->
     </div>
 {% endblock %}

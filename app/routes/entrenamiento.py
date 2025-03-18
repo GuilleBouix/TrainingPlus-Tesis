@@ -27,16 +27,24 @@ def entrenamiento():
 
     # Si el usuario es entrenador, buscar entrenamientos donde id_entrenador = id_usuario
     entrenamientos += db.execute("""
-        SELECT * FROM entrenamiento WHERE id_entrenador = ?
+        SELECT entrenamiento.*, 
+            COALESCE(entrenador.nombre, 'Desconocido') AS entrenador_nombre, 
+            COALESCE(entrenador.apellido, '') AS entrenador_apellido
+        FROM entrenamiento
+        LEFT JOIN entrenador ON entrenamiento.id_entrenador = entrenador.id_usuario
+        WHERE entrenamiento.id_entrenador = ?
     """, (user_id,)).fetchall()
 
     # Si el usuario es alumno, buscar entrenamientos donde id_alumno = id_alumno
     if id_alumno:
         entrenamientos += db.execute("""
-            SELECT * FROM entrenamiento WHERE id_alumno = ?
+            SELECT entrenamiento.*, 
+                COALESCE(entrenador.nombre, 'Desconocido') AS entrenador_nombre, 
+                COALESCE(entrenador.apellido, '') AS entrenador_apellido
+            FROM entrenamiento
+            LEFT JOIN entrenador ON entrenamiento.id_entrenador = entrenador.id_usuario
+            WHERE entrenamiento.id_alumno = ?
         """, (id_alumno,)).fetchall()
-
-    print(f"Entrenamientos obtenidos: {entrenamientos}")
 
     return render_template('entrenamiento.html', entrenamientos=entrenamientos)
 

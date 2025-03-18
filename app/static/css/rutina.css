@@ -55,7 +55,13 @@ main {
     font-size: 2rem;
     color: var(--color-text-primary);
 }
-.title p {
+
+.title .routine-data {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+.routine-data p {
     font-size: 1rem;
     color: var(--color-text-secondary);
 }
@@ -70,17 +76,17 @@ main {
     margin-top: 1rem;
     border: 1px solid var(--color-button-primary);
     background: linear-gradient(325deg, rgba(239,68,68,1) 0%, rgba(220,38,38,1) 100%);
+    padding: 15px;
 }
 
 .plan-container .weeks {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 3rem;
-    margin: 1rem 0;
+    gap: 2rem;
 }
 .weeks h1 {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     font-weight: 600;
     color: var(--color-background);
 }
@@ -99,7 +105,7 @@ main {
 }
 .weeks .previous-week:hover,
 .weeks .next-week:hover {
-    transform: scale(1.15);
+    transform: scale(1.1);
 }
 .weeks .previous-week:active,
 .weeks .next-week:active {
@@ -130,7 +136,7 @@ main {
     background-color: var(--color-background);
     color: var(--color-text-primary);
     cursor: pointer;
-    padding: 15px;
+    padding: 10px;
     font-size: 16px;
     font-weight: bold;
     display: flex;
@@ -140,7 +146,7 @@ main {
     border-bottom: 1px solid var(--color-border);
 }
 .accordion-header h1 {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     font-weight: 400;
 }
 .accordion-header h1 span {
@@ -186,7 +192,7 @@ main {
 }
 
 .accordion-content h3 {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     font-weight: 600;
 }
 .accordion-content .parameters {
@@ -219,7 +225,7 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 10px 15px;
+    padding: 10px 20px;
     background-color: var(--color-button-primary);
     color: var(--color-background);
     border: none;
@@ -248,16 +254,59 @@ main {
     font-size: 1rem;
 }
 
+.accordion-content .registers {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+.registers input {
+    border: 1px solid var(--color-border);
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 1rem;
+    width: 100%;
+    height: 40px;
+    color: var(--color-primary);
+    outline: none;
+    transition: all 0.2s ease-in-out;
+}
+.registers input:focus {
+    border-color: var(--color-primary);
+}
+
 .accordion-content textarea {
     resize: none; /* Deshabilita el redimensionamiento */
     width: 100%; /* Ocupa el 100% del contenedor */
-    border: 1px solid var(--color-primary); /* Borde de color rojo */
+    border: 1px solid var(--color-border); /* Borde de color rojo */
     padding: 10px;
     border-radius: 5px; /* Esquinas redondeadas */
     overflow: hidden; /* Evita el desbordamiento */
     outline: var(--color-button-active);
-    height: 100px;
-    margin-bottom: 1rem;
+    height: 130px;
+    font-size: 1rem;
+    transition: all 0.2s ease-in-out;
+}
+.accordion-content textarea:focus {
+    border-color: var(--color-primary);
+}
+
+.save-day {
+    margin: 1rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: var(--color-button-primary);
+    color: var(--color-background);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    font-size: 1rem;
+    height: 40px;
+    margin-left: auto;
 }
 
 
@@ -280,10 +329,20 @@ main {
     main {
         padding: 0px 20px;
     }
-}
 
-@media screen and (max-width: 480px) {
     .accordion-content .parameters {
         flex-direction: column;
+    }
+
+    .accordion-content .registers {
+        flex-direction: column;
+    }
+
+    .registers div {
+        width: 100%;
+    }
+
+    .save-day {
+        width: 100%;
     }
 }
