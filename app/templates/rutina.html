@@ -1,108 +1,132 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Rutina - Training+
+    {{ entrenamiento.nombre_entrenamiento }} - Training+
 {% endblock %}
 
 {% block content %}
-
     <div class="routine-container">
         <div class="routine-header">
             <div class="title">
-                <h1>Nombre del Entrenamiento</h1>
+                <h1>{{ entrenamiento.nombre_entrenamiento }}</h1>
                 <div class="routine-data">
-                    <p>
-                        Disciplina: Fitness
-                    </p>
-
-                    <p>
-                        Duración: 8 Semanas
-                    </p>
+                    <p>Disciplina: {{ entrenamiento.disciplina }}</p>
+                    <p>Duración: {{ entrenamiento.duracion_semanas }} Semanas</p>
                 </div>
             </div>
         </div>
 
         <div class="plan-container">
             <div class="weeks">
-                <!-- Selector de Semanas -->
                 <button class="previous-week" title="Anterior"><i class='bx bx-chevrons-left'></i></button>
-                <h1>Semana 1</h1>
-                <button class="next-week" title="Siguiente"><i class='bx bx-chevrons-right'></i></i></button>
+                <h1>Semana <span id="week-number">1</span></h1>
+                <button class="next-week" title="Siguiente"><i class='bx bx-chevrons-right'></i></button>
             </div>
         </div>
 
-        <div class="accordion">
-            <!-- Renderizar todos los días de esta semana -->
-            <div class="accordion-item">
-                <div class="accordion-header">
-                    <h1><span>Día 1</span> - Pecho y Tríceps</h1>
-                    <span class="icon"><i class='bx bx-chevron-down'></i></span>
-                </div>
-
-                <div class="accordion-content">
-                    <!-- Renderizar todos los ejercicios de este día -->
-                    <div class="excercise">
-                        <input id="id_dia_ejercicio" hidden type="text"> <!--Aqui se guarda el id de 'dia_ejericio'-->
-                        
-                        <div class="excercise-title">
-                            <h3>Press de Banco Plano</h3>
-                        </div>
-
-                        <div class="parameters">
-                            <p class="sets"><i class='bx bx-dumbbell'></i> 4  Series</p>
-                            <p class="reps">8 Repeticiones</p>
-                            <p class="rest"><i class='bx bx-time-five'></i> 90s Descanso</p>
-                        </div>
-
-                        <button class="btn-see-exercise"><i class='bx bxs-show'></i> Ver Ejercicio</button>
-
-                        <form action="">
-                            <div class="registers">
-                                <div>
-                                    <label for="sets">¿Cuántas series pudiste hacer?</label>
-                                    <input id="sets" class="sets" type="number" min="1" required placeholder="Cantidad de series">
+        {% for semana in semanas %}
+            <div class="accordion week-container" data-week="{{ semana.numero_semana }}" {% if loop.first %}style="display:block;"{% else %}style="display:none;"{% endif %}>
+                {% for dia in semana.dias %}
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h1><span>Día {{ dia.numero_dia }}</span> - {{ dia.nombre_rutina }}</h1>
+                        <span class="icon"><i class='bx bx-chevron-down'></i></span>
+                    </div>
+                    <div class="accordion-content">
+                        {% for ejercicio in dia.ejercicios %}
+                            <div class="excercise">
+                                <div class="excercise-title">
+                                    <h3>{{ ejercicio.nombre_ejercicio }}</h3>
                                 </div>
-                                <div>
-                                    <label for="reps">¿Cuántas repeticiones pudiste hacer?</label>
-                                    <input id="reps" class="reps" type="number" min="1" required placeholder="Cantidad de repeticiones">
+                                <div class="parameters">
+                                    <p class="sets"><i class='bx bx-dumbbell'></i> {{ ejercicio.series }} Series</p>
+                                    <p class="reps">{{ ejercicio.repeticiones }} Repeticiones</p>
+                                    <p class="rest"><i class='bx bx-time-five'></i> {{ ejercicio.tiempo_descanso }}s Descanso</p>
                                 </div>
-                                <div>
-                                    <label for="weight">¿Cuánto peso utilizaste?</label>
-                                    <input id="weight" class="weight" type="number" step="0.01" min="1" required placeholder="Cantidad de peso">
-                                </div>
+                                <button class="btn-see-exercise"><i class='bx bxs-show'></i> Ver Ejercicio</button>
+
+                                <form action="" method="">
+                                    <div class="registers">
+                                        <div>
+                                            <label for="sets">¿Cuántas series pudiste hacer?</label>
+                                            <input id="sets" name="sets" type="number" min="1" required>
+                                        </div>
+                                        <div>
+                                            <label for="reps">¿Cuántas repeticiones pudiste hacer?</label>
+                                            <input id="reps" name="reps" type="number" min="1" required>
+                                        </div>
+                                        <div>
+                                            <label for="weight">¿Cuánto peso utilizaste?</label>
+                                            <input id="weight" name="weight" type="number" step="0.01" min="1" required>
+                                        </div>
+                                    </div>
+                                    <label for="observations">Observaciones</label>
+                                    <textarea name="observations" required maxlength="500"></textarea>
+                                    <button type="submit" class="btn-see-exercise save-day">Guardar Registro</button>
+                                </form>
                             </div>
-                            
-                            <label for="observations">Observaciones</label>
-                            <textarea name="observations" id="observations" required placeholder="Escribe aquí tus sensaciones o dificultades al realizar este ejercicio..." maxlength="500"></textarea>
-                        
-                            <!-- Botón para guardar las observaciones por ejercicio -->
-                            <button type="submit" class="btn-see-exercise save-day" href="">Guardar Registro</button>
-                        </form>
-
+                        {% endfor %}
                     </div>
                 </div>
+                {% endfor %}
             </div>
-        </div>
+        {% endfor %}
     </div>
     
     <!-- Script para abrir y cerrar el acordeon -->
     <script>
-        const headers = document.querySelectorAll('.accordion-header');
-    
-        headers.forEach(header => {
-            header.addEventListener('click', () => {
-                // Alternar la clase 'active' para girar el ícono
-                header.classList.toggle('active');
-    
-                // Mostrar u ocultar el contenido asociado
-                const content = header.nextElementSibling;
-                if (content.style.display === "block") {
-                    content.style.display = "none";
-                } else {
-                    content.style.display = "block";
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll('.accordion-header').forEach(header => {
+                header.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    const content = this.nextElementSibling;
+
+                    if (content.style.maxHeight) {
+                        content.style.maxHeight = null;  // Cierra el acordeón
+                    } else {
+                        content.style.maxHeight = "0px";  // Asegura el inicio correcto
+                        requestAnimationFrame(() => {
+                            content.style.maxHeight = content.scrollHeight + "px"; // Expande suavemente
+                        });
+                    }
+                });
+            });
+        });
+
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let currentWeek = 1;
+            const totalWeeks = document.querySelectorAll('.week-container').length;
+            
+            document.querySelector(".next-week").addEventListener("click", function() {
+                if (currentWeek < totalWeeks) {
+                    document.querySelector(`.week-container[data-week="${currentWeek}"]`).style.display = "none";
+                    currentWeek++;
+                    document.querySelector(`.week-container[data-week="${currentWeek}"]`).style.display = "block";
+                    document.getElementById("week-number").textContent = currentWeek;
                 }
+            });
+
+            document.querySelector(".previous-week").addEventListener("click", function() {
+                if (currentWeek > 1) {
+                    document.querySelector(`.week-container[data-week="${currentWeek}"]`).style.display = "none";
+                    currentWeek--;
+                    document.querySelector(`.week-container[data-week="${currentWeek}"]`).style.display = "block";
+                    document.getElementById("week-number").textContent = currentWeek;
+                }
+            });
+
+            document.querySelectorAll('.accordion-header').forEach(header => {
+                header.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    const content = this.nextElementSibling;
+                    content.style.display = content.style.display === "block" ? "none" : "block";
+                });
             });
         });
     </script>
+
 
 {% endblock %}
