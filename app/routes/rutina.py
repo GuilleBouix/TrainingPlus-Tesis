@@ -15,12 +15,23 @@ def rutina(id_entrenamiento):
     user_id = session.get('id_usuario')
     DB = conexion_basedatos()
 
-    # Obtener datos del entrenamiento
+    # # Obtener datos del entrenamiento
+    # entrenamiento = DB.execute("""
+    #     SELECT nombre_entrenamiento, id_disciplina, duracion_semanas
+    #     FROM entrenamiento 
+    #     WHERE id_entrenamiento = ?
+    # """, (id_entrenamiento,)).fetchone()
+
+    # Obtener datos del entrenamiento con el nombre de la disciplina
     entrenamiento = DB.execute("""
-        SELECT nombre_entrenamiento, disciplina, duracion_semanas
-        FROM entrenamiento 
-        WHERE id_entrenamiento = ?
+        SELECT entrenamiento.nombre_entrenamiento, 
+            entrenamiento.duracion_semanas,
+            disciplina.nombre AS nombre_disciplina
+        FROM entrenamiento
+        LEFT JOIN disciplina ON entrenamiento.id_disciplina = disciplina.id_disciplina
+        WHERE entrenamiento.id_entrenamiento = ?
     """, (id_entrenamiento,)).fetchone()
+
 
     if not entrenamiento:
         return "Entrenamiento no encontrado", 404
@@ -59,6 +70,7 @@ def rutina(id_entrenamiento):
                 JOIN ejercicios e ON de.id_ejercicio = e.id_ejercicio
                 WHERE de.id_dia = ?
             """, (id_dia,)).fetchall()
+
 
             dia["ejercicios"] = [dict(ejercicio) for ejercicio in ejercicios]  # Convertir ejercicios a diccionarios
             dias_completos.append(dia)

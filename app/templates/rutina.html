@@ -10,7 +10,7 @@
             <div class="title">
                 <h1>{{ entrenamiento.nombre_entrenamiento }}</h1>
                 <div class="routine-data">
-                    <p>Disciplina: {{ entrenamiento.disciplina }}</p>
+                    <p>Disciplina: {{ entrenamiento.nombre_disciplina }}</p>
                     <p>Duración: {{ entrenamiento.duracion_semanas }} Semanas</p>
                 </div>
             </div>
@@ -92,7 +92,6 @@
                 });
             });
         });
-
     </script>
 
     <script>
@@ -127,6 +126,5 @@
             });
         });
     </script>
-
 
 {% endblock %}

@@ -17,8 +17,6 @@
         </div>
     </div>
 
-
-
     <!-- Sección 1 -->
     <div class="seccion seccion-1">
         <div class="inputs">
@@ -39,14 +37,7 @@
         <div class="inputs">
             <label for="disciplina">Disciplina:</label>
             <select name="disciplina" id="disciplina" required>
-                <option value="">Seleccionar Disciplina</option>
-                <option value="Calistenia">Calistenia</option>
-                <option value="Culturismo">Culturismo</option>
-                <option value="CrossFit">CrossFit</option>
-                <option value="Fitness" selected>Fitness</option>
-                <option value="HIIT">HIIT</option>
-                <option value="Funcional">Entrenamiento Funcional</option>
-                <option value="Yoga">Yoga</option>
+                <option value="1" selected>Fitness</option>
             </select>
         </div>
 
@@ -233,7 +224,6 @@
     form.addEventListener("input", validarCampos);
     form.addEventListener("change", validarCampos);
     
-    // Ejecutar validación inicial
     validarCampos();
 </script>
 {% endblock %}

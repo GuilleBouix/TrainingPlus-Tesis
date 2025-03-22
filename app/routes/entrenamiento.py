@@ -29,9 +29,11 @@ def entrenamiento():
     entrenamientos += db.execute("""
         SELECT entrenamiento.*, 
             COALESCE(entrenador.nombre, 'Desconocido') AS entrenador_nombre, 
-            COALESCE(entrenador.apellido, '') AS entrenador_apellido
+            COALESCE(entrenador.apellido, '') AS entrenador_apellido,
+            disciplina.nombre AS nombre_disciplina
         FROM entrenamiento
         LEFT JOIN entrenador ON entrenamiento.id_entrenador = entrenador.id_usuario
+        LEFT JOIN disciplina ON entrenamiento.id_disciplina = disciplina.id_disciplina
         WHERE entrenamiento.id_entrenador = ?
     """, (user_id,)).fetchall()
 
@@ -40,11 +42,14 @@ def entrenamiento():
         entrenamientos += db.execute("""
             SELECT entrenamiento.*, 
                 COALESCE(entrenador.nombre, 'Desconocido') AS entrenador_nombre, 
-                COALESCE(entrenador.apellido, '') AS entrenador_apellido
+                COALESCE(entrenador.apellido, '') AS entrenador_apellido,
+                disciplina.nombre AS nombre_disciplina
             FROM entrenamiento
             LEFT JOIN entrenador ON entrenamiento.id_entrenador = entrenador.id_usuario
+            LEFT JOIN disciplina ON entrenamiento.id_disciplina = disciplina.id_disciplina
             WHERE entrenamiento.id_alumno = ?
         """, (id_alumno,)).fetchall()
+
 
     return render_template('entrenamiento.html', entrenamientos=entrenamientos)
 
@@ -83,7 +88,7 @@ def crear_entrenamiento():
 
             # Insertar en la tabla entrenamiento
             cursor.execute("""
-                INSERT INTO entrenamiento (id_entrenador, id_alumno, nombre_entrenamiento, disciplina, duracion_semanas, fecha_inicio)
+                INSERT INTO entrenamiento (id_entrenador, id_alumno, nombre_entrenamiento, id_disciplina, duracion_semanas, fecha_inicio)
                 VALUES (?, ?, ?, ?, ?, ?)
             """, (id_entrenador, id_alumno, nombre_entrenamiento, disciplina, duracion_semanas, fecha_inicio))
             id_entrenamiento = cursor.lastrowid
