@@ -65,11 +65,14 @@ def rutina(id_entrenamiento):
 
             ejercicios = DB.execute("""
                 SELECT de.id_dia_ejercicio, e.nombre_ejercicio AS nombre_ejercicio, 
-                    de.series, de.repeticiones, de.peso, de.tiempo_descanso
+                    de.series, de.repeticiones, de.peso, de.tiempo_descanso, e.imagen_url
                 FROM dia_ejercicio de
                 JOIN ejercicios e ON de.id_ejercicio = e.id_ejercicio
                 WHERE de.id_dia = ?
             """, (id_dia,)).fetchall()
+
+            ejercicios_dict = [dict(ejercicio) for ejercicio in ejercicios]
+
 
 
             dia["ejercicios"] = [dict(ejercicio) for ejercicio in ejercicios]  # Convertir ejercicios a diccionarios
@@ -80,4 +83,5 @@ def rutina(id_entrenamiento):
 
     return render_template('rutina.html', 
                            entrenamiento=entrenamiento,
-                           semanas=semanas_completas)
+                           semanas=semanas_completas,
+                           ejercicios=ejercicios_dict)

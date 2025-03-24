@@ -43,7 +43,19 @@
                                     <p class="reps">{{ ejercicio.repeticiones }} Repeticiones</p>
                                     <p class="rest"><i class='bx bx-time-five'></i> {{ ejercicio.tiempo_descanso }}s Descanso</p>
                                 </div>
-                                <button class="btn-see-exercise"><i class='bx bxs-show'></i> Ver Ejercicio</button>
+                                <button class="btn-see-exercise" data-imagen="{{ ejercicio.imagen_url }}">
+                                    <i class='bx bxs-show'></i> Ver Ejercicio
+                                </button>
+
+                                <!-- Modal del ejercicio -->
+                                <dialog class="exercise-dialog" id="exercise-modal">
+                                    <div class="modal-content">
+                                        <img src="{{ url_for('static', filename='uploads/exercises/fitness/' + ejercicio.imagen_url) }}" alt="{{ ejercicio.nombre_ejercicio }}">
+                                        <span class="close-modal">
+                                            <i class='bx bx-x'></i>
+                                        </span>
+                                    </div>
+                                </dialog>
 
                                 <form action="" method="">
                                     <div class="registers">
@@ -72,6 +84,39 @@
             </div>
         {% endfor %}
     </div>
+
+    <!-- Script para abrir y cerrar el modal de ejercicio -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".btn-see-exercise").forEach(button => {
+                button.addEventListener("click", function () {
+                    let dialog = this.nextElementSibling; // Encuentra el <dialog> asociado
+                    dialog.showModal();
+                });
+            });
+    
+            document.querySelectorAll(".close-modal").forEach(closeButton => {
+                closeButton.addEventListener("click", function () {
+                    this.closest("dialog").close();
+                });
+            });
+    
+            document.querySelectorAll("dialog").forEach(dialog => {
+                dialog.addEventListener("click", function (event) {
+                    if (event.target === this) {
+                        this.close();
+                    }
+                });
+            });
+
+            function closeDialog() {
+                const dialog = document.getElementById("exercise-modal");
+                if (dialog) {
+                    dialog.close();
+                }
+            }
+        });
+    </script>
     
     <!-- Script para abrir y cerrar el acordeon -->
     <script>
@@ -94,6 +139,7 @@
         });
     </script>
 
+    <!-- Script para cambiar de semana -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             let currentWeek = 1;

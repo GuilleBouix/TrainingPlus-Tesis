@@ -177,6 +177,7 @@ main {
 }
 
 .accordion-content .excercise {
+    position: relative;
     margin-bottom: 1rem;
     border-bottom: 1px solid var(--color-border);
 }
@@ -236,6 +237,7 @@ main {
     transition: all 0.2s ease-in-out;
     font-size: 1rem;
     height: 40px;
+    outline: none;
 }
 .btn-see-exercise i {
     margin-right: 5px;
@@ -309,6 +311,68 @@ main {
     font-size: 1rem;
     height: 40px;
     margin-left: auto;
+}
+
+/* Estilos para el modal */
+.exercise-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    outline: none;
+    border: none;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    z-index: 9999;
+    visibility: hidden;
+    overflow: hidden;
+    border-radius: 10px;
+}
+.exercise-dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Clase para el efecto fade-in cuando se abre */
+.exercise-dialog[open] {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Contenido del modal */
+.modal-content {
+    position: relative;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;    /* Previene scroll en el contenido */
+}
+
+/* Botón de cerrar (X) */
+.close-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 24px;
+    color: var(--color-text-primary);
+    z-index: 10000;      /* Asegura que esté por encima */
+    transition: all 0.2s ease-in-out;
+}
+.close-modal:hover {
+    color: var(--color-primary);
+    transform: scale(1.1);
+}
+
+/* Estilo para la imagen dentro del modal */
+.modal-content img {
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+    object-fit: contain;
+}
+
+/* Prevenir scroll en el body cuando el modal está abierto */
+body.modal-open {
+    overflow: hidden;
 }
 
 
