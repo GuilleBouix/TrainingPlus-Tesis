@@ -17,15 +17,44 @@ def rutina(id_entrenamiento):
 
     DB = conexion_basedatos()
 
-    # Obtener el ID del alumno basado en el usuario logueado
-    id_alumno = DB.execute("""
-        SELECT id_alumno FROM alumno WHERE id_usuario = ?
+    # Verificar el rol del usuario
+    user_data = DB.execute("""
+        SELECT rol FROM usuario WHERE id_usuario = ?
     """, (user_id,)).fetchone()
 
-    if not id_alumno:
-        return "Error: No se encontró el alumno", 400  # Mejor manejar el error de manera más clara
+    if not user_data:
+        return "Error: Usuario no encontrado", 400
+    
+    rol_usuario = user_data[0]
 
-    id_alumno = id_alumno[0]  # Aquí obtienes el id real del alumno
+    if rol_usuario == 1:  # Es un alumno
+        id_alumno = DB.execute("""
+            SELECT id_alumno FROM alumno WHERE id_usuario = ?
+        """, (user_id,)).fetchone()
+        
+        if not id_alumno:
+            return "Error: No se encontró el alumno", 400
+        
+        id_alumno = id_alumno[0]
+        print(f"ID del Alumno: {id_alumno}") # Debugging
+
+    
+    elif rol_usuario == 2:  # Es un entrenador
+        # Obtener el ID de un alumno relacionado con el entrenamiento
+        id_alumno = DB.execute("""
+            SELECT a.id_alumno 
+            FROM alumno a
+            JOIN entrenamiento e ON a.id_alumno = e.id_alumno
+            WHERE e.id_entrenamiento = ?
+        """, (id_entrenamiento,)).fetchone()
+        
+        if not id_alumno:
+            return "Error: No hay alumnos asignados a este entrenamiento", 400
+        
+        id_alumno = id_alumno[0]
+    
+    else:
+        return "Error: Rol de usuario no válido", 400
 
     entrenamiento = DB.execute("""
     SELECT entrenamiento.id_entrenamiento, entrenamiento.nombre_entrenamiento, 
@@ -101,17 +130,27 @@ def rutina(id_entrenamiento):
 def guardar_progreso():
     # Obtener los datos del formulario
     id_dia_ejercicio = request.form['id_dia_ejercicio']
-    # Si el id_alumno ya está en la sesión, lo obtenemos desde allí
-    id_alumno = session.get('id_usuario')
 
+    # Obtener el ID del alumno
+    DB = conexion_basedatos()
+    id_alumno = DB.execute("""
+        SELECT id_alumno FROM alumno WHERE id_usuario = ?
+    """, (session.get('id_usuario'),)).fetchone()
+
+    if not id_alumno:
+        return "Error: No se encontró el alumno", 400
+
+    id_alumno = id_alumno[0]  # Extraer el valor real
+
+    # Obtener los datos del formulario
     series_realizadas = request.form['series_realizadas']
     repeticiones_realizadas = request.form['repeticiones_realizadas']
     peso_utilizado = request.form['peso_utilizado']
     observaciones = request.form['observaciones']
 
+    # Verificar si ya existe un registro para este ejercicio
     DB = conexion_basedatos()
 
-    # Verificar si ya existe un registro para este ejercicio
     progreso = DB.execute("""
         SELECT id_progreso FROM progreso_alumno WHERE id_dia_ejercicio = ? AND id_alumno = ?
     """, (id_dia_ejercicio, id_alumno)).fetchone()
@@ -132,4 +171,5 @@ def guardar_progreso():
 
     DB.commit()
     
+    # Redirigir a la rutina
     return redirect(url_for('rutina.rutina', id_entrenamiento=request.form['id_entrenamiento']))
