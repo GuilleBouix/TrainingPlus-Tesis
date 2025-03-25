@@ -25,6 +25,22 @@ def entrenamiento():
     # Buscar entrenamientos del usuario logueado
     entrenamientos = []
 
+    # Función para calcular progreso basado en ejercicios completados
+    def calcular_progreso(id_entrenamiento):
+        query = """
+        SELECT 
+            COUNT(DISTINCT p.id_progreso) * 100.0 / COUNT(DISTINCT de.id_dia_ejercicio) AS progreso
+        FROM entrenamiento e
+        JOIN semanas s ON e.id_entrenamiento = s.id_entrenamiento
+        JOIN dias d ON s.id_semana = d.id_semana
+        JOIN dia_ejercicio de ON d.id_dia = de.id_dia
+        LEFT JOIN progreso_alumno p ON de.id_dia_ejercicio = p.id_dia_ejercicio
+        WHERE e.id_entrenamiento = ?
+        GROUP BY e.id_entrenamiento;
+        """
+        result = db.execute(query, (id_entrenamiento,)).fetchone()
+        return round(result["progreso"], 1) if result and result["progreso"] is not None else 0.0
+
     # Si el usuario es entrenador, buscar entrenamientos donde id_entrenador = id_usuario
     entrenamientos += db.execute("""
         SELECT entrenamiento.*, 
@@ -50,8 +66,15 @@ def entrenamiento():
             WHERE entrenamiento.id_alumno = ?
         """, (id_alumno,)).fetchall()
 
+    # Agregar progreso a cada entrenamiento
+    entrenamientos_con_progreso = []
+    for entrenamiento in entrenamientos:
+        progreso = calcular_progreso(entrenamiento["id_entrenamiento"])
+        entrenamiento_dict = dict(entrenamiento)
+        entrenamiento_dict["progreso"] = progreso
+        entrenamientos_con_progreso.append(entrenamiento_dict)
 
-    return render_template('entrenamiento.html', entrenamientos=entrenamientos)
+    return render_template('entrenamiento.html', entrenamientos=entrenamientos_con_progreso)
 
 
 
@@ -139,7 +162,7 @@ def crear_entrenamiento():
         except Exception as e:
             # Revertir cambios en caso de error
             conexion.rollback()
-            print(f"Error al crear el entrenamiento: {str(e)}", "error")
+
             return redirect(url_for('entrenamiento.crear_entrenamiento'))
 
         finally:

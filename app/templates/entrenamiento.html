@@ -58,11 +58,11 @@
         
                     <div class="progress">
                         <p>Progreso</p>
-                        <span class="progress-percentage">100{{ entrenamiento.progreso }}%</span>
+                        <span class="progress-percentage">{{ entrenamiento.progreso }}%</span>
                     </div>
         
                     <div class="progress-bar-container">
-                        <div class="progress-bar" style="width: 100%"></div>
+                        <div class="progress-bar" data-progreso="{{ entrenamiento.progreso }}"></div>
                     </div>
         
                     <div class="actions">
@@ -74,7 +74,16 @@
                 </div>
             {% endfor %}
         </div>
-
-
     </div>
+
+    <!-- Script para la barra de progreso -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".progress-bar").forEach((bar) => {
+                let progreso = bar.getAttribute("data-progreso");
+                bar.style.width = progreso + "%";
+            });
+        });
+    </script>
+
 {% endblock %}
