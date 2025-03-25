@@ -31,24 +31,24 @@ def create_app():
     # Registrar rutas desde la carpeta `routes`
     from .routes.entrenamiento import entrenamiento_bp
     from .routes.auth import auth_bp
-    from .routes.rutina import rutina_bp
     from .routes.perfil import perfil_bp
     from .routes.buscador import buscador_bp
     from .routes.usuario import usuario_bp
     from .routes.notificaciones import notificaciones_bp
     from .routes.form_entrenador import form_entrenador_bp
+    from .routes.rutina import rutina_bp
 
 
 
     # Registrar Blueprints
     app.register_blueprint(auth_bp)
     app.register_blueprint(entrenamiento_bp)
-    app.register_blueprint(rutina_bp)
     app.register_blueprint(perfil_bp)
     app.register_blueprint(buscador_bp)
     app.register_blueprint(usuario_bp)
     app.register_blueprint(notificaciones_bp)
     app.register_blueprint(form_entrenador_bp)
+    app.register_blueprint(rutina_bp)
 
 
 

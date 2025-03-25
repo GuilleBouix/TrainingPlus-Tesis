@@ -12,6 +12,9 @@
                 <div class="routine-data">
                     <p>Disciplina: {{ entrenamiento.nombre_disciplina }}</p>
                     <p>Duración: {{ entrenamiento.duracion_semanas }} Semanas</p>
+
+                    <p>ID Entrenamiento: {{ entrenamiento.id_entrenamiento }}</p> <!--BORRAR-->
+
                 </div>
             </div>
         </div>
@@ -57,25 +60,38 @@
                                     </div>
                                 </dialog>
 
-                                <form action="" method="">
+                                <!-- Progreso del Alumno en cada ejercicio -->
+                                <form action="{{ url_for('rutina.guardar_progreso') }}" method="POST">
+                                    <input type="hidden" name="id_dia_ejercicio" value="{{ ejercicio.id_dia_ejercicio }}">
+                                    <input type="hidden" name="id_entrenamiento" value="{{ entrenamiento.id_entrenamiento }}">
+                                    <input type="hidden" name="id_alumno" value="{{ session['id_usuario'] }}">
+
+                                
                                     <div class="registers">
                                         <div>
-                                            <label for="sets">¿Cuántas series pudiste hacer?</label>
-                                            <input id="sets" name="sets" type="number" min="1" required>
+                                            <label for="sets_{{ ejercicio.id_dia_ejercicio }}">¿Cuántas series pudiste hacer?</label>
+                                            <input type="number" name="series_realizadas" value="{{ ejercicio.series_realizadas }}" min="0">
                                         </div>
+                                
                                         <div>
-                                            <label for="reps">¿Cuántas repeticiones pudiste hacer?</label>
-                                            <input id="reps" name="reps" type="number" min="1" required>
+                                            <label for="reps_{{ ejercicio.id_dia_ejercicio }}">¿Cuántas repeticiones pudiste hacer?</label>
+                                            <input type="number" name="repeticiones_realizadas" value="{{ ejercicio.repeticiones_realizadas }}" min="0">
+
                                         </div>
+                                
                                         <div>
-                                            <label for="weight">¿Cuánto peso utilizaste?</label>
-                                            <input id="weight" name="weight" type="number" step="0.01" min="1" required>
+                                            <label for="weight_{{ ejercicio.id_dia_ejercicio }}">¿Cuánto peso utilizaste?</label>
+                                            <input type="number" name="peso_utilizado" value="{{ ejercicio.peso_utilizado }}" step="0.1">
+
                                         </div>
                                     </div>
-                                    <label for="observations">Observaciones</label>
-                                    <textarea name="observations" required maxlength="500"></textarea>
+                                
+                                    <label for="observations_{{ ejercicio.id_dia_ejercicio }}">Observaciones</label>
+                                    <textarea name="observaciones">{{ ejercicio.observaciones }}</textarea>
+
+                                
                                     <button type="submit" class="btn-see-exercise save-day">Guardar Registro</button>
-                                </form>
+                                </form>                                        
                             </div>
                         {% endfor %}
                     </div>
