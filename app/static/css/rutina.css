@@ -375,6 +375,10 @@ body.modal-open {
     overflow: hidden;
 }
 
+.asterisk {
+    color: var(--color-primary);
+}
+
 
 
 

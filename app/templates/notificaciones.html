@@ -6,31 +6,31 @@
 
 {% block content %}
     <div class="notificactions-title">
-        <h1>Tus Notificaciones</h1>
-        <p>Visualiza y gestiona tus notificaciones para mantenerte al día.</p>
+        <h1 data-aos="fade-right">Tus Notificaciones</h1>
+        <p data-aos="fade-right" data-aos-delay="100">Visualiza y gestiona tus notificaciones para mantenerte al día.</p>
     </div>
 
     <div class="notifications-container">
-        <div class="notifications-sections section-filter">
-            <h2>Filtros</h2>
+        <div class="notifications-sections section-filter" data-aos="flip-right" data-aos-delay="200">
+            <h2 data-aos="fade-right" data-aos-delay="300">Filtros</h2>
 
-            <form action="{{ url_for('notificaciones.eliminar_notificaciones') }}" method="POST">
+            <form action="{{ url_for('notificaciones.eliminar_notificaciones') }}" method="POST" data-aos="fade-right" data-aos-delay="300">
                 <select name="tipo" id="tipo">
                     <option value="">Filtrar por Tipo</option>
                     <option value="conexiones">Conexiones</option>
                     <option value="mensajes">Mensajes</option>
                 </select>
 
-                <button type="submit">Eliminar Todas</button>
+                <button type="submit" data-aos="fade-right" data-aos-delay="300">Eliminar Todas</button>
             </form>
         </div>
 
 
 
-        <div class="notifications-sections section-notificaction">
+        <div class="notifications-sections section-notificaction" data-aos="flip-left" data-aos-delay="200">
             {% for solicitud in solicitudes %}
                 <ul class="notificacion">
-                    <li>
+                    <li data-aos="fade-down" data-aos-delay="300">
                         <h3>Solicitud de Conexión <i class='bx bxs-group'></i></h3>
                         <div class="message">
                             <strong>El entrenador @<a href="#">{{ solicitud['nombre_usuario'] }}</a> ha solicitado conectarse contigo.</strong>
@@ -46,7 +46,7 @@
         
             {% for notificacion in notificaciones %}
                 <ul class="notificacion">
-                    <li class="{% if notificacion['leida'] %}leida{% else %}no-leida{% endif %}">
+                    <li class="{% if notificacion['leida'] %}leida{% else %}no-leida{% endif %}" data-aos-delay="300">
                         <h3>Notificación <i class='bx bxs-bell'></i></h3>
                         <div class="message">
                             <strong>{{ notificacion['mensaje'] }}</strong>

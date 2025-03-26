@@ -7,11 +7,13 @@
 {% block content %}
     <div class="training-container">
         <div class="training-header">
-            <div class="title">
+            <div class="title" data-aos="fade-right">
                 <h1>Tus Entrenamientos</h1>
                 <p>Visualiza y gestiona tus programas de entrenamiento.</p>
             </div>
-            <a href="{{ url_for('entrenamiento.crear_entrenamiento') }}" class="btn-new-training"><i class='bx bx-plus'></i> Nuevo Entrenamiento</a>
+            <a href="{{ url_for('entrenamiento.crear_entrenamiento') }}" class="btn-new-training" data-aos="fade-left">
+                <i class='bx bx-plus'></i> Nuevo Entrenamiento
+            </a>
         </div>
         
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -29,14 +31,15 @@
 
 
         <div class="filters-box">
-            <button class="filter active">Todos</button>
-            <button class="filter">Activos</button>
-            <button class="filter">Completados</button>
+            <button class="filter active" data-aos="fade-in" data-aos-delay="100">Todos</button>
+            <button class="filter" data-aos="fade-in" data-aos-delay="200">Activos</button>
+            <button class="filter" data-aos="fade-in" data-aos-delay="300">Completados</button>
         </div>
 
+        {% if entrenamientos %}
         <div class="training-box">
             {% for entrenamiento in entrenamientos %}
-                <div class="training">
+                <div class="training" data-aos="flip-left" data-aos-delay="100">
                     <div class="tipo">
                         <h3>{{ entrenamiento.nombre_disciplina }}</h3>
                         <i class='bx bx-dumbbell'></i>
@@ -48,13 +51,23 @@
                         <p><i class='bx bx-time-five'></i> {{ entrenamiento.duracion_semanas }} Semanas</p>
                     </div>
         
-                    <div class="trainer-content">
+                    <!-- <div class="trainer-content">
                         <img src="{{ url_for('static', filename='uploads/users/trainer' ~ entrenamiento.id_entrenador ~ '-profile.webp') }}" alt="Trainer">
                         <div class="trainer-info">
                             <h3>Entrenador</h3>
                             <p>{{ entrenamiento.entrenador_nombre }} {{ entrenamiento.entrenador_apellido }}</p>
                         </div>
+                    </div> -->
+
+                    {% if asociacion %}
+                    <div class="trainer-content">
+                        <img src="{{ url_for('static', filename='uploads/users/' ~ asociacion.datos.foto_perfil) }}" alt="{{ asociacion.tipo }}">
+                        <div class="trainer-info">
+                            <h3>{{ asociacion.tipo }}</h3>
+                            <p>{{ asociacion.datos.nombre }} {{ asociacion.datos.apellido }}</p>
+                        </div>
                     </div>
+                    {% endif %}
         
                     <div class="progress">
                         <p>Progreso</p>
@@ -74,6 +87,9 @@
                 </div>
             {% endfor %}
         </div>
+        {% else %}
+            <p class="no-training">Aún no tienes entrenamientos disponibles.</p>
+        {% endif %}
     </div>
 
     <!-- Script para la barra de progreso -->

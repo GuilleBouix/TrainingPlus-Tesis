@@ -16,7 +16,11 @@
 
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
-    
+
+    <!-- AOS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
     <script src="{{ url_for('static', filename='javascript/script.js') }}" defer></script>
 </head>
 <body class="base-body">
@@ -89,6 +93,9 @@
                 loadingScreen.style.display = 'none'; // Oculta el loading
                 content.style.display = 'block'; // Muestra el contenido
             };
+
+            // Inicializar AOS
+            AOS.init();
         })
     </script>
 </body>

@@ -5,27 +5,27 @@
 {% block content %}
 
 <form id="form-entrenamiento" class="crear-entrenamiento" method="POST" action="/crear_entrenamiento">
-    <div class="crear-entrenamiento-title">
+    <div class="crear-entrenamiento-title" data-aos="fade-in">
         <h1>Crear Entrenamiento</h1>
 
         <div class="progreso-container">
-            <span class="step active" id="step-1" title="Configuración de Entrenamiento">1</span>
-            <div class="line"></div>
-            <span class="step" id="step-2" title="Configuración de Días">2</span>
-            <div class="line"></div>
-            <span class="step" id="step-3" title="Configuración de Ejercicios">3</span>
+            <span class="step active" id="step-1" title="Configuración de Entrenamiento" data-aos="fade-in" data-aos-delay="100">1</span>
+            <div class="line" data-aos="fade-in" data-aos-delay="100"></div>
+            <span class="step" id="step-2" title="Configuración de Días" data-aos="fade-in" data-aos-delay="200">2</span>
+            <div class="line" data-aos="fade-in" data-aos-delay="200"></div>
+            <span class="step" id="step-3" title="Configuración de Ejercicios" data-aos="fade-in" data-aos-delay="300">3</span>
         </div>
     </div>
 
     <!-- Sección 1 -->
     <div class="seccion seccion-1">
-        <div class="inputs">
-            <label for="nombre_entrenamiento">Nombre del Entrenamiento:</label>
+        <div class="inputs" data-aos="fade-down" data-aos-delay="100">
+            <label for="nombre_entrenamiento">Nombre del Entrenamiento</label>
             <input type="text" id="nombre_entrenamiento" name="nombre_entrenamiento" value="Entrenamiento" placeholder="Ingresa un nombre para el entrenamiento" required>
         </div>
 
-        <div class="inputs">
-            <label for="alumno">Alumno:</label>
+        <div class="inputs" data-aos="fade-down" data-aos-delay="200">
+            <label for="alumno">Alumno</label>
             <select id="alumno" name="id_alumno" required>
                 <option value="">Seleccionar Alumno</option>
                 {% for alumno in alumnos %}
@@ -34,19 +34,19 @@
             </select>
         </div>
 
-        <div class="inputs">
-            <label for="disciplina">Disciplina:</label>
+        <div class="inputs" data-aos="fade-down" data-aos-delay="300">
+            <label for="disciplina">Disciplina</label>
             <select name="disciplina" id="disciplina" required>
                 <option value="1" selected>Fitness</option>
             </select>
         </div>
 
-        <div class="inputs">
-            <label for="duracion_semanas">Duración (en semanas):</label>
+        <div class="inputs" data-aos="fade-down" data-aos-delay="400">
+            <label for="duracion_semanas">Duración (en semanas)</label>
             <input type="number" id="duracion_semanas" name="duracion_semanas" value="2" min="1" placeholder="Ingresa la duración en semanas" required>
         </div>
 
-        <button type="button" onclick="generarSemanas()">Continuar</button>
+        <button type="button" onclick="generarSemanas()" data-aos="fade-right" data-aos-delay="500">Continuar</button>
     </div>
 
     <!-- Sección 2 -->

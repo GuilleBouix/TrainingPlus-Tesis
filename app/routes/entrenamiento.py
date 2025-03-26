@@ -22,6 +22,30 @@ def entrenamiento():
     alumno = db.execute("SELECT id_alumno FROM alumno WHERE id_usuario = ?", (user_id,)).fetchone()
     id_alumno = alumno['id_alumno'] if alumno else None
 
+    # Obtener el rol del usuario logueado
+    usuario = db.execute("SELECT rol FROM usuario WHERE id_usuario = ?", (user_id,)).fetchone()
+    rol_usuario = usuario["rol"] if usuario else None
+
+    # Obtener información del alumno o entrenador asociado
+    if rol_usuario == 1:  # Alumno
+        info_entrenador = db.execute("""
+            SELECT e.nombre AS nombre, e.apellido AS apellido, COALESCE(e.foto_perfil, 'profile.webp') AS foto_perfil
+            FROM entrenador e
+            JOIN entrenamiento et ON e.id_usuario = et.id_entrenador
+            WHERE et.id_alumno = ?
+        """, (user_id,)).fetchone()
+        asociacion = {"tipo": "Entrenador", "datos": info_entrenador}
+    elif rol_usuario == 2:  # Entrenador
+        info_alumno = db.execute("""
+            SELECT a.nombre AS nombre, a.apellido AS apellido, COALESCE(a.foto_perfil, 'profile.webp') AS foto_perfil
+            FROM alumno a
+            JOIN entrenamiento et ON a.id_usuario = et.id_alumno
+            WHERE et.id_entrenador = ?
+        """, (user_id,)).fetchone()
+        asociacion = {"tipo": "Alumno", "datos": info_alumno}
+    else:
+        asociacion = None
+
     # Buscar entrenamientos del usuario logueado
     entrenamientos = []
 
@@ -74,7 +98,7 @@ def entrenamiento():
         entrenamiento_dict["progreso"] = progreso
         entrenamientos_con_progreso.append(entrenamiento_dict)
 
-    return render_template('entrenamiento.html', entrenamientos=entrenamientos_con_progreso)
+    return render_template('entrenamiento.html', entrenamientos=entrenamientos_con_progreso, asociacion=asociacion)
 
 
 

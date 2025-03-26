@@ -1,4 +1,4 @@
-from app.utils.helpers import login_required, verificar_formulario_completo, redirect, url_for
+from app.utils.helpers import login_required, verificar_formulario_completo, redirect, url_for, flash
 from flask import Blueprint, render_template, session, request
 from app.utils.conexion import conexion_basedatos
 from datetime import datetime
@@ -162,6 +162,8 @@ def guardar_progreso():
             SET series_realizadas = ?, repeticiones_realizadas = ?, peso_utilizado = ?, observaciones = ?
             WHERE id_progreso = ?
         """, (series_realizadas, repeticiones_realizadas, peso_utilizado, observaciones, progreso[0]))
+
+        flash('Progreso actualizado correctamente.', 'success')
     else:
         # Si no existe, insertar un nuevo registro
         DB.execute("""
@@ -169,6 +171,7 @@ def guardar_progreso():
             VALUES (?, ?, ?, ?, ?, ?, CURRENT_DATE)
         """, (id_dia_ejercicio, id_alumno, series_realizadas, repeticiones_realizadas, peso_utilizado, observaciones))
 
+        flash('Progreso registrado correctamente.', 'success')
     DB.commit()
     
     # Redirigir a la rutina

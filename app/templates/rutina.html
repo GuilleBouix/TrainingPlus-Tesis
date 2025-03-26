@@ -8,15 +8,15 @@
     <div class="routine-container">
         <div class="routine-header">
             <div class="title">
-                <h1>{{ entrenamiento.nombre_entrenamiento }}</h1>
-                <div class="routine-data">
+                <h1 data-aos="fade-right">{{ entrenamiento.nombre_entrenamiento }}</h1>
+                <div class="routine-data" data-aos="fade-right" data-aos-delay="100">
                     <p>Disciplina: {{ entrenamiento.nombre_disciplina }}</p>
                     <p>Duración: {{ entrenamiento.duracion_semanas }} Semanas</p>
                 </div>
             </div>
         </div>
 
-        <div class="plan-container">
+        <div class="plan-container" data-aos="fade-in" data-aos-delay="200">
             <div class="weeks">
                 <button class="previous-week" title="Anterior"><i class='bx bx-chevrons-left'></i></button>
                 <h1>Semana <span id="week-number">1</span></h1>
@@ -24,8 +24,21 @@
             </div>
         </div>
 
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flash-messages">
+                    {% for category, message in messages %}
+                        <li class="flash {{ category }}">
+                            <i class="{{ 'bx bxs-error-circle' if category == 'error' else 'bx bxs-check-circle' }}"></i>
+                            {{ message }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
         {% for semana in semanas %}
-            <div class="accordion week-container" data-week="{{ semana.numero_semana }}" {% if loop.first %}style="display:block;"{% else %}style="display:none;"{% endif %}>
+            <div class="accordion week-container" data-aos="fade-right" data-aos-delay="300" data-week="{{ semana.numero_semana }}" {% if loop.first %}style="display:block;"{% else %}style="display:none;"{% endif %}>
                 {% for dia in semana.dias %}
                 <div class="accordion-item">
                     <div class="accordion-header">
@@ -41,6 +54,7 @@
                                 <div class="parameters">
                                     <p class="sets"><i class='bx bx-dumbbell'></i> {{ ejercicio.series }} Series</p>
                                     <p class="reps">{{ ejercicio.repeticiones }} Repeticiones</p>
+                                    <p class="weight"><i class='bx bx-weight'></i> {{ ejercicio.peso }}kg</p>
                                     <p class="rest"><i class='bx bx-time-five'></i> {{ ejercicio.tiempo_descanso }}s Descanso</p>
                                 </div>
                                 <button class="btn-see-exercise" data-imagen="{{ ejercicio.imagen_url }}">
@@ -66,19 +80,19 @@
                                 
                                     <div class="registers">
                                         <div>
-                                            <label for="sets_{{ ejercicio.id_dia_ejercicio }}">¿Cuántas series pudiste hacer?</label>
-                                            <input type="number" name="series_realizadas" value="{{ ejercicio.series_realizadas }}" min="0">
+                                            <label for="sets_{{ ejercicio.id_dia_ejercicio }}">¿Cuántas series pudiste hacer?</label><span class="asterisk"> *</span>
+                                            <input type="number" name="series_realizadas" value="{{ ejercicio.series_realizadas }}" min="0" required>
                                         </div>
                                 
                                         <div>
-                                            <label for="reps_{{ ejercicio.id_dia_ejercicio }}">¿Cuántas repeticiones pudiste hacer?</label>
-                                            <input type="number" name="repeticiones_realizadas" value="{{ ejercicio.repeticiones_realizadas }}" min="0">
+                                            <label for="reps_{{ ejercicio.id_dia_ejercicio }}">¿Cuántas repeticiones pudiste hacer?</label><span class="asterisk"> *</span>
+                                            <input type="number" name="repeticiones_realizadas" value="{{ ejercicio.repeticiones_realizadas }}" min="0" required>
 
                                         </div>
                                 
                                         <div>
-                                            <label for="weight_{{ ejercicio.id_dia_ejercicio }}">¿Cuánto peso utilizaste?</label>
-                                            <input type="number" name="peso_utilizado" value="{{ ejercicio.peso_utilizado }}" step="0.1">
+                                            <label for="weight_{{ ejercicio.id_dia_ejercicio }}">¿Cuánto peso utilizaste?</label><span class="asterisk"> *</span>
+                                            <input type="number" name="peso_utilizado" value="{{ ejercicio.peso_utilizado }}" step="0.1" required>
 
                                         </div>
                                     </div>

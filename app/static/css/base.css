@@ -362,6 +362,12 @@ main {
     color: var(--color-background);
 }
 
+.no-training {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+    width: 100%;
+    margin-top: 1rem;
+}
 
 .training-box {
     display: grid;
