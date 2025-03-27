@@ -92,9 +92,12 @@
                 </div>
 
                 {% if es_entrenador and usuario['id_usuario'] != id_usuario_sesion %}
-                    <form action="{{ url_for('notificaciones.enviar_solicitud', id_usuario_destino=usuario.id_usuario) }}" method="POST">
-                        <button type="submit"><i class='bx bxs-group'></i> Conectar</button>
-                    </form>
+                    <!--  Si el usuario de la sesion es un alumno, no podra conectarse con ningun usuario  -->
+                    {% if id_usuario_sesion != info.id_usuario %}
+                        <form action="{{ url_for('notificaciones.enviar_solicitud', id_usuario_destino=usuario.id_usuario) }}" method="POST">
+                            <button type="submit"><i class='bx bxs-group'></i> Conectar</button>
+                        </form>
+                    {% endif %}
                 {% endif %}
             </div>
         </div>

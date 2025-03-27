@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <title>Registrarse - Training+</title>
 </head>
 <body>
@@ -18,10 +20,10 @@
         <div class="signup-form">
             <form action="{{ url_for('auth.signup') }}" method="POST">
                 <div class="logo-image">
-                    <img src="/static/images/logo.png">
+                    <img src="/static/images/logo.png" alt="Training+ Logo" data-aos="fade-in" data-aos-duration="1000">
                 </div>
                 
-                <div class="title">
+                <div class="title" data-aos="fade-right">
                     <h1>Registro</h1>
                     <p>Crea tu cuenta de <span>Training+</span></p>
                 </div>
@@ -41,22 +43,22 @@
                 {% endwith %}
 
 
-                <div class="input-box">
+                <div class="input-box" data-aos="fade-right" data-aos-delay="100">
                     <input type="text" name="email" placeholder="Tu Email" required>
                     <i class='bx bxs-envelope'></i>
                 </div>
 
-                <div class="input-box">
+                <div class="input-box" data-aos="fade-right" data-aos-delay="200">
                     <input type="text" name="nombre_usuario" placeholder="Tu Usuario" maxlength="16" oninput="eliminarEspacios(this)" required>
                     <i class='bx bxs-user'></i>
                 </div>
     
-                <div class="input-box">
+                <div class="input-box" data-aos="fade-right" data-aos-delay="300">
                     <input type="password" name="contrasena" placeholder="Tu Contraseña" required>
                     <i class='bx bxs-lock-alt'></i>
                 </div>
 
-                <div class="input-box">
+                <div class="input-box" data-aos="fade-right" data-aos-delay="400" data-aos-offset="0">
                     <select name="rol" id="rol" required placeholder="Seleccionar Rol">
                         <option value="">Seleccionar Rol</option>
                         <option value="2">Entrenador</option>
@@ -65,15 +67,15 @@
                     <i class='bx bx-chevron-down arrow'></i>
                 </div>
     
-                <button type="submit" class="btn">Registrarse</button>
+                <button type="submit" class="btn" data-aos="fade-right" data-aos-delay="500" data-aos-offset="0">Registrarse</button>
     
-                <div class="login">
+                <div class="login" data-aos="fade-right" data-aos-delay="600" data-aos-offset="0">
                     <p>¿Ya tienes una cuenta? <a href="{{ url_for('auth.login') }}">Ingresa</a></p>
                 </div>
             </form>
         </div>
         
-        <div class="image">
+        <div class="image" data-aos="fade-left" data-aos-duration="1000">
             <!--  Imagen de Fondo  -->
         </div>
     </div>
@@ -96,6 +98,10 @@
             loadingScreen.style.display = 'none'; // Oculta el loading
             content.style.display = 'block'; // Muestra el contenido
         };
+
+        AOS.init({
+            startEvent: 'DOMContentLoaded'
+        });
     </script>
 
 </body>

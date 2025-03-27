@@ -173,42 +173,42 @@
             <form action="{{ url_for('perfil.perfil', nombre_usuario=nombre_usuario) }}" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="form_type" value="datos_entrenador">
                 <div class="input-container">
-                    <div class="input-box" data-aos="fade-in" data-aos-delay="100">
+                    <div class="input-box">
                         <label for="entrenador_apellido">Apellido:</label>
                         <input type="text" name="entrenador_apellido" id="entrenador_apellido" value="{{ usuario_data['entrenador_apellido'] or '' }}" placeholder="Ingresa tu apellido">                
                     </div>
                     
-                    <div class="input-box" data-aos="fade-in" data-aos-delay="150">
+                    <div class="input-box">
                         <label for="entrenador_nombre">Nombre:</label>
                         <input type="text" name="entrenador_nombre" id="entrenador_nombre" value="{{ usuario_data['entrenador_nombre'] or '' }}" placeholder="Ingresa tu nombre">
                     </div>
                 </div>
 
                 <div class="input-container">
-                    <div class="input-box" data-aos="fade-in" data-aos-delay="200">
+                    <div class="input-box">
                         <label for="entrenador_nombre_usuario">Nombre de Usuario:</label>
                         <input type="text" name="entrenador_nombre_usuario" id="entrenador_nombre_usuario" value="{{ usuario_data['nombre_usuario'] or '' }}" placeholder="Ingresa tu usuario" maxlength="16" oninput="eliminarEspacios(this)">                </div>
                     
-                    <div class="input-box" data-aos="fade-in" data-aos-delay="250">
+                    <div class="input-box">
                         <label for="entrenador_email">Email:</label>
                         <input type="email" name="entrenador_email" id="entrenador_email" value="{{ usuario_data['email'] or '' }}" placeholder="Ingresa tu email">
                     </div>
                 </div>
 
                 <div class="input-container">
-                    <div class="input-box" data-aos="fade-in" data-aos-delay="300">
+                    <div class="input-box">
                         <label for="entrenador_fecha_nacimiento">Fecha de Nacimiento:</label>
                         <input type="date" name="entrenador_fecha_nacimiento" id="entrenador_fecha_nacimiento" value="{{ usuario_data['entrenador_fecha_nacimiento'] or '' }}">
                     </div>
 
-                    <div class="input-box" data-aos="fade-in" data-aos-delay="350">
+                    <div class="input-box">
                         <label for="entrenador_edad">Edad:</label>
                         <input type="number" name="entrenador_edad" id="entrenador_edad" value="{{ usuario_data['entrenador_edad'] or '' }}" placeholder="Ingresa tu edad">
                     </div>
                 </div>
 
                 <div class="input-container">
-                    <div class="input-box" data-aos="fade-in" data-aos-delay="400">
+                    <div class="input-box">
                         <label for="entrenador_pais">País:</label>
                         <select name="entrenador_pais" id="entrenador_pais">
                             <option value="">Seleccionar País</option>
@@ -220,7 +220,7 @@
                         </select>
                     </div>
 
-                    <div class="input-box" data-aos="fade-in" data-aos-delay="450">
+                    <div class="input-box">
                         <label for="entrenador_sexo">Género:</label>
                         <select name="entrenador_sexo" id="entrenador_sexo">
                             <option value="">Seleccionar Género</option>
@@ -231,12 +231,12 @@
                 </div>
 
                 <div class="input-container">
-                    <div class="input-box" data-aos="fade-in" data-aos-delay="500">
+                    <div class="input-box">
                         <label for="entrenador_biografia">Biografía:</label>
                         <textarea name="entrenador_biografia" id="entrenador_biografia" maxlength="200" placeholder="Escribe una breve biografía">{{ usuario_data['entrenador_biografia'] or '' }}</textarea>
                     </div>
 
-                    <div class="input-box" data-aos="fade-in" data-aos-delay="550">
+                    <div class="input-box">
                         <label>Foto de Perfil:</label>
 
                         <label for="file" id="archivo">
@@ -249,12 +249,12 @@
                 </div>
 
                 <div class="input-container">
-                    <div class="input-box" data-aos="fade-in" data-aos-delay="0">
+                    <div class="input-box">
                         <label for="entrenador_especializacion">Especialización:</label>
                         <input type="text" name="entrenador_especializacion" id="entrenador_especializacion" value="{{ usuario_data['especializacion'] or '' }}" placeholder="Ingresa tu Especialización" >
                     </div>
                     
-                    <div class="input-box" data-aos="fade-in" data-aos-delay="0">
+                    <div class="input-box">
                         <label for="entrenador_disciplina">Disciplina:</label>
                         <select name="entrenador_disciplina" id="entrenador_disciplina" placeholder="Seleccionar">
                             <option value="">Seleccionar Disciplina</option>
@@ -270,7 +270,7 @@
                 </div>
 
                 <div class="input-container">
-                    <div class="input-box" data-aos="fade-in" data-aos-delay="0">
+                    <div class="input-box">
                         <label for="entrenador_experiencia">Experiencia:</label>
                         <select name="entrenador_experiencia" id="entrenador_experiencia" placeholder="Seleccionar">
                             <option value="">Seleccionar Experiencia</option>
@@ -286,19 +286,19 @@
                 </div>
 
                 <div class="input-container">
-                    <div class="input-box" data-aos="fade-in" data-aos-delay="0">
+                    <div class="input-box">
                         <label for="titulo_foto">Título/Certificado:</label>
                         <input type="file" name="titulo_foto" id="titulo_foto" accept="image/*">
                     </div>
 
-                    <div class="input-box" data-aos="fade-in" data-aos-delay="0">
+                    <div class="input-box">
                         <label for="entrenador_titulo">Nombre del Título:</label>
                         <input type="text" name="entrenador_titulo" id="entrenador_titulo" value="{{ usuario_data['titulo'] or '' }}" placeholder="¿Cual es tu título o certificado?">
                     </div>
                 </div>
 
                 <div class="input-container">
-                    <div class="input-box" data-aos="fade-in" data-aos-delay="0">
+                    <div class="input-box">
                         <label for="entrenador_instituto">Universidad/Institución:</label>
                         <input type="text" name="entrenador_instituto" id="entrenador_instituto" value="{{ usuario_data['instituto'] or '' }}" placeholder="¿Donde lo obtuviste?">    
                     </div>

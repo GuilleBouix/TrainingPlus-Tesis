@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <title>Ingresar - Training+</title>
 </head>
 <body>
@@ -15,17 +17,17 @@
     </div>
 
     <div class="login-container">
-        <div class="image">
+        <div class="image" data-aos="fade-right" data-aos-duration="1000">
             <!--  Imagen de Fondo  -->
         </div>
 
         <div class="login-form">
             <form action="{{ url_for('auth.login') }}" method="POST">
                 <div class="logo-image">
-                    <img src="/static/images/logo.png">
+                    <img src="/static/images/logo.png" alt="Training+ Logo" data-aos="fade-in" data-aos-duration="1000">
                 </div>
                 
-                <div class="title">
+                <div class="title" data-aos="fade-left">
                     <h1>Iniciar Sesión</h1>
                     <p>Ingresa con tu cuenta de <span>Training+</span></p>
                 </div>
@@ -44,23 +46,23 @@
                 {% endif %}
                 {% endwith %}
 
-                <div class="input-box">
+                <div class="input-box" data-aos="fade-left" data-aos-delay="100">
                     <input type="text" name="email" placeholder="Email" required>
                     <i class='bx bxs-envelope'></i>
                 </div>
     
-                <div class="input-box">
+                <div class="input-box" data-aos="fade-left" data-aos-delay="200">
                     <input type="password" name="contrasena" placeholder="Contraseña" required>
                     <i class='bx bxs-lock-alt'></i>
                 </div>
     
-                <div class="forgot-password">
+                <div class="forgot-password" data-aos="fade-left" data-aos-delay="300">
                     <a href="#">¿Olvidaste tu contraseña?</a>
                 </div>
     
-                <button type="submit" class="btn">Ingresar</button>
+                <button type="submit" class="btn" data-aos="fade-left" data-aos-delay="400">Ingresar</button>
     
-                <div class="register">
+                <div class="register" data-aos="fade-left" data-aos-delay="500" data-aos-offset="0">
                     <p>¿No tienes una cuenta? <a href="{{ url_for('auth.signup') }}">Regístrate</a></p>
                 </div>
             </form>
@@ -76,6 +78,10 @@
             loadingScreen.style.display = 'none'; // Oculta el loading
             content.style.display = 'block'; // Muestra el contenido
         };
+
+        AOS.init({
+            startEvent: 'DOMContentLoaded'
+        });
     </script>
 
 </body>

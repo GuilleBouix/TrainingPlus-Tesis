@@ -13,7 +13,7 @@ buscador_bp = Blueprint('buscar', __name__)
 @login_required
 @verificar_formulario_completo
 def buscador():
-    query = request.args.get('query', '')  # Búsqueda general
+    query = request.args.get('query', '')  # Filtro general
     tipo = request.args.get('tipo', '')    # Filtro por rol
     pais = request.args.get('pais', '')    # Filtro por país
     sexo = request.args.get('sexo', '')    # Filtro por sexo
@@ -21,41 +21,37 @@ def buscador():
     connection = conexion_basedatos()
     cursor = connection.cursor()
 
-    # Base de la consulta SQL
-    # base_query = """
-    #     SELECT u.id_usuario, u.nombre_usuario, u.rol, a.nombre, a.apellido, a.foto_perfil, p.nombre, p.codigo_iso, a.sexo
-    #     FROM usuario u
-    #     LEFT JOIN alumno a ON u.id_usuario = a.id_usuario
-    #     LEFT JOIN pais p ON a.id_pais = p.id_pais
-    #     WHERE (u.nombre_usuario LIKE ? OR a.nombre LIKE ? OR a.apellido LIKE ? OR p.nombre LIKE ?)
-    # """
-
+    # Consulta SQL para realizar la búsqueda general y aplicar filtros
     base_query = """
-        SELECT u.id_usuario, u.nombre_usuario, u.rol, a.nombre, a.apellido, a.foto_perfil, p.nombre, p.codigo_iso, a.sexo, 
-               e.nombre, e.apellido, e.foto_perfil, e.sexo
+        SELECT u.id_usuario, u.nombre_usuario, u.rol, 
+               a.nombre, a.apellido, a.foto_perfil, p_a.nombre as pais_alumno, p_a.codigo_iso as iso_alumno, a.sexo as sexo_alumno,
+               e.nombre, e.apellido, e.foto_perfil, p_e.nombre as pais_entrenador, p_e.codigo_iso as iso_entrenador, e.sexo as sexo_entrenador
         FROM usuario u
         LEFT JOIN alumno a ON u.id_usuario = a.id_usuario
+        LEFT JOIN pais p_a ON a.id_pais = p_a.id_pais
         LEFT JOIN entrenador e ON u.id_usuario = e.id_usuario
-        LEFT JOIN pais p ON a.id_pais = p.id_pais
-        WHERE (u.nombre_usuario LIKE ? OR a.nombre LIKE ? OR a.apellido LIKE ? OR p.nombre LIKE ?)
+        LEFT JOIN pais p_e ON e.id_pais = p_e.id_pais
+        WHERE (u.nombre_usuario LIKE ? OR 
+               a.nombre LIKE ? OR a.apellido LIKE ? OR p_a.nombre LIKE ? OR
+               e.nombre LIKE ? OR e.apellido LIKE ? OR p_e.nombre LIKE ?)
     """
-    filters = ['%' + query + '%'] * 4  # Parámetros para la búsqueda general
+    filters = ['%' + query + '%'] * 7  # Parámetros para la búsqueda general
 
     # Aplicar filtros adicionales
     if tipo:
         base_query += " AND u.rol = ?"
         filters.append(tipo)
     if pais:
-        base_query += " AND a.id_pais = ?"
-        filters.append(pais)
+        # Buscar país tanto para alumnos como para entrenadores
+        base_query += " AND (a.id_pais = ? OR e.id_pais = ?)"
+        filters.extend([pais, pais])
     if sexo:
-        base_query += " AND a.sexo = ?"
-        filters.append(sexo)
+        # Buscar sexo tanto para alumnos como para entrenadores
+        base_query += " AND (a.sexo = ? OR e.sexo = ?)"
+        filters.extend([sexo, sexo])
 
     cursor.execute(base_query, filters)
     resultados = cursor.fetchall()
-
-    print(f'RESULTADOS DE CONSULTA: {resultados}')
 
     # Obtener lista de países para el filtro
     cursor.execute("SELECT id_pais, nombre FROM pais")
@@ -67,6 +63,7 @@ def buscador():
 
     connection.close()
 
+    # Renderizar la plantilla
     return render_template(
         'buscador.html',
         query=query,
@@ -81,6 +78,7 @@ def buscador():
 
 
 
+# Ruta para obtener los datos de un usuario
 @buscador_bp.route('/datos_usuario/<int:id_usuario>', methods=['GET'])
 @login_required
 def obtener_datos_usuario(id_usuario):
