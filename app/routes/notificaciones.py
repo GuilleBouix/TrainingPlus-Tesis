@@ -21,7 +21,7 @@ def enviar_solicitud(id_usuario_destino):
         conexion = conexion_basedatos()
         cursor = conexion.cursor()
         
-        print(f"Intentando enviar solicitud de {id_usuario_origen} a {id_usuario_destino}")
+        # print(f"Intentando enviar solicitud de {id_usuario_origen} a {id_usuario_destino}")
 
         cursor.execute("""
             SELECT rol FROM usuario WHERE id_usuario = ?
@@ -35,7 +35,7 @@ def enviar_solicitud(id_usuario_destino):
 
         # Generar un token único
         token = secrets.token_urlsafe(16)
-        print(f"Token generado: {token}")
+        # print(f"Token generado: {token}")
 
         # Generar la fecha sin segundos ni microsegundos
         fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M")
@@ -50,12 +50,11 @@ def enviar_solicitud(id_usuario_destino):
         conexion.close()
 
         flash("Solicitud de conexión enviada correctamente.", "success")
-        print("Solicitud enviada con éxito.")
         return redirect(url_for('usuario.usuario', id_usuario=id_usuario_destino))
 
     except Exception as e:
-        print(f"Error al enviar la solicitud: {e}")
         flash("Error al enviar la solicitud. Intente nuevamente.", "error")
+
         return redirect(url_for('usuario.usuario', id_usuario=id_usuario_origen))
 
 

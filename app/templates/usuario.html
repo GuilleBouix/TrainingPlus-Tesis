@@ -1,12 +1,25 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Usuario - Training+
+    {{ info.nombre.upper() }} {{ info.apellido.upper() }} - Training+
 {% endblock %}
 
 {% block content %}
 
     <div class="usuario-container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flash-messages">
+                    {% for category, message in messages %}
+                        <li class="flash {{ category }}">
+                            <i class="{{ 'bx bxs-error-circle' if category == 'error' else 'bx bxs-check-circle' }}"></i>
+                            {{ message }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
         <div class="section-1">
             <div class="photo-container">
                 <img src="{{ url_for('static', filename='uploads/users/' + (info.foto_perfil if info.foto_perfil else 'profile.webp')) }}" alt="Foto de perfil">
@@ -91,14 +104,30 @@
                     </div>
                 </div>
 
-                {% if es_entrenador and usuario['id_usuario'] != id_usuario_sesion %}
-                    <!--  Si el usuario de la sesion es un alumno, no podra conectarse con ningun usuario  -->
-                    {% if id_usuario_sesion != info.id_usuario %}
-                        <form action="{{ url_for('notificaciones.enviar_solicitud', id_usuario_destino=usuario.id_usuario) }}" method="POST">
-                            <button type="submit"><i class='bx bxs-group'></i> Conectar</button>
-                        </form>
-                    {% endif %}
+                <!-- {% if es_entrenador and usuario['id_usuario'] != id_usuario_sesion %}
+                    <form action="{{ url_for('notificaciones.enviar_solicitud', id_usuario_destino=usuario.id_usuario) }}" method="POST">
+                        <button type="submit"><i class='bx bxs-group'></i> Conectar</button>
+                    </form>
+                {% else %}
+                    <button>Ver Certificación</button>
+                {% endif %} -->
+
+                {% if es_entrenador_perfil %}
+                    <button class="btn-certificacion">
+                        <i class='bx bx-certification'></i> Ver Certificación
+                    </button>
                 {% endif %}
+
+                {# Botón "Conectar" solo aparece si: #}
+                {# 1. El usuario logueado es entrenador (es_entrenador) #}
+                {# 2. No es su propio perfil (usuario.id_usuario != id_usuario_sesion) #}
+                {# 3. El perfil visitado NO es de un entrenador (not es_entrenador_perfil) #}
+                {% if es_entrenador and usuario.id_usuario != id_usuario_sesion and not es_entrenador_perfil %}
+                    <form action="{{ url_for('notificaciones.enviar_solicitud', id_usuario_destino=usuario.id_usuario) }}" method="POST">
+                        <button type="submit"><i class='bx bxs-group'></i> Conectar</button>
+                    </form>
+                {% endif %}
+
             </div>
         </div>
     </div>

@@ -277,6 +277,31 @@ main {
     margin-right: .3rem;
 }
 
+.btn-certificacion {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 50px;
+    border-radius: 5px;
+    background-color: var(--color-button-primary);
+    color: var(--color-background);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    cursor: pointer;
+}
+.btn-certificacion:hover {
+    background-color: var(--color-button-hover);
+}
+.btn-certificacion:active {
+    background-color: var(--color-button-active);
+}
+.btn-certificacion i {
+    font-size: 1.3rem;
+    margin-right: .3rem;
+}
 
 
 

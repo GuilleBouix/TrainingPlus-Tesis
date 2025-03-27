@@ -104,6 +104,9 @@ def usuario(id_usuario):
     sesion_data = cursor.fetchone()
     es_entrenador = sesion_data and sesion_data['rol'] == 2
 
+    # En la parte final de tu ruta usuario.py, antes del render_template:
+    es_entrenador_perfil = usuario_data['rol'] == 2
+
     # Cerrar la conexión a la base de datos
     cursor.close()
     connection.close()
@@ -114,5 +117,6 @@ def usuario(id_usuario):
             usuario=usuario_data, 
             info=usuario_info,  
             id_usuario_sesion=id_usuario_sesion, 
-            es_entrenador=es_entrenador
+            es_entrenador=es_entrenador,
+            es_entrenador_perfil=es_entrenador_perfil
         )
