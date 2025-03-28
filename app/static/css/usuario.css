@@ -397,6 +397,15 @@ main {
         margin-right: .5rem;
     }
 
+    .btn-certificacion {
+        padding: 10px 50px;
+        font-size: 1.1rem;
+    }
+    .btn-certificacion i {
+        font-size: 1.7rem;
+        margin-right: .5rem;
+    }
+
     .links {
         display: flex;
         gap: 2rem;
