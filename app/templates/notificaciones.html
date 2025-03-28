@@ -10,6 +10,19 @@
         <p data-aos="fade-right" data-aos-delay="100">Visualiza y gestiona tus notificaciones para mantenerte al día.</p>
     </div>
 
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flash-messages">
+                {% for category, message in messages %}
+                    <li class="flash {{ category }}">
+                        <i class="{{ 'bx bxs-error-circle' if category == 'error' else 'bx bxs-check-circle' }}"></i>
+                        {{ message }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
     <div class="notifications-container">
         <div class="notifications-sections section-filter" data-aos="flip-right" data-aos-delay="200">
             <h2 data-aos="fade-right" data-aos-delay="300">Filtros</h2>

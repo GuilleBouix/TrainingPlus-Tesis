@@ -361,10 +361,7 @@
             .then(response => response.json())
             .then(result => {
                 if (result.success) {
-                    alert('Redes sociales actualizadas correctamente.');
                     document.getElementById('dialog-social-media').close(); // Cerrar el modal
-                } else {
-                    alert('Error: ' + result.message);
                 }
             })
             .catch(error => console.error('Error:', error));

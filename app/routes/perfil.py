@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash, jsonify
 from app.utils.conexion import conexion_basedatos
 from app.utils.helpers import login_required, verificar_formulario_completo
-from werkzeug.utils import secure_filename
 from PIL import Image
 import os
 
@@ -17,6 +16,9 @@ UPLOAD_FOLDERS = {
     'trainers': 'app/static/uploads/users',
     'studies': 'app/static/uploads/titles'
 }
+
+
+# Configuración de las extensiones permitidas
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}
 DEFAULT_PROFILE_PICTURE = 'profile.webp'
 
@@ -29,47 +31,84 @@ def allowed_file(filename):
 
 
 # Función para comprimir y convertir a .webp
+# def compress_and_convert_to_webp(file, id_usuario, folder_type, filename_format):
+#     """
+#     Comprime y convierte una imagen a formato WEBP.
+    
+#     :param file: Archivo de imagen subido.
+#     :param id_usuario: ID del usuario o entrenador asociado.
+#     :param folder_type: Tipo de carpeta (users, trainers, studies).
+#     :param filename_format: Formato para el nombre del archivo.
+#     :return: Nombre del archivo guardado o None si falla.
+#     """
+#     # Verifica que el tipo de carpeta sea válido
+#     uploads_dir = UPLOAD_FOLDERS.get(folder_type)
+#     if not uploads_dir:
+#         raise ValueError("Tipo de carpeta no válido")
+
+#     # Genera el nombre de archivo basado en el formato proporcionado
+#     filename = filename_format.format(id=id_usuario)
+
+#     # Define el camino completo donde se guardará la imagen
+#     file_path = os.path.join(uploads_dir, filename)
+
+#     try:
+#         # Abre la imagen con PIL
+#         image = Image.open(file)
+
+#         # Obtener las dimensiones originales
+#         width, height = image.size
+
+#         # Redimensionar la imagen a la mitad del tamaño original
+#         new_width = width // 2
+#         new_height = height // 2
+
+#         # Redimensionar la imagen
+#         image = image.resize((new_width, new_height))
+
+#         image = image.convert("RGB")  # Convertir la imagen a RGB si es necesario
+#         image.save(file_path, format="WEBP", quality=60)  # Guarda con calidad 60%
+        
+#         return filename
+#     except Exception as e:
+#         print(f"Error al procesar la imagen: {e}")
+#         return None
 def compress_and_convert_to_webp(file, id_usuario, folder_type, filename_format):
     """
     Comprime y convierte una imagen a formato WEBP.
-    
-    :param file: Archivo de imagen subido.
-    :param id_usuario: ID del usuario o entrenador asociado.
-    :param folder_type: Tipo de carpeta (users, trainers, studies).
-    :param filename_format: Formato para el nombre del archivo.
-    :return: Nombre del archivo guardado o None si falla.
+    :param file: Archivo de imagen subido
+    :param id_usuario: ID del usuario/entrenador
+    :param folder_type: Tipo de carpeta (users/trainers/studies)
+    :param filename_format: Formato del nombre de archivo
+    :return: Nombre del archivo guardado o None si falla
     """
-    # Verifica que el tipo de carpeta sea válido
-    uploads_dir = UPLOAD_FOLDERS.get(folder_type)
-    if not uploads_dir:
-        raise ValueError("Tipo de carpeta no válido")
-
-    # Genera el nombre de archivo basado en el formato proporcionado
-    filename = filename_format.format(id=id_usuario)
-
-    # Define el camino completo donde se guardará la imagen
-    file_path = os.path.join(uploads_dir, filename)
-
     try:
-        # Abre la imagen con PIL
-        image = Image.open(file)
+        uploads_dir = UPLOAD_FOLDERS.get(folder_type)
+        if not uploads_dir:
+            raise ValueError("Tipo de carpeta no válido")
 
-        # Obtener las dimensiones originales
-        width, height = image.size
+        # Asegurar que el directorio existe
+        os.makedirs(uploads_dir, exist_ok=True)
 
-        # Redimensionar la imagen a la mitad del tamaño original
-        new_width = width // 2
-        new_height = height // 2
+        # Generar nombre de archivo
+        filename = filename_format.format(id=id_usuario)
+        file_path = os.path.join(uploads_dir, filename)
 
-        # Redimensionar la imagen
-        image = image.resize((new_width, new_height))
+        # Procesar imagen
+        with Image.open(file) as img:
+            # Redimensionar manteniendo aspect ratio
+            base_width = 800
+            w_percent = (base_width / float(img.size[0]))
+            h_size = int((float(img.size[1]) * float(w_percent)))
+            img = img.resize((base_width, h_size), Image.Resampling.LANCZOS)
 
-        image = image.convert("RGB")  # Convertir la imagen a RGB si es necesario
-        image.save(file_path, format="WEBP", quality=60)  # Guarda con calidad 60%
+            # Convertir y guardar
+            img.convert("RGB").save(file_path, "WEBP", quality=70)
         
         return filename
+
     except Exception as e:
-        print(f"Error al procesar la imagen: {e}")
+        print(f"Error procesando imagen: {e}")
         return None
 
 
@@ -115,7 +154,7 @@ def perfil(nombre_usuario):
     """, (nombre_usuario,))
     usuario_data = cursor.fetchone()
 
-    print("CLAVES DE usuario_data:", usuario_data.keys())
+    # print("CLAVES DE usuario_data:", usuario_data.keys())
 
     # Verificar el rol del usuario
     rol_usuario = usuario_data['rol']
@@ -202,11 +241,6 @@ def perfil(nombre_usuario):
             titulo = request.form['entrenador_titulo']
             instituto = request.form['entrenador_instituto']
 
-            print(f"...........................................................................")
-            print(f"Datos recibidos en el formulario: {request.form}")  # Esto imprimirá los datos recibidos en el terminal o consolarequest.form)  # Esto imprimirá los datos recibidos en el terminal o consola
-            print(f"...........................................................................")
-
-
             # Procesar la foto de perfil
             if 'file' in request.files:
                 file = request.files['file']
@@ -227,11 +261,21 @@ def perfil(nombre_usuario):
             if 'titulo_foto' in request.files:
                 file = request.files['titulo_foto']
                 if file and allowed_file(file.filename):
+                    # Eliminar la imagen anterior si existe
+                    titulo_actual = usuario_data['titulo_foto']
+                    if titulo_actual and titulo_actual:
+                        try:
+                            old_path = os.path.join(UPLOAD_FOLDERS['studies'], titulo_actual)
+                            if os.path.exists(old_path):
+                                os.remove(old_path)
+                        except Exception as e:
+                            print(f"Error al eliminar imagen anterior: {e}")
+
+                    # Procesar nueva imagen
                     titulo_foto_filename = compress_and_convert_to_webp(
                         file, id_usuario, 'studies', 'trainer{id}-title.webp'
                     )
                     if titulo_foto_filename:
-                        # Guardar en la base de datos
                         cursor.execute("""
                             UPDATE entrenador
                             SET titulo_foto = ?
@@ -292,24 +336,27 @@ def actualizar_redes():
         conn = conexion_basedatos()
         cursor = conn.cursor()
         id_usuario = session.get('id_usuario')
+        rol_usuario = session.get('rol')  # Asegúrate de tener el rol en la sesión
 
-        if not id_usuario:
-            return jsonify({'success': False, 'message': 'Usuario no autenticado.'})
-
-        cursor.execute("""
-            UPDATE alumno
-            SET instagram = ?, facebook = ?, telefono = ?
-            WHERE id_usuario = ?
-        """, (instagram, facebook, telefono, id_usuario))
+        if rol_usuario == 1:  # Alumno
+            cursor.execute("""
+                UPDATE alumno
+                SET instagram = ?, facebook = ?, telefono = ?
+                WHERE id_usuario = ?
+            """, (instagram, facebook, telefono, id_usuario))
+        elif rol_usuario == 2:  # Entrenador
+            cursor.execute("""
+                UPDATE entrenador
+                SET instagram = ?, facebook = ?, telefono = ?
+                WHERE id_usuario = ?
+            """, (instagram, facebook, telefono, id_usuario))
 
         conn.commit()
         flash('Redes actualizadas correctamente.', 'success')
         return jsonify({'success': True})
-
     except Exception as e:
         conn.rollback()
         return jsonify({'success': False, 'message': f'Error al actualizar redes sociales: {str(e)}'})
-
     finally:
         cursor.close()
         conn.close()

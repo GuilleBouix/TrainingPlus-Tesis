@@ -29,7 +29,7 @@ def enviar_solicitud(id_usuario_destino):
         rol_origen = cursor.fetchone()
 
         if rol_origen[0] != 2:  # Si el origen no es un entrenador
-            print("El usuario no es entrenador.")
+            # print("El usuario no es entrenador.")
             flash("Solo los entrenadores pueden enviar solicitudes.", "error")
             return redirect(url_for('usuario.usuario', id_usuario=id_usuario_origen))
 
@@ -239,7 +239,7 @@ def responder_solicitud(id_vinculacion):
                 VALUES (?, ?)
             """, (id_usuario_origen, mensaje))
 
-            flash("Solicitud aceptada y notificación enviada al entrenador.", "success")
+            flash("Solicitud aceptada exitosamente.", "success")
 
         elif respuesta == 'rechazar':
             # Eliminar la solicitud de la tabla

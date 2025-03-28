@@ -100,7 +100,9 @@
 
             // Inicializar AOS
             AOS.init({
-                startEvent: 'DOMContentLoaded'
+                startEvent: 'DOMContentLoaded', // Inicia las animaciones cuando se carga la página
+                offset: 0,                     // Desactiva el offset del scroll
+                once: true                     // Asegúrate de que se ejecute solo una vez
             });
         })
     </script>

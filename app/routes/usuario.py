@@ -104,8 +104,19 @@ def usuario(id_usuario):
     sesion_data = cursor.fetchone()
     es_entrenador = sesion_data and sesion_data['rol'] == 2
 
-    # En la parte final de tu ruta usuario.py, antes del render_template:
+    # Verificar si el usuario de la sesión actual es un entrenador
     es_entrenador_perfil = usuario_data['rol'] == 2
+    
+    titulo_foto = None
+
+    if es_entrenador_perfil:
+        cursor.execute("""
+            SELECT titulo_foto
+            FROM entrenador
+            WHERE id_usuario = ?
+        """, (id_usuario,))
+        titulo_data = cursor.fetchone()
+        titulo_foto = titulo_data['titulo_foto'] if titulo_data and titulo_data['titulo_foto'] else None
 
     # Cerrar la conexión a la base de datos
     cursor.close()
@@ -118,5 +129,6 @@ def usuario(id_usuario):
             info=usuario_info,  
             id_usuario_sesion=id_usuario_sesion, 
             es_entrenador=es_entrenador,
-            es_entrenador_perfil=es_entrenador_perfil
+            es_entrenador_perfil=es_entrenador_perfil,
+            titulo_foto=titulo_foto
         )
