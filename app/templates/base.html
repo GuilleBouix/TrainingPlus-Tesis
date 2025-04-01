@@ -24,13 +24,12 @@
     <script src="{{ url_for('static', filename='javascript/script.js') }}" defer></script>
 </head>
 <body class="base-body">
-    <!-- Loading Screen -->
+    <!-- Pantalla de carga -->
     <div id="loading-screen">
         <div class="spinner"></div>
     </div>
 
-
-
+    <!-- Modal de Notificaciones -->
     <dialog class="modal-notificaciones" id="modalNotificaciones">
         <div class="title">
             <h1>Notificaciones</h1>
@@ -42,9 +41,7 @@
         </div>
     </dialog>
     
-
-
-
+    <!-- Barra de navegación -->
     <nav class="nav">
         <i class='bx bx-menu navOpenBtn'></i>
         <img src="/static/images/logo.png" alt="" class="logo-image" width="50px" height="auto">
@@ -71,21 +68,18 @@
         </div>
     </nav>
 
-
-
+    <!-- Contenido principal -->
     <main id="main-content">
         {% block content %}
 
         {% endblock %}
     </main>
 
-
-    <a href="{{ url_for('notificaciones.listar_solicitudes') }}" class="btn-notification open-modal-notification" title="Notificaciones">
+    <!-- Botón de notificaciones -->
+    <a href="{{ url_for('notificaciones.listar_solicitudes') }}" class="btn-notification open-modal-notification" title="Notificaciones" data-aos="fade-up">
+        <span class="notification-count" id="notificationCount" style="display: none;"></span>
         <i class='bx bxs-bell'></i>
     </a>
-
-
-
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -105,6 +99,24 @@
                 once: true                     // Asegúrate de que se ejecute solo una vez
             });
         })
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch("{{ url_for('notificaciones.cantidad_notificaciones') }}")
+                .then(response => response.json())
+                .then(data => {
+                    const notificationCount = document.getElementById("notificationCount");
+
+                    if (data.cantidad !== null) {
+                        notificationCount.textContent = data.cantidad === 9 ? "+9" : data.cantidad;
+                        notificationCount.style.display = "flex"; // Mostrar si hay notificaciones
+                    } else {
+                        notificationCount.style.display = "none"; // Ocultar si no hay notificaciones
+                    }
+                })
+                .catch(error => console.error("Error al obtener notificaciones:", error));
+        });
     </script>
 </body>
 </html>

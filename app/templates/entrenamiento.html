@@ -11,6 +11,7 @@
                 <h1>Tus Entrenamientos</h1>
                 <p>Visualiza y gestiona tus programas de entrenamiento.</p>
             </div>
+            <!--Mostrar solo si el usuario es un entrenador (rol = 2)-->
             <a href="{{ url_for('entrenamiento.crear_entrenamiento') }}" class="btn-new-training" data-aos="fade-left">
                 <i class='bx bx-plus'></i> Nuevo Entrenamiento
             </a>
@@ -29,11 +30,11 @@
             {% endif %}
         {% endwith %}
 
-
-        <div class="filters-box">
-            <button class="filter active" data-aos="fade-in" data-aos-delay="100">Todos</button>
-            <button class="filter" data-aos="fade-in" data-aos-delay="200">Activos</button>
-            <button class="filter" data-aos="fade-in" data-aos-delay="300">Completados</button>
+        <!-- Filtros -->
+        <div class="filters-box" role="group" aria-label="Filtrar entrenamientos">
+            <button class="filter active" data-aos="fade-in" data-aos-delay="100" data-filter="all" aria-pressed="true">Todos</button>
+            <button class="filter" data-aos="fade-in" data-aos-delay="200" data-filter="active" aria-pressed="false">Activos</button>
+            <button class="filter" data-aos="fade-in" data-aos-delay="300" data-filter="completed" aria-pressed="false">Completados</button>
         </div>
 
         {% if entrenamientos %}
@@ -50,23 +51,15 @@
                     <div class="duration">
                         <p><i class='bx bx-time-five'></i> {{ entrenamiento.duracion_semanas }} Semanas</p>
                     </div>
-        
-                    <!-- <div class="trainer-content">
-                        <img src="{{ url_for('static', filename='uploads/users/trainer' ~ entrenamiento.id_entrenador ~ '-profile.webp') }}" alt="Trainer">
-                        <div class="trainer-info">
-                            <h3>Entrenador</h3>
-                            <p>{{ entrenamiento.entrenador_nombre }} {{ entrenamiento.entrenador_apellido }}</p>
-                        </div>
-                    </div> -->
 
                     {% if asociacion %}
-                    <div class="trainer-content">
-                        <img src="{{ url_for('static', filename='uploads/users/' ~ asociacion.datos.foto_perfil) }}" alt="{{ asociacion.tipo }}">
-                        <div class="trainer-info">
-                            <h3>{{ asociacion.tipo }}</h3>
-                            <p>{{ asociacion.datos.nombre }} {{ asociacion.datos.apellido }}</p>
+                        <div class="trainer-content">
+                            <img src="{{ url_for('static', filename='uploads/users/' ~ asociacion.datos.foto_perfil) }}" alt="{{ asociacion.tipo }}">
+                            <div class="trainer-info">
+                                <h3>{{ asociacion.tipo }}</h3>
+                                <p>{{ asociacion.datos.nombre }} {{ asociacion.datos.apellido }}</p>
+                            </div>
                         </div>
-                    </div>
                     {% endif %}
         
                     <div class="progress">
@@ -88,10 +81,66 @@
             {% endfor %}
         </div>
         {% else %}
-            <p class="no-training">Aún no tienes entrenamientos disponibles.</p>
+            <p class="no-training" data-aos="fade-in" data-aos-delay="100">
+                Aún no tienes entrenamientos disponibles.
+            </p>
         {% endif %}
     </div>
 
+    <!-- Script para filtrar entrenamientos según su estado -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Barra de progreso (existente)
+            document.querySelectorAll(".progress-bar").forEach((bar) => {
+                let progreso = bar.getAttribute("data-progreso");
+                bar.style.width = progreso + "%";
+            });
+
+            // Filtros (versión simplificada)
+            const filters = document.querySelectorAll('.filter');
+            const trainingItems = document.querySelectorAll('.training');
+
+            filters.forEach(filter => {
+                filter.addEventListener('click', () => {
+                    // Remover clase active de todos los filtros
+                    filters.forEach(f => f.classList.remove('active'));
+                    // Añadir clase active al filtro clickeado
+                    filter.classList.add('active');
+                    
+                    const filterValue = filter.getAttribute('data-filter');
+                    
+                    trainingItems.forEach(item => {
+                        const progressText = item.querySelector('.progress-percentage').textContent;
+                        const progress = parseFloat(progressText.replace('%', ''));
+                        
+                        let shouldShow = false;
+                        
+                        switch(filterValue) {
+                            case 'all':
+                                shouldShow = true;
+                                break;
+                            case 'active':
+                                shouldShow = progress < 100.0;
+                                break;
+                            case 'completed':
+                                shouldShow = progress === 100.0;
+                                break;
+                        }
+                        
+                        // Transición suave al mostrar/ocultar
+                        item.style.opacity = '0';
+                        setTimeout(() => {
+                            item.style.display = shouldShow ? 'block' : 'none';
+                            setTimeout(() => {
+                                item.style.opacity = '1';
+                            }, 50);
+                        }, 200);
+                    });
+                });
+            });
+        });
+    </script>
+    
     <!-- Script para la barra de progreso -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {

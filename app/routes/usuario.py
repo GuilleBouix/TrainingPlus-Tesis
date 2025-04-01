@@ -4,9 +4,7 @@ from app.utils.helpers import login_required, verificar_formulario_completo
 from datetime import datetime
 
 
-
 usuario_bp = Blueprint('usuario', __name__)
-
 
 
 # Función para formatear la fecha de nacimiento
@@ -17,6 +15,19 @@ def format_fecha(fecha):
     ]
     return f"{fecha.day}/{meses[fecha.month - 1]}/{fecha.year}"
 
+
+# Función para verificar el estado de conexión
+def verificar_estado_conexion(id_entrenador, id_alumno, cursor):
+    cursor.execute("""
+        SELECT estado 
+        FROM vinculaciones 
+        WHERE id_usuario_origen = ? AND id_usuario_destino = ?
+        ORDER BY fecha_solicitud DESC
+        LIMIT 1
+    """, (id_entrenador, id_alumno))
+    
+    resultado = cursor.fetchone()
+    return resultado[0] if resultado else None
 
 
 # Ruta de Usuario
@@ -118,6 +129,11 @@ def usuario(id_usuario):
         titulo_data = cursor.fetchone()
         titulo_foto = titulo_data['titulo_foto'] if titulo_data and titulo_data['titulo_foto'] else None
 
+    # Verificar estado de conexión si es un entrenador viendo perfil de alumno
+    estado_conexion = None
+    if es_entrenador and usuario_data['rol'] == 1 and usuario_data['id_usuario'] != id_usuario_sesion:
+        estado_conexion = verificar_estado_conexion(id_usuario_sesion, id_usuario, cursor)
+
     # Cerrar la conexión a la base de datos
     cursor.close()
     connection.close()
@@ -130,5 +146,6 @@ def usuario(id_usuario):
             id_usuario_sesion=id_usuario_sesion, 
             es_entrenador=es_entrenador,
             es_entrenador_perfil=es_entrenador_perfil,
-            titulo_foto=titulo_foto
+            titulo_foto=titulo_foto,
+            estado_conexion=estado_conexion
         )

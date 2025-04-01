@@ -5,9 +5,7 @@ from datetime import datetime
 import secrets
 
 
-
 notificaciones_bp = Blueprint('notificaciones', __name__)
-
 
 
 # Ruta de Enviar Solicitud
@@ -58,9 +56,76 @@ def enviar_solicitud(id_usuario_destino):
         return redirect(url_for('usuario.usuario', id_usuario=id_usuario_origen))
 
 
+# Ruta para cancelar una solicitud pendiente
+@notificaciones_bp.route('/cancelar_solicitud/<int:id_usuario_destino>', methods=['POST'])
+@login_required
+def cancelar_solicitud(id_usuario_destino):
+    id_usuario_origen = session['id_usuario']
+
+    try:
+        conexion = conexion_basedatos()
+        cursor = conexion.cursor()
+
+        # Verificar que existe una solicitud pendiente
+        cursor.execute("""
+            DELETE FROM vinculaciones
+            WHERE id_usuario_origen = ? AND id_usuario_destino = ? AND estado = 'pendiente'
+        """, (id_usuario_origen, id_usuario_destino))
+
+        conexion.commit()
+        conexion.close()
+
+        flash("Solicitud cancelada correctamente.", "success")
+        return redirect(url_for('usuario.usuario', id_usuario=id_usuario_destino))
+
+    except Exception as e:
+        print(f"Error al cancelar solicitud: {e}")
+        flash("Error al cancelar la solicitud.", "error")
+        return redirect(url_for('usuario.usuario', id_usuario=id_usuario_origen))
+
+
+# Ruta para eliminar una conexión existente
+@notificaciones_bp.route('/eliminar_conexion/<int:id_usuario_destino>', methods=['POST'])
+@login_required
+def eliminar_conexion(id_usuario_destino):
+    id_usuario_origen = session['id_usuario']
+
+    try:
+        conexion = conexion_basedatos()
+        cursor = conexion.cursor()
+
+        # Eliminar la conexión aceptada
+        cursor.execute("""
+            DELETE FROM vinculaciones
+            WHERE id_usuario_origen = ? AND id_usuario_destino = ? AND estado = 'aceptada'
+        """, (id_usuario_origen, id_usuario_destino))
+
+        # Crear notificación para el alumno
+        cursor.execute("""
+            SELECT nombre_usuario FROM usuario WHERE id_usuario = ?
+        """, (id_usuario_origen,))
+        nombre_entrenador = cursor.fetchone()[0]
+
+        mensaje = f"El entrenador @{nombre_entrenador} ha eliminado tu conexión."
+        cursor.execute("""
+            INSERT INTO notificaciones (id_usuario, mensaje)
+            VALUES (?, ?)
+        """, (id_usuario_destino, mensaje))
+
+        conexion.commit()
+        conexion.close()
+
+        flash("Conexión eliminada correctamente.", "success")
+        return redirect(url_for('usuario.usuario', id_usuario=id_usuario_destino))
+
+    except Exception as e:
+        print(f"Error al eliminar conexión: {e}")
+        flash("Error al eliminar la conexión.", "error")
+        return redirect(url_for('usuario.usuario', id_usuario=id_usuario_origen))
+
 
 # Ruta para listar las solicitudes pendientes
-@notificaciones_bp.route('/solicitudes', methods=['GET'])
+@notificaciones_bp.route('/notificaciones', methods=['GET'])
 @login_required
 def listar_solicitudes():
     id_usuario = session['id_usuario']
@@ -79,7 +144,7 @@ def listar_solicitudes():
 
     # Obtener notificaciones
     cursor.execute("""
-        SELECT id_notificacion, mensaje, fecha, leida
+        SELECT id_notificacion, mensaje, fecha, id_entrenamiento
         FROM notificaciones
         WHERE id_usuario = ?
         ORDER BY fecha DESC
@@ -111,7 +176,6 @@ def listar_solicitudes():
         id_notificacion = notificacion[0]
         mensaje = notificacion[1]
         fecha = notificacion[2]
-        leida = bool(notificacion[3])  # Convertir 0/1 a False/True
 
         # Convertir y formatear la fecha
         fecha_obj = datetime.strptime(fecha, "%Y-%m-%d %H:%M:%S")
@@ -121,7 +185,7 @@ def listar_solicitudes():
             'id_notificacion': id_notificacion,
             'mensaje': mensaje,
             'fecha': fecha_formateada,
-            'leida': leida
+            'id_entrenamiento': notificacion[3]  # Añade esto
         })
 
     return render_template(
@@ -129,7 +193,6 @@ def listar_solicitudes():
         solicitudes=solicitudes_formateadas,
         notificaciones=notificaciones_formateadas
     )
-
 
 
 # Ruta para aceptar una solicitud
@@ -198,7 +261,6 @@ def aceptar_vinculo(token):
         return redirect(url_for('usuario.usuario', id_usuario=id_usuario))
     
 
-
 # Ruta para responder a una solicitud
 @notificaciones_bp.route('/responder_solicitud/<int:id_vinculacion>', methods=['POST'])
 @login_required
@@ -210,12 +272,12 @@ def responder_solicitud(id_vinculacion):
         conexion = conexion_basedatos()
         cursor = conexion.cursor()
 
-        # Obtener el entrenador (origen) asociado a esta solicitud
+        # Obtener los datos de la vinculación
         cursor.execute("""
-            SELECT id_usuario_origen 
+            SELECT id_usuario_origen, id_usuario_destino, estado 
             FROM vinculaciones 
-            WHERE id_vinculacion = ?
-        """, (id_vinculacion,))
+            WHERE id_vinculacion = ? AND id_usuario_destino = ?
+        """, (id_vinculacion, id_usuario_destino))
         resultado = cursor.fetchone()
 
         if not resultado:
@@ -223,17 +285,27 @@ def responder_solicitud(id_vinculacion):
             return redirect(url_for('notificaciones.listar_solicitudes'))
 
         id_usuario_origen = resultado[0]
+        estado_actual = resultado[2]
+
+        if estado_actual != 'pendiente':
+            flash("Esta solicitud ya fue procesada.", "error")
+            return redirect(url_for('notificaciones.listar_solicitudes'))
 
         if respuesta == 'aceptar':
-            # Cambiar el estado de la solicitud a 'aceptada'
+            # Actualizar el estado a 'aceptada'
             cursor.execute("""
                 UPDATE vinculaciones
                 SET estado = 'aceptada'
                 WHERE id_vinculacion = ?
             """, (id_vinculacion,))
 
-            # Crear notificación para el entrenador
-            mensaje = f"El usuario @{session['nombre_usuario']} aceptó tu solicitud de conexión."
+            # Notificación para el entrenador
+            cursor.execute("""
+                SELECT nombre_usuario FROM usuario WHERE id_usuario = ?
+            """, (id_usuario_destino,))
+            nombre_alumno = cursor.fetchone()[0]
+
+            mensaje = f"El usuario @{nombre_alumno} ha aceptado tu solicitud de conexión."
             cursor.execute("""
                 INSERT INTO notificaciones (id_usuario, mensaje)
                 VALUES (?, ?)
@@ -242,20 +314,26 @@ def responder_solicitud(id_vinculacion):
             flash("Solicitud aceptada exitosamente.", "success")
 
         elif respuesta == 'rechazar':
-            # Eliminar la solicitud de la tabla
+            # Actualizar el estado a 'rechazada'
             cursor.execute("""
-                DELETE FROM vinculaciones
+                UPDATE vinculaciones
+                SET estado = 'rechazada'
                 WHERE id_vinculacion = ?
             """, (id_vinculacion,))
 
-            # Crear notificación para el entrenador sobre el rechazo
-            mensaje_rechazo = f"El usuario @{session['nombre_usuario']} rechazó tu solicitud de conexión."
+            # Notificación para el entrenador
+            cursor.execute("""
+                SELECT nombre_usuario FROM usuario WHERE id_usuario = ?
+            """, (id_usuario_destino,))
+            nombre_alumno = cursor.fetchone()[0]
+
+            mensaje = f"El usuario @{nombre_alumno} ha rechazado tu solicitud de conexión."
             cursor.execute("""
                 INSERT INTO notificaciones (id_usuario, mensaje)
                 VALUES (?, ?)
-            """, (id_usuario_origen, mensaje_rechazo))
+            """, (id_usuario_origen, mensaje))
 
-            flash("Solicitud rechazada y notificación enviada al entrenador.", "info")
+            flash("Solicitud rechazada exitosamente.", "success")
 
         conexion.commit()
         conexion.close()
@@ -267,7 +345,7 @@ def responder_solicitud(id_vinculacion):
         return redirect(url_for('notificaciones.listar_solicitudes'))
 
 
-
+# Ruta para eliminar todas las notificaciones
 @notificaciones_bp.route('/eliminar_notificaciones', methods=['POST'])
 @login_required
 def eliminar_notificaciones():
@@ -287,10 +365,41 @@ def eliminar_notificaciones():
         conexion.commit()
         conexion.close()
 
-        flash("Notificaciones y vinculaciones eliminadas correctamente.", "success")
+        flash("Notificaciones eliminadas correctamente.", "success")
         return redirect(url_for('notificaciones.listar_solicitudes'))
 
     except Exception as e:
-        print(f"Error al eliminar notificaciones y vinculaciones: {e}")
-        flash("Error al eliminar las notificaciones y vinculaciones.", "error")
+        flash("Error al eliminar las notificaciones.", "error")
         return redirect(url_for('notificaciones.listar_solicitudes'))
+    
+
+# Ruta para obtener la cantidad de notificaciones no leídas
+@notificaciones_bp.route('/cantidad_notificaciones')
+@login_required
+def cantidad_notificaciones():
+    id_usuario = session['id_usuario']
+
+    conexion = conexion_basedatos()
+    cursor = conexion.cursor()
+
+    # Contar las solicitudes de vinculación pendientes
+    cursor.execute("""
+        SELECT COUNT(*) FROM vinculaciones 
+        WHERE id_usuario_destino = ? AND estado = 'pendiente'
+    """, (id_usuario,))
+    total_vinculaciones = cursor.fetchone()[0]
+
+    # Contar las notificaciones NO leídas
+    cursor.execute("""
+        SELECT COUNT(*) FROM notificaciones 
+        WHERE id_usuario = ?
+    """, (id_usuario,))
+    total_notificaciones = cursor.fetchone()[0]
+
+    conexion.close()
+
+    # Calcular total y aplicar límite de +9
+    total = total_vinculaciones + total_notificaciones
+    total_mostrar = min(total, 9) if total > 0 else None
+
+    return {"cantidad": total_mostrar}

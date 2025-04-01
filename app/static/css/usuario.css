@@ -44,6 +44,40 @@ main {
     z-index: -1;
 }
 
+.flash-messages {
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+}
+.flash-messages li {
+    font-size: 0.8rem;
+    text-align: left;
+    font-weight: 300;
+}
+.flash-messages li i {
+    margin-right: 0.3rem;
+    font-size: 1.1rem;
+}
+
+.flash {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    font-weight: 500;
+    text-align: center;
+}
+.flash.error {
+    background-color: var(--color-flash-error-bg);
+    color: var(--color-flash-error-text);
+}
+.flash.success {
+    background-color: var(--color-flash-success-bg);
+    color: var(--color-flash-success-text);
+}
+
 .usuario-container  {
     display: flex;
     flex-direction: column;
@@ -251,13 +285,13 @@ main {
     margin: 0;
 }
 
+/* Estilos base para todos los botones de conexión */
 .connect-container form button {
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 10px 50px;
     border-radius: 5px;
-    background-color: var(--color-button-primary);
     color: var(--color-background);
     text-decoration: none;
     transition: all 0.3s ease;
@@ -266,16 +300,126 @@ main {
     font-size: 1rem;
     cursor: pointer;
 }
-.connect-container form button:hover {
-    background-color: var(--color-button-hover);
-}
-.connect-container form button:active {
-    background-color: var(--color-button-active);
-}
+
+/* Iconos dentro de los botones */
 .connect-container form button i {
     font-size: 1.3rem;
     margin-right: .3rem;
 }
+
+/* Botón Conectar */
+.connect-container form .btn-conectar {
+    background-color: var(--color-button-primary);
+}
+
+.connect-container form .btn-conectar:hover {
+    background-color: var(--color-button-hover);
+}
+
+.connect-container form .btn-conectar:active {
+    background-color: var(--color-button-active);
+}
+
+/* Botón Pendiente */
+.btn-pendiente {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 50px;
+    border-radius: 5px;
+    background-color: orange;
+    color: var(--color-background);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    cursor: pointer;
+    overflow: hidden;
+}
+.btn-pendiente::before {
+    content: "Pendiente";
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+}
+.btn-pendiente::after {
+    content: "Cancelar";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(207, 135, 0);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.btn-pendiente:hover::before {
+    opacity: 0;
+}
+.btn-pendiente:hover::after {
+    opacity: 1;
+}
+
+/* Botón Conectado */
+.btn-conectado {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 50px;
+    border-radius: 5px;
+    background-color: var(--color-flash-success-text);
+    color: var(--color-background);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    cursor: pointer;
+    overflow: hidden;
+}
+.btn-conectado::before {
+    content: "Conectado";
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+}
+.btn-conectado::after {
+    content: "Desconectar";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #308d30;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.btn-conectado:hover::before {
+    opacity: 0;
+}
+.btn-conectado:hover::after {
+    opacity: 1;
+}
+.btn-conectado i {
+    font-size: 1.3rem;
+    margin-right: .3rem;
+    transition: opacity 0.3s ease;
+}
+.btn-conectado:hover i {
+    opacity: 0;
+}
+
 
 .btn-certificacion {
     display: flex;

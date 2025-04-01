@@ -4,6 +4,7 @@ from app.utils.conexion import conexion_basedatos
 
 
 
+# Decorador para verificar si hay una sesión activa
 def login_required(f):
     @wraps(f)
     def funcion_decorador(*args, **kwargs):
@@ -17,6 +18,7 @@ def login_required(f):
 
 
 
+# Decorador para verificar si el usuario es un entrenador
 def entrenador_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -27,10 +29,7 @@ def entrenador_required(f):
 
 
 
-from functools import wraps
-from flask import session, redirect, url_for
-from app.utils.conexion import conexion_basedatos
-
+# Decorador para verificar si el formulario de entrenador esta completo
 def verificar_formulario_completo(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
@@ -55,13 +54,14 @@ def verificar_formulario_completo(func):
 
 
 
-
+# Función para verificar si un archivo tiene una extension permitida
 def allowed_file(filename):
     allowed_extensions = {'png', 'jpg', 'jpeg', 'gif'}
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
 
 
 
+# Función para insertar un usuario en la base de datos
 def insertar_usuario(email, nombre_usuario, contrasena, rol):
     try:
         conn = conexion_basedatos()

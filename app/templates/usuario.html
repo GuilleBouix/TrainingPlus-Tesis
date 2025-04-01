@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    {{ info.nombre.upper() }} {{ info.apellido.upper() }} - Training+
+    {{ info.nombre }} {{ info.apellido }} - Training+
 {% endblock %}
 
 {% block content %}
@@ -104,14 +104,6 @@
                     </div>
                 </div>
 
-                <!-- {% if es_entrenador and usuario['id_usuario'] != id_usuario_sesion %}
-                    <form action="{{ url_for('notificaciones.enviar_solicitud', id_usuario_destino=usuario.id_usuario) }}" method="POST">
-                        <button type="submit"><i class='bx bxs-group'></i> Conectar</button>
-                    </form>
-                {% else %}
-                    <button>Ver Certificación</button>
-                {% endif %} -->
-
                 {% if es_entrenador_perfil %}
                     <button class="btn-certificacion" data-imagen="{{ titulo_foto }}" data-aos="fade-left" data-aos-delay="200">
                         <i class='bx bx-certification'></i> Ver Certificación
@@ -133,11 +125,22 @@
                 {% endif %}
 
                 {% if es_entrenador and usuario.id_usuario != id_usuario_sesion and not es_entrenador_perfil %}
-                    <form action="{{ url_for('notificaciones.enviar_solicitud', id_usuario_destino=usuario.id_usuario) }}" method="POST">
-                        <button type="submit"><i class='bx bxs-group'></i> Conectar</button>
-                    </form>
+                    <div class="connection-buttons">
+                        {% if estado_conexion == 'pendiente' %}
+                            <form action="{{ url_for('notificaciones.cancelar_solicitud', id_usuario_destino=usuario.id_usuario) }}" method="POST">
+                                <button type="submit" class="btn-pendiente"></button>
+                            </form>
+                        {% elif estado_conexion == 'aceptada' %}
+                            <form action="{{ url_for('notificaciones.eliminar_conexion', id_usuario_destino=usuario.id_usuario) }}" method="POST">
+                                <button type="submit" class="btn-conectado"></button>
+                            </form>
+                        {% else %}
+                            <form action="{{ url_for('notificaciones.enviar_solicitud', id_usuario_destino=usuario.id_usuario) }}" method="POST">
+                                <button type="submit" class="btn-conectar"><i class='bx bxs-group'></i> Conectar</button>
+                            </form>
+                        {% endif %}
+                    </div>
                 {% endif %}
-
             </div>
         </div>
     </div>

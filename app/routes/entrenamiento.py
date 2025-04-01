@@ -4,9 +4,7 @@ from app.utils.conexion import conexion_basedatos
 from datetime import date
 
 
-
 entrenamiento_bp = Blueprint('entrenamiento', __name__)
-
 
 
 # Ruta de Entrenamiento
@@ -101,12 +99,13 @@ def entrenamiento():
     return render_template('entrenamiento.html', entrenamientos=entrenamientos_con_progreso, asociacion=asociacion)
 
 
-
-
 # Ruta de Crear Entrenamiento (Todo en uno)
 @entrenamiento_bp.route('/crear_entrenamiento', methods=['GET', 'POST'])
 @login_required
 def crear_entrenamiento():
+    # Obtener el rol del usuario de la sesion
+    rol = session.get('rol')
+
     id_entrenador = session['id_usuario']
 
     # Obtener alumnos con vinculación aceptada
@@ -139,6 +138,21 @@ def crear_entrenamiento():
                 VALUES (?, ?, ?, ?, ?, ?)
             """, (id_entrenador, id_alumno, nombre_entrenamiento, disciplina, duracion_semanas, fecha_inicio))
             id_entrenamiento = cursor.lastrowid
+
+            # Obtener datos del entrenador
+            entrenador = cursor.execute("""
+                SELECT u.nombre_usuario, e.nombre, e.apellido 
+                FROM usuario u
+                JOIN entrenador e ON u.id_usuario = e.id_usuario
+                WHERE u.id_usuario = ?
+            """, (id_entrenador,)).fetchone()
+
+            # Insertar notificación para el alumno con el formato deseado
+            mensaje = f"El entrenador @{entrenador['nombre_usuario']} ha creado un nuevo plan de entrenamiento: {nombre_entrenamiento}."
+
+            cursor.execute('''INSERT INTO notificaciones (id_usuario, mensaje, id_entrenamiento)
+                            VALUES (?, ?, ?)''', (id_alumno, mensaje, id_entrenamiento))
+
 
             # Procesar semanas, días y ejercicios
             for semana in range(1, duracion_semanas + 1):
@@ -180,6 +194,7 @@ def crear_entrenamiento():
 
             # Confirmar cambios en la base de datos
             conexion.commit()
+
             flash("¡Entrenamiento creado exitosamente!", "success")
             return redirect(url_for('entrenamiento.entrenamiento'))
 
@@ -193,4 +208,7 @@ def crear_entrenamiento():
             # Cerrar la conexión a la base de datos
             conexion.close()
 
-    return render_template('crear_entrenamiento.html', alumnos=alumnos, ejercicios=ejercicios)
+    return render_template('crear_entrenamiento.html',
+                           alumnos=alumnos,
+                           ejercicios=ejercicios,
+                           rol=rol)

@@ -5,9 +5,7 @@ from app.utils.conexion import conexion_basedatos
 from app.utils.helpers import login_required, entrenador_required
 
 
-
 form_entrenador_bp = Blueprint('form_entrenador', __name__)
-
 
 
 # Configuración de la carpeta de subida de fotos para entrenadores
@@ -17,10 +15,10 @@ DEFAULT_PROFILE_PICTURE = 'profile.webp'
 DEFAULT_TITLE_IMAGE = 'title.webp'
 
 
-
 # Verificar extensiones permitidas
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 
 # Comprimir y convertir a .webp
 def compress_and_convert_to_webp(file, id_usuario, file_type):
@@ -52,7 +50,6 @@ def compress_and_convert_to_webp(file, id_usuario, file_type):
 
     return filename
     
-
 
 # Ruta de Formulario de Entrenador
 @form_entrenador_bp.route('/formulario-entrenador', methods=['GET', 'POST'])

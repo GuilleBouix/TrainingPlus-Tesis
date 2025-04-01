@@ -4,9 +4,7 @@ from app.utils.helpers import insertar_usuario
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-
 auth_bp = Blueprint('auth', __name__)
-
 
 
 # Ruta de Login
@@ -58,9 +56,6 @@ def login():
             return redirect(url_for('auth.login'))
 
     return render_template('login.html')
-
-
-
 
 
 # Ruta de Signup
@@ -129,9 +124,6 @@ def signup():
             conn.close()
     
     return render_template('signup.html')
-
-
-
 
 
 # Ruta Cerrar Sesión

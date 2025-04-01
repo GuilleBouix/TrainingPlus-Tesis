@@ -50,6 +50,40 @@ main .notificactions-title {
     flex-direction: column;
 }
 
+.flash-messages {
+    list-style-type: none;
+    padding: 0;
+    width: 100%;
+}
+.flash-messages li {
+    font-size: 0.8rem;
+    text-align: left;
+    font-weight: 300;
+}
+.flash-messages li i {
+    margin-right: 0.3rem;
+    font-size: 1.1rem;
+}
+
+.flash {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    font-weight: 500;
+    text-align: center;
+}
+.flash.error {
+    background-color: var(--color-flash-error-bg);
+    color: var(--color-flash-error-text);
+}
+.flash.success {
+    background-color: var(--color-flash-success-bg);
+    color: var(--color-flash-success-text);
+}
+
 .notificactions-title h1 {
     font-weight: 600;
     font-size: 2rem;
@@ -195,8 +229,31 @@ main .notificactions-title {
 .notificacion form button:active {
     background: var(--color-button-active);
 }
+.notifications-container form select {
+    outline: none;
+}
 
+.notificacion-container {
+    margin: .5rem 0;
+}
 
+.btn-notificacion-entrenamiento {
+    padding: 3px 15px;
+    border-radius: 5px;
+    border: none;
+    background: var(--color-button-primary);
+    cursor: pointer;
+    transition: all 0.1s ease-in-out;
+    font-size: 1rem;
+    color: var(--color-background);
+    width: 100px;
+}
+.btn-notificacion-entrenamiento:hover {
+    background: var(--color-button-hover);
+}
+.btn-notificacion-entrenamiento:active {
+    background: var(--color-button-active);
+}
 
 
 

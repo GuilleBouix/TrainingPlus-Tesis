@@ -5,9 +5,7 @@ from PIL import Image
 import os
 
 
-
 perfil_bp = Blueprint('perfil', __name__)
-
 
 
 # Configuración de la carpeta de subida de fotos
@@ -23,11 +21,9 @@ ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png', 'gif'}
 DEFAULT_PROFILE_PICTURE = 'profile.webp'
 
 
-
 # Función para verificar las extensiones permitidas
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
 
 
 # Función para comprimir y convertir a .webp
@@ -110,7 +106,6 @@ def compress_and_convert_to_webp(file, id_usuario, folder_type, filename_format)
     except Exception as e:
         print(f"Error procesando imagen: {e}")
         return None
-
 
 
 # Ruta de Perfil
@@ -317,7 +312,6 @@ def perfil(nombre_usuario):
 
     # Renderizar plantilla con los datos actuales del usuario
     return render_template('perfil.html', rol_usuario=rol_usuario, nombre_usuario=nombre_usuario, usuario_data=usuario_data, paises=paises)
-
 
 
 # Ruta para actualizar las Redes Sociales

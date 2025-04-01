@@ -4,11 +4,10 @@ from app.utils.helpers import login_required, verificar_formulario_completo
 import os
 
 
-
 buscador_bp = Blueprint('buscar', __name__)
 
 
-
+# Ruta de Buscador
 @buscador_bp.route('/buscador', methods=['GET'])
 @login_required
 @verificar_formulario_completo
@@ -75,7 +74,6 @@ def buscador():
         paises_iso=paises_iso,
         rol=session.get('rol')
     )
-
 
 
 # Ruta para obtener los datos de un usuario

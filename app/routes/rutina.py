@@ -4,7 +4,6 @@ from app.utils.conexion import conexion_basedatos
 from datetime import datetime
 
 
-
 rutina_bp = Blueprint('rutina', __name__)
 
 
@@ -121,7 +120,6 @@ def rutina(id_entrenamiento):
     return render_template('rutina.html', 
                            entrenamiento=entrenamiento,
                            semanas=semanas)
-
 
 
 # Ruta de Guardar Progreso

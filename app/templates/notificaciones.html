@@ -10,6 +10,7 @@
         <p data-aos="fade-right" data-aos-delay="100">Visualiza y gestiona tus notificaciones para mantenerte al día.</p>
     </div>
 
+    <!-- Mensajes Flash -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             <ul class="flash-messages">
@@ -24,22 +25,22 @@
     {% endwith %}
 
     <div class="notifications-container">
+        <!-- Filtros y Eliminar -->
         <div class="notifications-sections section-filter" data-aos="flip-right" data-aos-delay="200">
             <h2 data-aos="fade-right" data-aos-delay="300">Filtros</h2>
 
             <form action="{{ url_for('notificaciones.eliminar_notificaciones') }}" method="POST" data-aos="fade-right" data-aos-delay="300">
                 <select name="tipo" id="tipo">
-                    <option value="">Filtrar por Tipo</option>
-                    <option value="conexiones">Conexiones</option>
-                    <option value="mensajes">Mensajes</option>
+                    <option value="">Ordenar por</option>
+                    <option value="fecha">Fecha</option>
+                    <option value="tipo">Tipo</option>
                 </select>
 
                 <button type="submit" data-aos="fade-right" data-aos-delay="300">Eliminar Todas</button>
             </form>
         </div>
 
-
-
+        <!-- Notificaciones -->
         <div class="notifications-sections section-notificaction" data-aos="flip-left" data-aos-delay="200">
             {% for solicitud in solicitudes %}
                 <ul class="notificacion">
@@ -65,13 +66,48 @@
                             <strong>{{ notificacion['mensaje'] }}</strong>
                             <p class="fecha">{{ notificacion['fecha'] }}</p>
                         </div>
+
+                        {% if notificacion.get('id_entrenamiento') %}
+                            <div class="notificacion-container">
+                                <a class="btn-notificacion-entrenamiento" href="/entrenamiento/rutina/{{ notificacion['id_entrenamiento'] }}">
+                                    Ir a Entrenamiento
+                                </a>
+                            </div>
+                        {% endif %}
                     </li>
                 </ul>
             {% endfor %}
         
             {% if not solicitudes and not notificaciones %}
-                <p>No tienes notificaciones ni solicitudes pendientes.</p>
+                <p>No tienes notificaciones pendientes.</p>
             {% endif %}
         </div>
+    </div>
+
+    <script>
+        document.getElementById("tipo").addEventListener("change", function () {
+            let criterio = this.value;
+            let lista = document.querySelector(".section-notificaction");
+            let notificaciones = Array.from(lista.getElementsByClassName("notificacion"));
+
+            if (criterio === "fecha") {
+                notificaciones.sort((a, b) => {
+                    let fechaA = new Date(a.querySelector(".fecha").textContent.trim());
+                    let fechaB = new Date(b.querySelector(".fecha").textContent.trim());
+                    return fechaB - fechaA; // Orden descendente (más reciente primero)
+                });
+            } else if (criterio === "tipo") {
+                notificaciones.sort((a, b) => {
+                    let esSolicitudA = a.querySelector("h3").textContent.includes("Solicitud de Conexión");
+                    let esSolicitudB = b.querySelector("h3").textContent.includes("Solicitud de Conexión");
+                    return esSolicitudB - esSolicitudA; // Prioriza solicitudes
+                });
+            }
+
+            // Vacía y vuelve a insertar en el orden correcto
+            lista.innerHTML = "";
+            notificaciones.forEach(noti => lista.appendChild(noti));
+        });
+    </script>
 
 {% endblock %}
