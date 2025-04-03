@@ -11,10 +11,12 @@
                 <h1>Tus Entrenamientos</h1>
                 <p>Visualiza y gestiona tus programas de entrenamiento.</p>
             </div>
-            <!--Mostrar solo si el usuario es un entrenador (rol = 2)-->
-            <a href="{{ url_for('entrenamiento.crear_entrenamiento') }}" class="btn-new-training" data-aos="fade-left">
-                <i class='bx bx-plus'></i> Nuevo Entrenamiento
-            </a>
+            
+            {% if rol_usuario == 2 %}
+                <a href="{{ url_for('entrenamiento.crear_entrenamiento') }}" class="btn-new-training" data-aos="fade-left">
+                    <i class='bx bx-plus'></i> Nuevo Entrenamiento
+                </a>
+            {% endif %}
         </div>
         
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -75,7 +77,12 @@
                         <a class="btn-view-training" href="{{ url_for('rutina.rutina', id_entrenamiento=entrenamiento.id_entrenamiento) }}">
                             Ir al Entrenamiento <i class='bx bx-chevron-right'></i>
                         </a>
-                        <button class="btn-delete-training"><i class='bx bxs-pencil'></i></button>
+
+                        {% if rol_usuario == 2 %}
+                            <button class="btn-delete-training">
+                                <i class='bx bxs-pencil'></i>
+                            </button>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}

@@ -48,15 +48,15 @@
         <ul class="nav-links">
             <i class='bx bx-x navCloseBtn'></i>
             <li><a href="{{ url_for('entrenamiento.entrenamiento') }}">ENTRENAMIENTO</a></li>
-            <!-- <li><a href="#">PROGRESO</a></li> -->
             <li><a href="{{ url_for('perfil.perfil', nombre_usuario=session['nombre_usuario']) }}">PERFIL</a></li>
             {% if session['rol'] == 2 %}
                 <li><a href="#">DASHBOARD</a></li>
             {% else %}
                 <li><a href="#">PROGRESO</a></li>
             {% endif %}
+            <li><a href="{{ url_for('notificaciones.listar_solicitudes') }}" class="menu-notificacion">NOTIFICACIONES</a>
+            </li>
             <li><a href="{{ url_for('auth.logout') }}">LOGOUT</a></li>
-            <li><a href="{{ url_for('notificaciones.listar_solicitudes') }}" class="menu-notificacion">NOTIFICACIONES</a></li>
         </ul>
         
         <i class='bx bx-search icono-busqueda' id="iconoBusqueda"></i>

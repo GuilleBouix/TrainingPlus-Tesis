@@ -1,7 +1,10 @@
-from app.utils.helpers import login_required, verificar_formulario_completo, redirect, url_for, flash
-from flask import Blueprint, render_template, session, request
+from flask import Blueprint, render_template, session, request, current_app,  redirect, url_for, flash
+from app.utils.helpers import login_required, verificar_formulario_completo
 from app.utils.conexion import conexion_basedatos
+from werkzeug.utils import secure_filename
+from app.utils.helpers import allowed_file
 from datetime import datetime
+import os
 
 
 rutina_bp = Blueprint('rutina', __name__)
@@ -32,7 +35,9 @@ def rutina(id_entrenamiento):
         """, (user_id,)).fetchone()
         
         if not id_alumno:
-            return "Error: No se encontró el alumno", 400
+            # Lanzar un flash
+            flash("Solos los alumnos pueden registrar su progreso", "error")
+            return redirect(url_for('rutina.rutina', id_entrenamiento=id_entrenamiento))
         
         id_alumno = id_alumno[0]
         print(f"ID del Alumno: {id_alumno}") # Debugging
@@ -56,12 +61,12 @@ def rutina(id_entrenamiento):
         return "Error: Rol de usuario no válido", 400
 
     entrenamiento = DB.execute("""
-    SELECT entrenamiento.id_entrenamiento, entrenamiento.nombre_entrenamiento, 
-        entrenamiento.duracion_semanas,
-        disciplina.nombre AS nombre_disciplina
-    FROM entrenamiento
-    LEFT JOIN disciplina ON entrenamiento.id_disciplina = disciplina.id_disciplina
-    WHERE entrenamiento.id_entrenamiento = ? 
+        SELECT entrenamiento.id_entrenamiento, entrenamiento.nombre_entrenamiento, 
+            entrenamiento.duracion_semanas,
+            disciplina.nombre AS nombre_disciplina
+        FROM entrenamiento
+        LEFT JOIN disciplina ON entrenamiento.id_disciplina = disciplina.id_disciplina
+        WHERE entrenamiento.id_entrenamiento = ? 
     """, (id_entrenamiento,)).fetchone()
 
     if not entrenamiento:
@@ -78,6 +83,27 @@ def rutina(id_entrenamiento):
     # Obtener días y ejercicios por semana
     for semana in semanas:
         id_semana = semana['id_semana']
+
+        # Obtener progreso semanal si existe
+        progreso_semanal = DB.execute("""
+            SELECT observaciones, foto_fisico, 
+                   DATE(fecha) as fecha  -- Asegura el formato de fecha
+            FROM progreso_semana 
+            WHERE id_entrenamiento = ? AND id_semana = ? AND id_alumno = ?
+        """, (id_entrenamiento, id_semana, id_alumno)).fetchone()
+        
+        if progreso_semanal:
+            semana['progreso'] = dict(progreso_semanal)
+            # Convertir string a objeto date si es necesario
+            if isinstance(semana['progreso']['fecha'], str):
+                try:
+                    semana['progreso']['fecha'] = datetime.strptime(
+                        semana['progreso']['fecha'], '%Y-%m-%d'
+                    ).date()
+                except (ValueError, TypeError):
+                    semana['progreso']['fecha'] = None
+        else:
+            semana['progreso'] = None
 
         dias = [dict(dia) for dia in DB.execute("""
             SELECT id_dia, numero_dia, nombre_rutina 
@@ -119,7 +145,89 @@ def rutina(id_entrenamiento):
 
     return render_template('rutina.html', 
                            entrenamiento=entrenamiento,
-                           semanas=semanas)
+                           semanas=semanas,
+                           semana_actual=1)
+
+
+@rutina_bp.route('/guardar_progreso_semanal', methods=['POST'])
+@login_required
+def guardar_progreso_semanal():
+    id_entrenamiento = request.form['id_entrenamiento']
+    id_semana = request.form['id_semana']
+    observaciones = request.form.get('sensations', '')
+    
+    DB = conexion_basedatos()
+    
+    # Obtener ID del alumno
+    id_alumno = DB.execute("""
+        SELECT id_alumno FROM alumno WHERE id_usuario = ?
+    """, (session.get('id_usuario'),)).fetchone()[0]
+    
+    # Manejar la carga de archivos
+    foto_fisico = None
+    if 'progress-file' in request.files:
+        file = request.files['progress-file']
+        if file.filename != '':
+            # Validar que sea una imagen
+            if file and allowed_file(file.filename):
+                # Crear directorio si no existe
+                upload_folder = os.path.join(current_app.root_path, 'static/uploads/weekly_progress')
+                os.makedirs(upload_folder, exist_ok=True)
+                
+                filename = f"user{id_alumno}-progress-{int(datetime.now().timestamp())}.webp"
+                file.save(os.path.join(upload_folder, filename))
+                foto_fisico = filename
+    
+    # Verificar si ya existe progreso para esta semana
+    progreso_existente = DB.execute("""
+        SELECT id_progreso_semanal, foto_fisico FROM progreso_semana 
+        WHERE id_entrenamiento = ? AND id_semana = ? AND id_alumno = ?
+    """, (id_entrenamiento, id_semana, id_alumno)).fetchone()
+    
+    if progreso_existente:
+        # Actualizar registro existente
+        DB.execute("""
+            UPDATE progreso_semana 
+            SET observaciones = ?, 
+                foto_fisico = COALESCE(?, foto_fisico),
+                fecha = ?
+            WHERE id_progreso_semanal = ?
+        """, (
+            observaciones, 
+            foto_fisico,
+            datetime.now().strftime("%Y-%m-%d"),
+            progreso_existente[0]
+        ))
+        
+        # Eliminar foto anterior si se subió una nueva
+        if foto_fisico and progreso_existente[1]:
+            try:
+                os.remove(os.path.join(
+                    current_app.root_path,
+                    'static/uploads/weekly_progress',
+                    progreso_existente[1]
+                ))
+            except FileNotFoundError:
+                pass
+    else:
+        # Crear nuevo registro
+        DB.execute("""
+            INSERT INTO progreso_semana 
+            (id_entrenamiento, id_alumno, id_semana, observaciones, foto_fisico, fecha)
+            VALUES (?, ?, ?, ?, ?, ?)
+        """, (
+            id_entrenamiento, 
+            id_alumno, 
+            id_semana, 
+            observaciones, 
+            foto_fisico,
+            datetime.now().strftime("%Y-%m-%d")
+        ))
+    
+    DB.commit()
+    DB.close()
+    flash('Progreso semanal guardado correctamente', 'success')
+    return redirect(url_for('rutina.rutina', id_entrenamiento=id_entrenamiento))
 
 
 # Ruta de Guardar Progreso
@@ -128,6 +236,7 @@ def rutina(id_entrenamiento):
 def guardar_progreso():
     # Obtener los datos del formulario
     id_dia_ejercicio = request.form['id_dia_ejercicio']
+    id_entrenamiento = request.form['id_entrenamiento']
 
     # Obtener el ID del alumno
     DB = conexion_basedatos()
@@ -136,9 +245,34 @@ def guardar_progreso():
     """, (session.get('id_usuario'),)).fetchone()
 
     if not id_alumno:
-        return "Error: No se encontró el alumno", 400
+        flash("Solo los alumnos pueden registrar su progreso", "error")
+        return redirect(url_for('rutina.rutina', id_entrenamiento=id_entrenamiento))
 
-    id_alumno = id_alumno[0]  # Extraer el valor real
+    id_alumno = id_alumno[0]
+
+    # Obtener datos del ejercicio y entrenamiento para la notificación
+    ejercicio_data = DB.execute("""
+        SELECT e.nombre_ejercicio, d.numero_dia, s.numero_semana, 
+               en.nombre_entrenamiento, en.id_entrenador
+        FROM dia_ejercicio de
+        JOIN ejercicios e ON de.id_ejercicio = e.id_ejercicio
+        JOIN dias d ON de.id_dia = d.id_dia
+        JOIN semanas s ON d.id_semana = s.id_semana
+        JOIN entrenamiento en ON s.id_entrenamiento = en.id_entrenamiento
+        WHERE de.id_dia_ejercicio = ?
+    """, (id_dia_ejercicio,)).fetchone()
+
+    if not ejercicio_data:
+        flash("Error al obtener datos del ejercicio", "error")
+        return redirect(url_for('rutina.rutina', id_entrenamiento=id_entrenamiento))
+
+    # Obtener nombre de usuario del alumno
+    nombre_alumno = DB.execute("""
+        SELECT u.nombre_usuario 
+        FROM usuario u
+        JOIN alumno a ON u.id_usuario = a.id_usuario
+        WHERE a.id_alumno = ?
+    """, (id_alumno,)).fetchone()[0]
 
     # Obtener los datos del formulario
     series_realizadas = request.form['series_realizadas']
@@ -147,30 +281,35 @@ def guardar_progreso():
     observaciones = request.form['observaciones']
 
     # Verificar si ya existe un registro para este ejercicio
-    DB = conexion_basedatos()
-
     progreso = DB.execute("""
         SELECT id_progreso FROM progreso_alumno WHERE id_dia_ejercicio = ? AND id_alumno = ?
     """, (id_dia_ejercicio, id_alumno)).fetchone()
 
     if progreso:
-        # Si ya existe, actualizar el progreso
+        # Actualizar el progreso existente
         DB.execute("""
             UPDATE progreso_alumno
             SET series_realizadas = ?, repeticiones_realizadas = ?, peso_utilizado = ?, observaciones = ?
             WHERE id_progreso = ?
         """, (series_realizadas, repeticiones_realizadas, peso_utilizado, observaciones, progreso[0]))
-
         flash('Progreso actualizado correctamente.', 'success')
     else:
-        # Si no existe, insertar un nuevo registro
+        # Insertar nuevo registro de progreso
         DB.execute("""
             INSERT INTO progreso_alumno (id_dia_ejercicio, id_alumno, series_realizadas, repeticiones_realizadas, peso_utilizado, observaciones, fecha)
             VALUES (?, ?, ?, ?, ?, ?, CURRENT_DATE)
         """, (id_dia_ejercicio, id_alumno, series_realizadas, repeticiones_realizadas, peso_utilizado, observaciones))
-
         flash('Progreso registrado correctamente.', 'success')
+
+    # Crear notificación para el entrenador
+    mensaje = (
+        f"'{ejercicio_data['nombre_entrenamiento']}': @{nombre_alumno} completó {ejercicio_data['nombre_ejercicio']} (Semana {ejercicio_data['numero_semana']}/Día {ejercicio_data['numero_dia']})"
+    )
+
+    DB.execute("""
+        INSERT INTO notificaciones (id_usuario, mensaje, id_entrenamiento)
+        VALUES (?, ?, ?)
+    """, (ejercicio_data['id_entrenador'], mensaje, id_entrenamiento))
+
     DB.commit()
-    
-    # Redirigir a la rutina
-    return redirect(url_for('rutina.rutina', id_entrenamiento=request.form['id_entrenamiento']))
+    return redirect(url_for('rutina.rutina', id_entrenamiento=id_entrenamiento))

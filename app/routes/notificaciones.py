@@ -378,18 +378,21 @@ def eliminar_notificaciones():
 @login_required
 def cantidad_notificaciones():
     id_usuario = session['id_usuario']
+    rol_usuario = session.get('rol')  # 1 = alumno, 2 = entrenador
 
     conexion = conexion_basedatos()
     cursor = conexion.cursor()
 
-    # Contar las solicitudes de vinculación pendientes
-    cursor.execute("""
-        SELECT COUNT(*) FROM vinculaciones 
-        WHERE id_usuario_destino = ? AND estado = 'pendiente'
-    """, (id_usuario,))
-    total_vinculaciones = cursor.fetchone()[0]
+    # Para entrenadores: contar solicitudes de vinculación pendientes
+    total_vinculaciones = 0
+    if rol_usuario == 2:
+        cursor.execute("""
+            SELECT COUNT(*) FROM vinculaciones 
+            WHERE id_usuario_destino = ? AND estado = 'pendiente'
+        """, (id_usuario,))
+        total_vinculaciones = cursor.fetchone()[0]
 
-    # Contar las notificaciones NO leídas
+    # Contar TODAS las notificaciones del usuario (sin filtro de leído)
     cursor.execute("""
         SELECT COUNT(*) FROM notificaciones 
         WHERE id_usuario = ?
@@ -398,8 +401,10 @@ def cantidad_notificaciones():
 
     conexion.close()
 
-    # Calcular total y aplicar límite de +9
+    # Lógica para mostrar el contador
     total = total_vinculaciones + total_notificaciones
     total_mostrar = min(total, 9) if total > 0 else None
 
+    print(f"[DEBUG] Usuario {id_usuario} (Rol:{rol_usuario}) - Vinc:{total_vinculaciones} Notif:{total_notificaciones}")
+    
     return {"cantidad": total_mostrar}

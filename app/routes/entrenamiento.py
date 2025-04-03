@@ -96,7 +96,10 @@ def entrenamiento():
         entrenamiento_dict["progreso"] = progreso
         entrenamientos_con_progreso.append(entrenamiento_dict)
 
-    return render_template('entrenamiento.html', entrenamientos=entrenamientos_con_progreso, asociacion=asociacion)
+    return render_template('entrenamiento.html',
+                           entrenamientos=entrenamientos_con_progreso,
+                           asociacion=asociacion,
+                           rol_usuario=rol_usuario)
 
 
 # Ruta de Crear Entrenamiento (Todo en uno)
@@ -120,7 +123,7 @@ def crear_entrenamiento():
     alumnos = cursor.fetchall()
 
     # Obtener la lista de ejercicios disponibles
-    cursor.execute("SELECT id_ejercicio, nombre_ejercicio FROM ejercicios")
+    cursor.execute("SELECT id_ejercicio, nombre_ejercicio FROM ejercicios ORDER BY nombre_ejercicio ASC")
     ejercicios = cursor.fetchall()
 
     if request.method == 'POST':

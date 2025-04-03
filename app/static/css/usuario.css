@@ -52,7 +52,6 @@ main {
 .flash-messages li {
     font-size: 0.8rem;
     text-align: left;
-    font-weight: 300;
 }
 .flash-messages li i {
     margin-right: 0.3rem;

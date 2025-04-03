@@ -336,7 +336,13 @@ details[open] div {
 }
 
 .btn-agregar-ejercicio {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin: 1rem;
+}
+.btn-agregar-ejercicio i {
+    margin-right: .3rem;
 }
 
 
@@ -432,6 +438,19 @@ details[open] div {
     .inputs-container .inputs input,
     .ejercicios-container select {
         width: 100%;
+    }
+
+    .btn-agregar-ejercicio {
+        width: 100%; /* Ocupa todo el ancho disponible */
+        margin: 0.5rem 0 !important; /* Margen consistente */
+        padding: 0.5rem; /* Espaciado interno adecuado */
+        white-space: nowrap; /* Evita que el texto se parta */
+        overflow: hidden; /* Contiene el texto largo */
+        text-overflow: ellipsis; /* Añade "..." si el texto es muy largo */
+    }
+
+    .ejercicios-semana {
+        width: 100%; /* Asegura que el contenedor ocupe todo el ancho */
     }
 
 }

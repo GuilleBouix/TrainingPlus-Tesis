@@ -93,14 +93,16 @@
                                         <div>
                                             <label for="weight_{{ ejercicio.id_dia_ejercicio }}">¿Cuánto peso utilizaste?</label><span class="asterisk"> *</span>
                                             <input type="number" name="peso_utilizado" value="{{ ejercicio.peso_utilizado }}" step="0.1" required>
-
                                         </div>
                                     </div>
                                 
                                     <label for="observations_{{ ejercicio.id_dia_ejercicio }}">Observaciones</label>
                                     <textarea name="observaciones">{{ ejercicio.observaciones }}</textarea>
 
-                                    <button type="submit" class="btn-see-exercise save-day">Guardar Registro</button>
+                                    <!--Si el rol del usuario en la sesion es 2, ocultar el boton-->
+                                    {% if session.get('rol') == 1 %}
+                                        <button type="submit" class="btn-see-exercise save-day">Guardar Registro</button>
+                                    {% endif %}
                                 </form>                                        
                             </div>
                         {% endfor %}
@@ -109,6 +111,76 @@
                 {% endfor %}
             </div>
         {% endfor %}
+
+        <!-- Reemplazar la sección de progreso semanal con esto: -->
+        {% for semana in semanas %}
+            <div class="week-progress" data-week="{{ semana.numero_semana }}" 
+                {% if semana.numero_semana != 1 %}style="display:none"{% endif %}>
+                <h2>Progreso Semanal N°{{ semana.numero_semana }}</h2>
+
+                {% if session.get('rol') == 1 %}  <!-- Alumno -->
+                    <form action="{{ url_for('rutina.guardar_progreso_semanal') }}" method="POST" 
+                        enctype="multipart/form-data" class="week-progress-container">
+                        <input type="hidden" name="id_entrenamiento" value="{{ entrenamiento.id_entrenamiento }}">
+                        <input type="hidden" name="id_semana" value="{{ semana.id_semana }}">
+                        
+                        <div class="photo">
+                            <strong>Fotografía del Progreso</strong>
+                            <p>Adjunta una fotografía de tu físico actual.</p>
+
+                            <input type="file" name="progress-file" id="progress-file-{{ semana.id_semana }}" accept="image/*">
+
+                            <div class="photo-container">
+                                {% if semana.progreso and semana.progreso.foto_fisico %}
+                                    <img src="{{ url_for('static', filename='uploads/weekly_progress/' + semana.progreso.foto_fisico) }}" 
+                                        alt="Fotografia Semanal">
+                                {% else %}
+                                    <p>No se ha adjuntado ninguna fotografía.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="sensations">
+                            <strong>Observaciones</strong>
+                            <p>Registra tus sensaciones (máx. 200 caracteres)</p>
+
+                            <textarea maxlength="200" name="sensations" id="sensations-{{ semana.id_semana }}" placeholder="Escribe tus sensaciones durante esta semana">{% if semana.progreso %}{{ semana.progreso.observaciones }}{% endif %}</textarea>
+
+                            <button type="submit">Guardar Progreso Semanal</button>
+                        </div>
+                    </form>
+
+                {% else %}  <!-- Entrenador -->
+                    {% if semana.progreso %}
+                        <div class="week-progress-container">
+                            <div class="photo">
+                                <strong>Fotografía del Progreso</strong>
+                                <p>Fecha: {{ semana.progreso.fecha.strftime('%d/%m/%Y') if semana.progreso.fecha else 'No especificada' }}</p>
+
+                                <div class="photo-container">
+                                    <img src="{{ url_for('static', filename='uploads/weekly_progress/' + semana.progreso.foto_fisico) if semana.progreso.foto_fisico else 'https://via.placeholder.com/300x400?text=Sin+imagen' }}" 
+                                        alt="Fotografia Semanal">
+                                </div>
+                            </div>
+
+                            <div class="sensations">
+                                <strong>Observaciones del Alumno</strong>
+                                <p>Sensaciones registradas</p>
+
+                                <div class="observations">
+                                    {{ semana.progreso.observaciones or 'No hay observaciones registradas' }}
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="week-progress-container week-no-progress-container">
+                            <p>No hay progreso registrado para esta semana.</p>
+                        </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+        {% endfor %}
+
     </div>
 
     <!-- Script para abrir y cerrar el modal de ejercicio -->
@@ -171,21 +243,27 @@
             let currentWeek = 1;
             const totalWeeks = document.querySelectorAll('.week-container').length;
             
+            function changeWeek(newWeek) {
+                // Ocultar semana anterior
+                document.querySelector(`.week-container[data-week="${currentWeek}"]`).style.display = "none";
+                document.querySelector(`.week-progress[data-week="${currentWeek}"]`).style.display = "none";
+                
+                // Mostrar nueva semana
+                currentWeek = newWeek;
+                document.querySelector(`.week-container[data-week="${currentWeek}"]`).style.display = "block";
+                document.querySelector(`.week-progress[data-week="${currentWeek}"]`).style.display = "block";
+                document.getElementById("week-number").textContent = currentWeek;
+            }
+            
             document.querySelector(".next-week").addEventListener("click", function() {
                 if (currentWeek < totalWeeks) {
-                    document.querySelector(`.week-container[data-week="${currentWeek}"]`).style.display = "none";
-                    currentWeek++;
-                    document.querySelector(`.week-container[data-week="${currentWeek}"]`).style.display = "block";
-                    document.getElementById("week-number").textContent = currentWeek;
+                    changeWeek(currentWeek + 1);
                 }
             });
 
             document.querySelector(".previous-week").addEventListener("click", function() {
                 if (currentWeek > 1) {
-                    document.querySelector(`.week-container[data-week="${currentWeek}"]`).style.display = "none";
-                    currentWeek--;
-                    document.querySelector(`.week-container[data-week="${currentWeek}"]`).style.display = "block";
-                    document.getElementById("week-number").textContent = currentWeek;
+                    changeWeek(currentWeek - 1);
                 }
             });
 
@@ -194,6 +272,23 @@
                     this.classList.toggle('active');
                     const content = this.nextElementSibling;
                     content.style.display = content.style.display === "block" ? "none" : "block";
+                });
+            });
+
+            // Preview de imagen al seleccionar archivo
+            document.querySelectorAll('input[type="file"]').forEach(input => {
+                input.addEventListener('change', function() {
+                    const file = this.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        const img = this.closest('.photo').querySelector('.photo-container img');
+                        
+                        reader.onload = function(e) {
+                            img.src = e.target.result;
+                        }
+                        
+                        reader.readAsDataURL(file);
+                    }
                 });
             });
         });
