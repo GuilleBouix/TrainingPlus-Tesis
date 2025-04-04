@@ -1,0 +1,292 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Mi Progreso - Training+
+{% endblock %}
+
+{% block content %}
+
+    <div class="title">
+        <h1>Mi Progreso</h1>
+        <p>Visualiza tu rendimiento y progreso</p>
+    </div>
+
+    <!-- Select para seleccionar el plan de entrenamiento -->
+    <div class="select-training">
+        <select id="select-training">
+            <option value="" selected>Plan de Entrenamiento</option>
+            <option value="">Rutina de Fuerza</option>
+            <option value="">Hipertrofia</option>
+        </select>
+    </div>
+
+    <!-- Progreso en general -->
+    <div class="progreso-general">
+        <div class="card">
+            <div class="card-title">
+                <h2>Progreso General</h2>
+                <i class='bx bx-trending-up'></i>
+            </div>
+
+            <div class="card-data">
+                <h3>65%</h3>
+
+                <div class="bar bar-progress" data-progreso=""></div>
+
+                <p>65% completado</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <h2>Días Completados</h2>
+                <i class='bx bx-calendar'></i>
+            </div>
+
+            <div class="card-data">
+                <h3>14/36</h3>
+
+                <div class="bar day-progress" data-progreso=""></div>
+
+                <p>65% completado</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <h2>Entrenador</h2>
+                <i class='bx bxs-medal'></i>
+            </div>
+
+            <div class="card-data">
+                <h3>Joe Smith</h3>
+
+                <p>Entrenador asignado a este plan.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grafico de rendimiento (lineal) -->
+    <div class="rendimiento-container">
+        <h2>Gráfico de Rendimiento</h2>
+
+        <canvas id="lineChart"></canvas>
+
+         <!-- Gráfico de Rendimiento (lineal) -->
+        <script>
+            const ctx = document.getElementById('lineChart').getContext('2d');
+            const lineChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5', 'Sem 6', 'Sem 7', 'Sem 8'],
+                datasets: [{
+                    // label eliminado
+                    data: [30, 40, 55, 65, 70, 75, 85, 95],
+                    borderColor: '#DC2626',
+                    backgroundColor: 'rgba(220, 38, 38, 0.2)', // mismo color pero transparente
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 5,
+                    pointHoverRadius: 8,
+                }]
+                },
+                options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                    display: false // Oculta el rectángulo/label
+                    }
+                },
+                scales: {
+                    y: {
+                    beginAtZero: true,
+                    max: 100,
+                    title: {
+                        display: true,
+                    }
+                    },
+                    x: {
+                    title: {
+                        display: true,
+                    }
+                    }
+                }
+                }
+            });
+        </script>
+    </div>
+
+    <!-- Grafico de fuerza (radar) -->
+    <div class="rendimiento-container">
+        <h2>Evolución de Fuerza</h2>
+
+        <canvas id="fuerzaMovChart"></canvas>
+
+        <script>
+            const ctx2 = document.getElementById('fuerzaMovChart').getContext('2d');
+        
+            const fuerzaData = {
+              labels: ['Empuje', 'Jale', 'Resistencia'],
+              datasets: [{
+                data: [80, 60, 50], // ejemplo de valores
+                backgroundColor: [
+                  'rgba(220,38,38,0.7)',  // rojo
+                  'rgba(59,130,246,0.7)', // azul
+                  'rgba(34,197,94,0.7)'   // verde
+                ],
+                borderWidth: 0
+              }]
+            };
+        
+            const fuerzaOptions = {
+              responsive: true,
+              plugins: {
+                legend: {
+                  position: 'right',
+                  labels: {
+                    color: '#374151'
+                  }
+                },
+                tooltip: {
+                  backgroundColor: '#1f2937',
+                  titleColor: '#fff',
+                  bodyColor: '#fff',
+                  cornerRadius: 6,
+                  callbacks: {
+                    label: function(context) {
+                      const label = context.label;
+                      const value = context.raw;
+                      if (label === 'Resistencia') {
+                        return `Aumento de Resistencia: ${value}`;
+                      } else {
+                        return `Fuerza Ganada: ${value}`;
+                      }
+                    }
+                  }
+                }
+              },
+              scales: {
+                r: {
+                  angleLines: {
+                    color: '#e5e7eb'
+                  },
+                  grid: {
+                    color: '#d1d5db'
+                  },
+                  pointLabels: {
+                    color: '#374151',
+                    font: {
+                      weight: 'bold'
+                    }
+                  },
+                  ticks: {
+                    color: '#6b7280'
+                  }
+                }
+              }
+            };
+        
+            new Chart(ctx2, {
+              type: 'polarArea',
+              data: fuerzaData,
+              options: fuerzaOptions,
+              responsive: true,
+              maintainAspectRatio: false,
+            });
+        </script>  
+    </div>
+
+    <!-- Mejores Marcas-->
+    <div class="marcadores-container">
+        <h2>Mejores Marcas</h2>
+
+        <div class="marcadores">
+            <div class="marcador">
+                <strong>Press de Banca c/ Barra</strong>
+
+                <span>100 Kg x 8</span>
+            </div>
+
+            <div class="marcador">
+                <strong>Sentadilla</strong>
+
+                <span>175 Kg x 6</span>
+            </div>
+
+            <div class="marcador">
+                <strong>Peso Mueto c/ Barra</strong>
+
+                <span>250 Kg x 4</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progreso Semanal -->
+    <div class="progreso-semanal-container">
+        <h2>Progreso Semanal</h2>
+        
+        <div class="semana">
+            <div class="semana-title">
+                <strong>Semana 1</strong>
+                <p>Fecha: 01/01/2023</p>
+            </div>
+
+            <div class="datos">
+                <div class="dias">
+                    <p>
+                        Días completados: <span>3/7</span>
+                    </p>
+                </div>
+
+                <div class="ejercicios">
+                    <p>
+                        Ejercicios completados: <span>12/16</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="semana">
+            <div class="semana-title">
+                <strong>Semana 2</strong>
+                <p>Fecha: 07/01/2023</p>
+            </div>
+
+            <div class="datos">
+                <div class="dias">
+                    <p>
+                        Días completados: <span>4/6</span>
+                    </p>
+                </div>
+
+                <div class="ejercicios">
+                    <p>
+                        Ejercicios completados: <span>10/12</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="semana">
+            <div class="semana-title">
+                <strong>Semana 3</strong>
+                <p>Fecha: 14/01/2023</p>
+            </div>
+
+            <div class="datos">
+                <div class="dias">
+                    <p>
+                        Días completados: <span>3/3</span>
+                    </p>
+                </div>
+
+                <div class="ejercicios">
+                    <p>
+                        Ejercicios completados: <span>8/8</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

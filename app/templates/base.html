@@ -13,7 +13,13 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/usuario.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/notificaciones.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/crear_entrenamiento.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/progreso.css') }}">
 
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Iconos -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
 
@@ -52,7 +58,7 @@
             {% if session['rol'] == 2 %}
                 <li><a href="#">DASHBOARD</a></li>
             {% else %}
-                <li><a href="#">PROGRESO</a></li>
+                <li><a href="{{ url_for('progreso.progreso') }}">PROGRESO</a></li>
             {% endif %}
             <li><a href="{{ url_for('notificaciones.listar_solicitudes') }}" class="menu-notificacion">NOTIFICACIONES</a>
             </li>

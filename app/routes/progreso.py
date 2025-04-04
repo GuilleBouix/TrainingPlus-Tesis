@@ -5,3 +5,9 @@ from datetime import date
 
 
 progreso_bp = Blueprint('progreso', __name__)
+
+
+@progreso_bp.route('/progreso', methods=['GET', 'POST'])
+@login_required
+def progreso():
+    return render_template('progreso.html')
