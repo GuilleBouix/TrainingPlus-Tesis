@@ -163,17 +163,47 @@ def guardar_progreso_semanal():
         SELECT id_alumno FROM alumno WHERE id_usuario = ?
     """, (session.get('id_usuario'),)).fetchone()[0]
     
+    # Obtener datos para la notificación
+    ejercicio_data = DB.execute("""
+        SELECT e.nombre_entrenamiento, s.numero_semana, e.id_entrenador
+        FROM entrenamiento e
+        JOIN semanas s ON e.id_entrenamiento = s.id_entrenamiento
+        WHERE e.id_entrenamiento = ? AND s.id_semana = ?
+    """, (id_entrenamiento, id_semana)).fetchone()
+
+    # Obtener nombre del alumno
+    nombre_alumno = DB.execute("""
+        SELECT u.nombre_usuario 
+        FROM usuario u
+        JOIN alumno a ON u.id_usuario = a.id_usuario
+        WHERE a.id_alumno = ?
+    """, (id_alumno,)).fetchone()[0]
+    
+    # Crear notificación para el entrenador
+    mensaje = f"'{ejercicio_data['nombre_entrenamiento']}': @{nombre_alumno} registró su progreso en la Semana {ejercicio_data['numero_semana']}"
+
     # Manejar la carga de archivos
     foto_fisico = None
     if 'progress-file' in request.files:
         file = request.files['progress-file']
         if file.filename != '':
-            # Validar que sea una imagen
             if file and allowed_file(file.filename):
-                # Crear directorio si no existe
                 upload_folder = os.path.join(current_app.root_path, 'static/uploads/weekly_progress')
                 os.makedirs(upload_folder, exist_ok=True)
                 
+                # Eliminar foto anterior si existe
+                progreso_existente = DB.execute("""
+                    SELECT foto_fisico FROM progreso_semana 
+                    WHERE id_entrenamiento = ? AND id_semana = ? AND id_alumno = ?
+                """, (id_entrenamiento, id_semana, id_alumno)).fetchone()
+                
+                if progreso_existente and progreso_existente[0]:
+                    try:
+                        os.remove(os.path.join(upload_folder, progreso_existente[0]))
+                    except FileNotFoundError:
+                        pass
+                
+                # Generar nuevo nombre de archivo
                 filename = f"user{id_alumno}-progress-{int(datetime.now().timestamp())}.webp"
                 file.save(os.path.join(upload_folder, filename))
                 foto_fisico = filename
@@ -223,6 +253,11 @@ def guardar_progreso_semanal():
             foto_fisico,
             datetime.now().strftime("%Y-%m-%d")
         ))
+
+    DB.execute("""
+        INSERT INTO notificaciones (id_usuario, mensaje, id_entrenamiento)
+        VALUES (?, ?, ?)
+    """, (ejercicio_data['id_entrenador'], mensaje, id_entrenamiento))   
     
     DB.commit()
     DB.close()
@@ -303,7 +338,7 @@ def guardar_progreso():
 
     # Crear notificación para el entrenador
     mensaje = (
-        f"'{ejercicio_data['nombre_entrenamiento']}': @{nombre_alumno} completó {ejercicio_data['nombre_ejercicio']} (Semana {ejercicio_data['numero_semana']}/Día {ejercicio_data['numero_dia']})"
+        f"'{ejercicio_data['nombre_entrenamiento']}': @{nombre_alumno} registró {ejercicio_data['nombre_ejercicio']} (Semana {ejercicio_data['numero_semana']}/Día {ejercicio_data['numero_dia']})"
     )
 
     DB.execute("""

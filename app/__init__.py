@@ -37,6 +37,8 @@ def create_app():
     from .routes.notificaciones import notificaciones_bp
     from .routes.form_entrenador import form_entrenador_bp
     from .routes.rutina import rutina_bp
+    from .routes.dashboard import dashboard_bp
+    from .routes.progreso import progreso_bp
 
 
 
@@ -49,6 +51,8 @@ def create_app():
     app.register_blueprint(notificaciones_bp)
     app.register_blueprint(form_entrenador_bp)
     app.register_blueprint(rutina_bp)
+    app.register_blueprint(dashboard_bp)
+    app.register_blueprint(progreso_bp)
 
 
 
