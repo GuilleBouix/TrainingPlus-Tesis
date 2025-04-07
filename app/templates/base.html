@@ -56,7 +56,7 @@
             <li><a href="{{ url_for('entrenamiento.entrenamiento') }}">ENTRENAMIENTO</a></li>
             <li><a href="{{ url_for('perfil.perfil', nombre_usuario=session['nombre_usuario']) }}">PERFIL</a></li>
             {% if session['rol'] == 2 %}
-                <li><a href="#">DASHBOARD</a></li>
+                <li><a href="{{ url_for('dashboard.dashboard') }}">DASHBOARD</a></li>
             {% else %}
                 <li><a href="{{ url_for('progreso.progreso') }}">PROGRESO</a></li>
             {% endif %}

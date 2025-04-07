@@ -15,13 +15,11 @@
     <div class="select-training">
         <select id="select-training">
             <option value="" selected>Plan de Entrenamiento</option>
-            <option value="">Rutina de Fuerza</option>
-            <option value="">Hipertrofia</option>
         </select>
     </div>
 
     <!-- Progreso en general -->
-    <div class="progreso-general">
+    <section class="progreso-general">
         <div class="card">
             <div class="card-title">
                 <h2>Progreso General</h2>
@@ -29,11 +27,11 @@
             </div>
 
             <div class="card-data">
-                <h3>65%</h3>
+                <h3>0%</h3>
 
                 <div class="bar bar-progress" data-progreso=""></div>
 
-                <p>65% completado</p>
+                <p>0% completado</p>
             </div>
         </div>
 
@@ -44,11 +42,11 @@
             </div>
 
             <div class="card-data">
-                <h3>14/36</h3>
+                <h3>0/N</h3>
 
                 <div class="bar day-progress" data-progreso=""></div>
 
-                <p>65% completado</p>
+                <p>0 días completado</p>
             </div>
         </div>
 
@@ -59,15 +57,17 @@
             </div>
 
             <div class="card-data">
-                <h3>Joe Smith</h3>
+                <h3>
+                    <a href="">Joe Smith</a>
+                </h3>
 
                 <p>Entrenador asignado a este plan.</p>
             </div>
         </div>
-    </div>
+    </section>
 
     <!-- Grafico de rendimiento (lineal) -->
-    <div class="rendimiento-container">
+    <section class="rendimiento-container">
         <h2>Gráfico de Rendimiento</h2>
 
         <canvas id="lineChart"></canvas>
@@ -114,10 +114,10 @@
                 }
             });
         </script>
-    </div>
+    </section>
 
-    <!-- Grafico de fuerza (radar) -->
-    <div class="rendimiento-container">
+    <!-- Grafico de fuerza -->
+    <section class="rendimiento-container">
         <h2>Evolución de Fuerza</h2>
 
         <canvas id="fuerzaMovChart"></canvas>
@@ -194,10 +194,10 @@
               maintainAspectRatio: false,
             });
         </script>  
-    </div>
+    </section>
 
     <!-- Mejores Marcas-->
-    <div class="marcadores-container">
+    <section class="marcadores-container">
         <h2>Mejores Marcas</h2>
 
         <div class="marcadores">
@@ -219,16 +219,16 @@
                 <span>250 Kg x 4</span>
             </div>
         </div>
-    </div>
+    </section>
 
     <!-- Progreso Semanal -->
-    <div class="progreso-semanal-container">
+    <section class="progreso-semanal-container">
         <h2>Progreso Semanal</h2>
         
         <div class="semana">
             <div class="semana-title">
                 <strong>Semana 1</strong>
-                <p>Fecha: 01/01/2023</p>
+                <p>01/01/2023</p>
             </div>
 
             <div class="datos">
@@ -249,7 +249,7 @@
         <div class="semana">
             <div class="semana-title">
                 <strong>Semana 2</strong>
-                <p>Fecha: 07/01/2023</p>
+                <p>07/01/2023</p>
             </div>
 
             <div class="datos">
@@ -270,7 +270,7 @@
         <div class="semana">
             <div class="semana-title">
                 <strong>Semana 3</strong>
-                <p>Fecha: 14/01/2023</p>
+                <p>14/01/2023</p>
             </div>
 
             <div class="datos">
@@ -287,6 +287,6 @@
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
 {% endblock %}

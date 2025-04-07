@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Dashboard - Training+
+{% endblock %}
+
+{% block content %}
+
+    <div class="title">
+        <h1>Dashboard de Entrenador</h1>
+        <p>Gestiona y visualiza el progreso de tus alumnos</p>
+    </div>
+
+    <!-- Resumen en general -->
+    <section class="resumen-general">
+        <div class="card">
+            <div class="card-title">
+                <h2>Total de Alumnos</h2>
+                <i class='bx bxs-group'></i>
+            </div>
+
+            <div class="card-data">
+                <h3>N</h3>
+
+                <p>N alumnos de 6.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <h2>Cumplimiento Promedio</h2>
+                <i class='bx bxs-award'></i>
+            </div>
+
+            <div class="card-data">
+                <h3>0%</h3>
+
+                <div class="bar average-progress-student" data-progreso=""></div>
+
+                <p>Promedio de cumplimiento de los alumnos.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">
+                <h2>Progreso Promedio</h2>
+                <i class='bx bx-trending-up'></i>
+            </div>
+
+            <div class="card-data">
+                <h3>0%</h3>
+
+                <div class="bar average-progress" data-progreso=""></div>
+
+                <p>Promedio de progreso en los planes de entrenamiento.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Actividad reciente -->
+    <section class="activity-container">
+        <h2>Actividad Reciente</h2>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Alumno</th>
+                        <th scope="col">Rutina</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td data-label="alumno" id="alumno">
+                            <div class="foto-nombre">
+                                <img src="{{ url_for('static', filename='uploads/users/profile.webp') }}" alt="">
+                                <span class="nombre-alumno">Guille Bouix</span>
+                            </div>
+                        </td>
+                        <td data-label="entrenamiento">Aumento Masa Muscular</td>
+                        <td data-label="fecha">14/09/2025</td>
+                        <td data-label="estado">Activo</td>
+                    </tr>
+                    <tr>
+                        <td data-label="alumno" id="alumno">
+                            <div class="foto-nombre">
+                                <img src="{{ url_for('static', filename='uploads/users/profile.webp') }}" alt="">
+                                <span class="nombre-alumno">Ana Martinez</span>
+                            </div>
+                        </td>
+                        <td data-label="entrenamiento">Hipertrofia</td>
+                        <td data-label="fecha">07/04/2025</td>
+                        <td data-label="estado">Activo</td>
+                    </tr>
+                    <tr>
+                        <td data-label="alumno" id="alumno">
+                            <div class="foto-nombre">
+                                <img src="{{ url_for('static', filename='uploads/users/profile.webp') }}" alt="">
+                                <span class="nombre-alumno">Edgar Hernandez</span>
+                            </div>
+                        </td>
+                        <td data-label="entrenamiento">Rutina de Fuerza</td>
+                        <td data-label="fecha">26/08/2024</td>
+                        <td data-label="estado">Completado</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+    <!-- Evolución fuerza (Empuje/Jale/Resistencia) -->
+    <section class="rendimiento-container">
+        <h2>Evolución de Fuerza y Resistencia</h2>
+        <p>Porcentaje de mejora en fuerza y resistencia entre todos los alumnos.</p>
+
+        <div style="max-width: 100%; height: 400px; margin-top: 1rem;">
+            <canvas id="barraProgreso"></canvas>
+        </div>
+
+        <script>
+            function crearGraficoBarra() {
+              const esPantallaChica = window.innerWidth <= 768;
+              const ctx = document.getElementById('barraProgreso').getContext('2d');
+          
+              // Destruir gráfico anterior si existe (para cuando se redimensiona)
+              if (window.barraProgresoChart) {
+                window.barraProgresoChart.destroy();
+              }
+          
+              window.barraProgresoChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                  labels: ['Empuje', 'Jale', 'Resistencia'],
+                  datasets: [{
+                    label: 'Fuerza',
+                    data: [80, 65, 50],
+                    backgroundColor: '#DC2626',
+                    borderRadius: 5,
+                    barThickness: 40
+                  }]
+                },
+                options: {
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  indexAxis: esPantallaChica ? 'x' : 'y',
+                  scales: {
+                    [esPantallaChica ? 'y' : 'x']: {
+                      beginAtZero: true,
+                      min: 0,
+                      max: 100,
+                      ticks: {
+                        stepSize: 25,
+                        callback: value => value + '%'
+                      },
+                      grid: {
+                        drawBorder: false
+                      }
+                    },
+                    [esPantallaChica ? 'x' : 'y']: {
+                      grid: {
+                        drawBorder: false
+                      },
+                      ticks: {
+                        color: '#000'
+                      }
+                    }
+                  },
+                  plugins: {
+                    legend: {
+                      display: false
+                    },
+                    tooltip: {
+                      backgroundColor: '#5B5B5B',
+                      titleColor: '#fff',
+                      bodyColor: '#fff',
+                      callbacks: {
+                        label: (context) =>
+                          `${context.label}: ${context.raw}%`
+                      }
+                    }
+                  }
+                }
+              });
+            }
+          
+            crearGraficoBarra();
+          
+            // Si querés que se actualice dinámicamente al redimensionar:
+            window.addEventListener('resize', () => {
+              crearGraficoBarra();
+            });
+        </script>
+
+    </section>
+
+{% endblock %}

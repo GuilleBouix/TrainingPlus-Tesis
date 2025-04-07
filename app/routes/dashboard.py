@@ -5,3 +5,10 @@ from datetime import date
 
 
 dashboard_bp = Blueprint('dashboard', __name__)
+
+
+# Ruta de Dashboard
+@dashboard_bp.route('/dashboard', methods=['GET', 'POST'])
+@login_required
+def dashboard():
+    return render_template('dashboard.html')

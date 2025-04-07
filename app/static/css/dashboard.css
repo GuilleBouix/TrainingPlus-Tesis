@@ -1,0 +1,254 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Saira:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Saira', sans-serif;
+    font-weight: 400;
+}
+
+:root {
+    /* ------ MAIN COLORS ------ */
+    --color-primary: #DC2626;
+    --color-secondary: #EDEDED;
+    --color-background: #FFFFFF;
+    /* ------ TEXT COLORS ------ */
+    --color-text-primary: #222222;
+    --color-text-secondary: #5B5B5B;
+    /* ------ BUTTON COLORS ------ */
+    --color-button-primary: #EF4444;
+    --color-button-hover: #DC2626;
+    --color-button-active: #B91C1C;
+    /* ------ OTHERS COLORS ------ */
+    --color-border: #DFDFDF;
+    --color-flash-error-bg: #EEC8C5;
+    --color-flash-error-text: #CA0000;
+    --color-flash-success-bg: #C6ECC6;
+    --color-flash-success-text: #37A437;
+}
+
+
+
+/* Resumen General */
+.resumen-general {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.resumen-general .card {
+    width: 100%;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 1rem;
+}
+
+.card .card-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+.card-title h2 {
+    font-weight: 500;
+    font-size: 1rem;
+    color: var(--color-text-primary);
+}
+.card-title i {
+    font-size: 1.2rem;
+    color: var(--color-primary);
+}
+
+.card .card-data {
+    display: flex;
+    flex-direction: column;
+    align-items: self-start;
+}
+.card-data h3,
+.card-data h3 a {
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: var(--color-text-primary);
+    transition: all .2s ease-in-out;
+}
+.card-data h3 a:hover {
+    color: var(--color-primary);
+}
+.card-data p {
+    font-weight: 400;
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+}
+.card-data .bar {
+    width: 100%;
+    height: 10px;
+    background-color: var(--color-secondary);
+    border-radius: 3px;
+    margin: 0.5rem 0;
+}
+.bar-progress {
+    background-color: var(--color-primary);
+}
+.day-progress {
+    background-color: var(--color-primary);
+}
+
+
+
+/* Actividad Reciente */
+.activity-container {
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    margin: 1rem 0;
+    position: relative;
+}
+.activity-container h2 {
+    font-weight: 600;
+    font-size: 1.3rem;
+    color: var(--color-text-primary);
+}
+
+/* Tabla */
+.table-container {
+    margin-top: 1rem;
+}
+
+table {
+  border-bottom: 1px solid var(--color-border);
+  border-collapse: collapse;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  table-layout: fixed;
+}
+
+table tr {
+  border-bottom: 1px solid var(--color-border);
+}
+
+table th,
+table td {
+  padding: 1rem 0;
+  text-align: left;
+}
+
+td .foto-nombre {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: normal;
+  text-align: left;
+}
+.foto-nombre img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  vertical-align: middle;
+  margin-right: .3rem;
+  border: 1px solid var(--color-border);
+}
+.nombre-alumno {
+  vertical-align: middle;
+  display: inline-block;
+  font-weight: 500;
+}
+
+table th {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+}
+
+
+
+/* Rendimiento Fuerza/Resistencia */
+.rendimiento-container {
+  padding: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  margin: 1rem 0;
+  position: relative;
+}
+.rendimiento-container h2 {
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: var(--color-text-primary);
+}
+.rendimiento-container p {
+  color: var(--color-text-secondary);
+}
+
+
+
+/* Media Querys */
+@media screen and (max-width: 1160px) {
+}
+@media screen and (max-width: 950px) {
+}
+@media screen and (max-width: 768px) {
+  .resumen-general {
+    flex-direction: column;
+  }
+
+  table {
+    border: 0;
+  }
+
+  table caption {
+    font-size: 1rem;
+  }
+
+  table thead {
+    border: none;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+
+  table tr {
+    border-bottom: 1px solid var(--color-border);
+    display: block;
+    margin-bottom: 2rem;
+  }
+
+  table th,
+  table td {
+    padding: .50em 0;
+    text-align: left;
+  }
+
+  table td {
+    border-bottom: 1px solid var(--color-border);
+    display: block;
+    font-size: .9rem;
+    text-align: right;
+  }
+
+  td .foto-nombre img {
+    display: none;
+  }
+
+  td .nombre-alumno {
+    font-weight: 400;
+  }
+
+  table td::before {
+    content: attr(data-label);
+    float: left;
+    font-weight: 600;
+    text-transform: capitalize;
+  }
+
+  table td:last-child {
+    border-bottom: 0;
+  }
+}
+@media screen and (max-width: 480px) {
+}

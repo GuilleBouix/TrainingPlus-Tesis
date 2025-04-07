@@ -80,18 +80,32 @@
                                 
                                     <div class="registers">
                                         <div>
-                                            <label for="sets_{{ ejercicio.id_dia_ejercicio }}">¿Cuántas series pudiste hacer?</label><span class="asterisk"> *</span>
+                                            {% if session.get('rol') == 2 %}
+                                                <label for="sets_{{ ejercicio.id_dia_ejercicio }}">Series Realizadas</label>
+                                            {% else %}
+                                                <label for="sets_{{ ejercicio.id_dia_ejercicio }}">¿Cuántas series pudiste hacer?</label><span class="asterisk"> *</span>
+                                            {% endif %}
+
                                             <input type="number" name="series_realizadas" value="{{ ejercicio.series_realizadas }}" min="0" required>
                                         </div>
                                 
                                         <div>
-                                            <label for="reps_{{ ejercicio.id_dia_ejercicio }}">¿Cuántas repeticiones pudiste hacer?</label><span class="asterisk"> *</span>
-                                            <input type="number" name="repeticiones_realizadas" value="{{ ejercicio.repeticiones_realizadas }}" min="0" required>
+                                            {% if session.get('rol') == 2 %}
+                                                <label for="reps_{{ ejercicio.id_dia_ejercicio }}">Repeticiones Realizadas</label>
+                                            {% else %}
+                                                <label for="reps_{{ ejercicio.id_dia_ejercicio }}">¿Cuántas repeticiones pudiste hacer?</label><span class="asterisk"> *</span>
+                                            {% endif %}
 
+                                            <input type="number" name="repeticiones_realizadas" value="{{ ejercicio.repeticiones_realizadas }}" min="0" required>
                                         </div>
                                 
                                         <div>
-                                            <label for="weight_{{ ejercicio.id_dia_ejercicio }}">¿Cuánto peso utilizaste?</label><span class="asterisk"> *</span>
+                                            {% if session.get('rol') == 2 %}
+                                                <label for="weight_{{ ejercicio.id_dia_ejercicio }}">Peso Utilizado (Kg)</label>
+                                            {% else %}
+                                                <label for="weight_{{ ejercicio.id_dia_ejercicio }}">¿Cuánto peso utilizaste?</label><span class="asterisk"> *</span>
+                                            {% endif %}
+                                            
                                             <input type="number" name="peso_utilizado" value="{{ ejercicio.peso_utilizado }}" step="0.1" required>
                                         </div>
                                     </div>
