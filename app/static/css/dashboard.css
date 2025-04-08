@@ -98,7 +98,7 @@
 
 
 
-/* Actividad Reciente */
+/* Vinculaciones */
 .activity-container {
     padding: 1rem;
     border: 1px solid var(--color-border);
@@ -162,6 +162,22 @@ table th {
   color: var(--color-text-secondary);
 }
 
+td a {
+  display: flex;
+  align-items: center;
+  max-width: fit-content;
+  font-weight: 500;
+}
+td a i {
+  font-size: 1.3rem;
+  transition: .1s ease-in-out;
+}
+td a:hover {  
+  i {
+      margin-left: .2rem;
+  }
+}
+
 
 
 /* Rendimiento Fuerza/Resistencia */
@@ -180,6 +196,25 @@ table th {
 .rendimiento-container p {
   color: var(--color-text-secondary);
 }
+
+
+/* Ranking de cumplimiento */
+.cumplimiento-container {
+  padding: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  margin: 1rem 0;
+  position: relative;
+}
+.cumplimiento-container h2 {
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: var(--color-text-primary);
+}
+.cumplimiento-container p {
+  color: var(--color-text-secondary);
+}
+
 
 
 

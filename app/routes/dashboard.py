@@ -12,3 +12,10 @@ dashboard_bp = Blueprint('dashboard', __name__)
 @login_required
 def dashboard():
     return render_template('dashboard.html')
+
+
+# Ruta de Progreso Alumno
+@dashboard_bp.route('/dashboard/progreso-alumno/<alumno_id>', methods=['GET', 'POST'])
+@login_required
+def progreso_alumno(alumno_id):
+    return render_template('progreso_alumno.html', alumno_id=alumno_id)

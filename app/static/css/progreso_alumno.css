@@ -1,0 +1,309 @@
+.progreso-alumno-container {
+    display: flex;
+    margin: 1rem 0;
+    gap: 1rem;
+}
+
+/* Datos del Alumno */
+.alumno-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    border: 1px solid var(--color-border);
+    width: 40%;
+    border-radius: 10px;
+    padding: 1rem;
+    height: 100%;
+}
+
+.alumno-container .datos {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.datos img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+}
+
+.datos div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: .75rem;
+}
+.datos h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+.datos p {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+    line-height: 1;
+}
+
+.progreso-plan {
+    display: flex;
+    align-items: start;
+    flex-direction: column;
+    margin: 1rem 0;
+    border-top: 1px solid var(--color-border);
+    padding-top: .75rem;
+}
+.progreso-plan strong {
+    font-weight: 500;
+    font-size: .9rem;
+    color: var(--color-text-primary);
+}
+.progreso-plan span {
+    font-size: .9rem;
+    color: var(--color-text-secondary);
+    margin-top: .5rem;
+}
+
+.info {
+    padding: .75rem 0;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+}
+
+.info .edad,
+.info .peso,
+.info .altura,
+.info .inicio {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.edad h3,
+.peso h3,
+.altura h3,
+.inicio h3 {
+    font-size: .9rem;
+    color: var(--color-text-secondary);
+}
+.edad span,
+.peso span,
+.altura span,
+.inicio span {
+    font-size: .9rem;
+    color: var(--color-text-primary);
+}
+
+.ficha {
+    border-top: 1px solid var(--color-border);
+    padding: .75rem 0;
+}
+
+.ficha button {
+    width: 100%;
+    padding: 10px 10px;
+    border-radius: 5px;
+    border: none;
+    background: var(--color-button-primary);
+    cursor: pointer;
+    transition: all 0.1s ease-in-out;
+    font-size: 1rem;
+    color: var(--color-background);
+    margin: 1rem 0;
+}
+.ficha button:hover {
+    background: var(--color-button-hover);
+}
+.ficha button:active {
+    background: var(--color-button-active);
+}
+
+
+
+
+
+
+/* Progreso del Alumno */
+.progreso-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    width: 100%;
+    gap: 1rem;
+}
+
+.rendimiento {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    width: 100%;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 1rem;
+}
+
+.rendimiento h2 {
+    font-weight: 600;
+    font-size: 1.3rem;
+    color: var(--color-text-primary);
+    margin-bottom: 1rem;
+}
+
+
+.evolucion-fuerza {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    width: 100%;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 1rem;
+}
+
+.evolucion-fuerza h2 {
+    font-weight: 600;
+    font-size: 1.3rem;
+    color: var(--color-text-primary);
+    margin-bottom: 1rem;
+}
+
+.navigation-buttons {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+.navigation-buttons button {
+    display: flex;
+    align-items: center;
+    font-size: 1.75rem;
+    border: none;
+    background-color: var(--color-button-primary);
+    outline: none;
+    color: var(--color-background);
+    cursor: pointer;
+    border-radius: 5px;
+    transition: all .1s linear;
+}
+.navigation-buttons button:hover {
+    background-color: var(--color-button-hover);
+}
+.navigation-buttons button:active {
+    background-color: var(--color-button-active);
+}
+
+
+.mejores-marcas-alumno {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    width: 100%;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 1rem;
+}
+
+.mejores-marcas-alumno h2 {
+    font-weight: 600;
+    font-size: 1.3rem;
+    color: var(--color-text-primary);
+    margin-bottom: 1rem;
+}
+
+.mejores-marcas-alumno .marcadores {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+
+.observaciones-semanales {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+    width: 100%;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 1rem;
+    overflow-y: auto;
+    max-height: 500px;
+}
+
+.observaciones-semanales h2 {
+    font-weight: 600;
+    font-size: 1.3rem;
+    color: var(--color-text-primary);
+    margin-bottom: .5rem;
+}
+
+.observaciones-semanales .observacion {
+    width: 100%;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.observacion div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: .3rem;
+}
+.observacion div strong {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+.observacion div button {
+    font-size: 1.5rem;
+    color: var(--color-button-primary);
+    outline: none;
+    border: none;
+    background: none;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+    transition: all 0.1s ease-in-out;
+}
+.observacion div button:hover {
+    color: var(--color-button-hover);
+    transform: scale(1.1);
+}
+.observacion div button:active {
+    color: var(--color-button-active);
+}
+
+.observacion p {
+    color: var(--color-text-secondary);
+}
+
+
+
+
+
+
+
+
+/* Media Querys */
+@media screen and (max-width: 1160px) {
+}
+
+@media screen and (max-width: 950px) {
+}
+
+@media screen and (max-width: 768px) {
+    .progreso-alumno-container {
+        flex-direction: column;
+    }
+
+    .alumno-container {
+        margin-top: 1rem;
+        width: 100%;
+    }
+}
