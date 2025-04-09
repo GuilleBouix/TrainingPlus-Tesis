@@ -12,7 +12,7 @@
                 <img src="{{ url_for('static', filename='uploads/users/profile.webp') }}" alt="">
 
                 <div>
-                    <h1>Guille Bouix</h1>
+                    <h1 style="text-align: center;">Guille Bouix</h1>
                     <p>Rutina de Fuerza</p>
                 </div>
             </div>
@@ -49,12 +49,128 @@
             </div>
 
             <div class="ficha">
-                <button>
+                <button class="btn-open-cuestionario" id="abrir-cuestionario">
                     <i class='bx bxs-file'></i>
                     Ver Ficha Completa
                 </button>
             </div>
         </section>
+
+        <!-- Modal del cuestionario -->
+        <dialog class="cuestionario-dialog" id="cuestionario-modal">
+            <div class="modal-content">
+                <div class="header">
+                    <div class="title">
+                        <strong>Ficha de Guillermo Bouix</strong>
+
+                        <i class='bx bx-x close-modal'></i>
+                    </div>
+                </div>
+
+                <div class="ficha-content">
+                    <!-- Información Personal -->
+                    <div class="container">
+                        <h1>
+                            <i class='bx bx-user'></i> Información Personal
+                        </h1>
+
+                        <div class="datos">
+                            <h3>Edad</h3>
+                            <span>23 años</span>
+                        </div>
+
+                        <div class="datos">
+                            <h3>Experiencia</h3>
+                            <span>Ninguna</span>
+                        </div>
+
+                        <div class="datos">
+                            <h3>Objetivo</h3>
+                            <span>Perder peso y ganar masa muscular</span>
+                        </div>
+                    </div>
+
+                    <!-- Datos Físicos -->
+                    <div class="container container-2">
+                        <h1>
+                            <i class='bx bx-ruler regla'></i> Datos Físicos
+                        </h1>
+
+                        <div class="datos">
+                            <h3>Peso</h3>
+                            <span>92.3 kg</span>
+                        </div>
+
+                        <div class="datos">
+                            <h3>Altura</h3>
+                            <span>182 cm</span>
+                        </div>
+                    </div>
+
+                    <!-- Entrenamiento -->
+                    <div class="container container-2">
+                        <h1>
+                            <i class='bx bx-dumbbell regla'></i> Entrenamiento
+                        </h1>
+
+                        <div class="datos">
+                            <h3>Nivel de Actividad</h3>
+                            <span>Moderado</span>
+                        </div>
+
+                        <div class="datos">
+                            <h3>Frecuencia</h3>
+                            <span>4 Veces por semana</span>
+                        </div>
+
+                        <div class="datos">
+                            <h3>Duración de Entrenamiento</h3>
+                            <span>60 minutos</span>
+                        </div>
+                    </div>
+
+                    <!-- Salud -->
+                    <div class="container container-2">
+                        <h1>
+                            <i class='bx bx-heart'></i> Estado de Salud
+                        </h1>
+
+                        <div class="datos">
+                            <h3>Estado General</h3>
+                            <span>Bien, sin condiciones médicas relevantes</span>
+                        </div>
+
+                        <div class="datos">
+                            <h3>Lesiones</h3>
+                            <span>Lesión de hombro hace dos años</span>
+                        </div>
+
+                        <div class="datos">
+                            <h3>Condición Cardiovascular</h3>
+                            <span>Buena</span>
+                        </div>
+
+                        <div class="datos">
+                            <h3>Nivel de Estrés</h3>
+                            <span>Medio</span>
+                        </div>
+                    </div>
+
+                    <!-- Notas adicionales -->
+                    <div class="container container-2">
+                        <h1>
+                            <i class='bx bx-comment'></i> Notas Adicionales
+                        </h1>
+
+                        <div class="datos">
+                            <span class="nota-adicional">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sit debitis, nobis non perferendis cupiditate at illo distinctio cumque, sed, ea repellat quo ut voluptate vero. Inventore, praesentium? Porro, temporibus eius.</span>
+                        </div>
+
+                        <button>Descargar (PDF)</button>
+                    </div>
+                </div>
+            </div>
+        </dialog>
 
         <div class="progreso-container">
             <section class="rendimiento">
@@ -283,5 +399,31 @@
             </section>
         </div>
     </div>
+
+    <!-- Script para abrir y cerrar el modal del cuestionario -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const modal = document.getElementById("cuestionario-modal");
+            const abrirBtn = document.querySelector(".btn-open-cuestionario");
+            const cerrarBtn = modal.querySelector(".close-modal");
+        
+            // Abrir modal
+            abrirBtn.addEventListener("click", () => {
+                modal.showModal();
+            });
+        
+            // Cerrar con el icono <i>
+            cerrarBtn.addEventListener("click", () => {
+                modal.close();
+            });
+        
+            // Cerrar haciendo clic afuera del contenido
+            modal.addEventListener("click", (e) => {
+                if (e.target === modal) {
+                    modal.close();
+                }
+            });
+        });
+    </script>
 
 {% endblock %}

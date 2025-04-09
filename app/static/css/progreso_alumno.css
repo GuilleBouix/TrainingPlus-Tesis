@@ -2,6 +2,12 @@
     display: flex;
     margin: 1rem 0;
     gap: 1rem;
+    align-items: stretch; /* Este es el truco */
+}
+
+.alumno-container,
+.progreso-container {
+    height: auto !important;
 }
 
 /* Datos del Alumno */
@@ -11,7 +17,8 @@
     justify-content: start;
     border: 1px solid var(--color-border);
     width: 40%;
-    border-radius: 10px;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
     padding: 1rem;
     height: 100%;
 }
@@ -37,8 +44,9 @@
 }
 .datos h1 {
     font-size: 1.5rem;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--color-text-primary);
+    text-transform: uppercase;
 }
 .datos p {
     font-size: 1rem;
@@ -113,6 +121,7 @@
     font-size: 1rem;
     color: var(--color-background);
     margin: 1rem 0;
+    outline: none;
 }
 .ficha button:hover {
     background: var(--color-button-hover);
@@ -123,6 +132,142 @@
 
 
 
+/* Modal Cuestionario/Ficha */
+.cuestionario-dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    outline: none;
+    border: none;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    z-index: 9999;
+    visibility: hidden;
+    overflow: hidden;
+    border-radius: 10px;
+    padding: 0;
+}
+.cuestionario-dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.cuestionario-dialog[open] {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    position: relative;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    width: 600px;
+    outline: none;
+}
+
+.header {
+    background-color: var(--color-primary);
+    padding: 1.5rem 2rem;
+}
+
+.header .title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.title strong {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-background);
+}
+
+.title i {
+    cursor: pointer;
+    font-size: 24px;
+    color: var(--color-text-primary);
+    transition: all 0.2s ease-in-out;
+}
+.title i:hover {
+    color: var(--color-background);
+    transform: scale(1.1);
+}
+
+/* Datos Ficha */
+.ficha-content {
+    padding: 1.5rem 2rem;
+    max-height: 80vh;
+    overflow-y: auto;
+    outline: none;
+}
+
+.ficha-content .container-2 {
+    margin-top: 1.5rem;
+}
+
+.ficha-content h1 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: .5rem;
+    display: flex;
+    align-items: center;
+}
+
+.ficha-content h1 i {
+    color: var(--color-primary);
+    margin-right: .3rem;
+}
+.ficha-content h1 .regla {
+    rotate: -45deg;
+}
+
+.ficha-content .datos {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    border-left: 2px solid var(--color-border);
+    margin: 0 .5em;
+    padding: 0 1rem;
+}
+.datos h3 {
+    color: var(--color-text-secondary);
+    font-size: 1rem;
+}
+.datos span {
+    color: var(--color-text-primary);
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: .5rem;
+}
+
+.nota-adicional {
+    font-weight: 400 !important;
+}
+
+.ficha-content .container button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 10px;
+    border-radius: 5px;
+    border: none;
+    background: var(--color-button-primary);
+    cursor: pointer;
+    transition: all 0.1s ease-in-out;
+    font-size: 1rem;
+    color: var(--color-background);
+    margin-top: 2rem;
+    margin-left: auto;
+    outline: none;
+}
+.ficha-content .container button:hover {
+    background: var(--color-button-hover);
+}
+.ficha-content .container button:active {
+    background: var(--color-button-active);
+}
 
 
 
@@ -185,18 +330,18 @@
     align-items: center;
     font-size: 1.75rem;
     border: none;
-    background-color: var(--color-button-primary);
     outline: none;
-    color: var(--color-background);
+    color: var(--color-primary);
+    background-color: var(--color-background);
     cursor: pointer;
     border-radius: 5px;
     transition: all .1s linear;
 }
 .navigation-buttons button:hover {
-    background-color: var(--color-button-hover);
+    transform: scale(1.1);
 }
 .navigation-buttons button:active {
-    background-color: var(--color-button-active);
+    transform: scale(.9);
 }
 
 
@@ -231,7 +376,8 @@
     align-items: start;
     width: 100%;
     border: 1px solid var(--color-border);
-    border-radius: 10px;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
     padding: 1rem;
     overflow-y: auto;
     max-height: 500px;
@@ -292,9 +438,13 @@
 
 /* Media Querys */
 @media screen and (max-width: 1160px) {
+    .alumno-container {
+        padding: 1rem .5rem;
+    }
 }
 
 @media screen and (max-width: 950px) {
+
 }
 
 @media screen and (max-width: 768px) {
