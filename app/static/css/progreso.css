@@ -29,18 +29,18 @@
     --color-flash-success-text: #37A437;
 }
 
-.title h1 {
+.progreso-title h1 {
     font-weight: 600;
     font-size: 2rem;
     color: var(--color-text-primary);
 }
-.title p {
+.progreso-title p {
     font-size: 1rem;
     color: var(--color-text-secondary);
 }
 
 
-/* Seleccionar plan deentrenamiento */
+/* Seleccionar plan de entrenamiento */
 .select-training select {
     outline: none;
     padding: 0.5rem;
@@ -144,36 +144,37 @@
 }
 
 /* Marcadores */
-.marcadores-container {
+.marcadores-container-alumno {
     padding: 1rem;
     border: 1px solid var(--color-border);
     border-radius: 10px;
     margin: 1rem 0;
 }
-.marcadores-container h2 {
+.marcadores-container-alumno h2 {
     font-weight: 600;
     font-size: 1.3rem;
     color: var(--color-text-primary);
 }
 
-.marcadores-container .marcadores {
+.marcadores-container-alumno .marcadores-alumno {
     margin: 1rem 0;
 }
 
-.marcadores .marcador {
+.marcadores-alumno .marcador {
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid var(--color-border);
     margin-bottom: 1rem;
 }
-.marcador strong {
+.marcadores-alumno .marcador .ejercicio-marcador {
     font-weight: 500;
     font-size: 1rem;
     color: var(--color-text-primary);
     margin-bottom: .75rem;
 }
-.marcador span {
+.marcadores-alumno .marcador .valor-marcador {
+    font-size: 1rem;
     font-weight: 500;
     color: var(--color-text-secondary);
     border-radius: 50px;

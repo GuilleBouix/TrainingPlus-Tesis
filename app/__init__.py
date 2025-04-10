@@ -39,6 +39,7 @@ def create_app():
     from .routes.rutina import rutina_bp
     from .routes.dashboard import dashboard_bp
     from .routes.progreso import progreso_bp
+    from .routes.cuestionario import cuestionario_bp
 
 
 
@@ -53,6 +54,7 @@ def create_app():
     app.register_blueprint(rutina_bp)
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(progreso_bp)
+    app.register_blueprint(cuestionario_bp)
 
 
 

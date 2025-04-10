@@ -363,9 +363,31 @@
     margin-bottom: 1rem;
 }
 
-.mejores-marcas-alumno .marcadores {
+.mejores-marcas-alumno .marcadores-container {
     width: 100%;
     margin-top: 1rem;
+}
+
+.marcadores-container .marcador {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 1rem;
+}
+.marcador strong {
+    font-weight: 500;
+    font-size: 1rem;
+    color: var(--color-text-primary);
+    margin-bottom: .75rem;
+}
+.marcador span {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    border-radius: 50px;
+    padding: 0 10px;
+    margin-bottom: .75rem;
 }
 
 
@@ -425,8 +447,9 @@
     color: var(--color-button-active);
 }
 
-.observacion p {
+.observacion .observacion-texto {
     color: var(--color-text-secondary);
+    font-size: 1rem;
 }
 
 

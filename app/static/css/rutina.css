@@ -265,6 +265,12 @@ main {
     gap: 1rem;
     margin: 1rem 0;
 }
+.registers label {
+    font-size: 1rem;
+}
+#observations {
+    font-size: 1rem;
+}
 .registers input {
     border: 1px solid var(--color-border);
     border-radius: 5px;
@@ -381,6 +387,7 @@ body.modal-open {
 
 .asterisk {
     color: var(--color-primary);
+    font-size: 1rem;
 }
 
 

@@ -99,14 +99,14 @@
 
 
 /* Vinculaciones */
-.activity-container {
+.vinculaciones-container {
     padding: 1rem;
     border: 1px solid var(--color-border);
     border-radius: 10px;
     margin: 1rem 0;
     position: relative;
 }
-.activity-container h2 {
+.vinculaciones-container h2 {
     font-weight: 600;
     font-size: 1.3rem;
     color: var(--color-text-primary);
@@ -117,7 +117,7 @@
     margin-top: 1rem;
 }
 
-table {
+.dashboard-table {
   border-bottom: 1px solid var(--color-border);
   border-collapse: collapse;
   margin: 0;
@@ -126,12 +126,12 @@ table {
   table-layout: fixed;
 }
 
-table tr {
+.dashboard-table tr {
   border-bottom: 1px solid var(--color-border);
 }
 
-table th,
-table td {
+.dashboard-table th,
+.dashboard-table td {
   padding: 1rem 0;
   text-align: left;
 }
@@ -150,13 +150,20 @@ td .foto-nombre {
   margin-right: .3rem;
   border: 1px solid var(--color-border);
 }
-.nombre-alumno {
+td .nombre-alumno {
   vertical-align: middle;
   display: inline-block;
   font-weight: 500;
+  font-size: 1rem;
 }
 
-table th {
+.dashboard-table-rutina,
+.dashboard-table-fecha,
+.dashboard-table-detalles {
+  font-size: 1rem;
+}
+
+.dashboard-table th {
   font-size: 1rem;
   font-weight: 500;
   color: var(--color-text-secondary);
@@ -215,6 +222,12 @@ td a:hover {
   color: var(--color-text-secondary);
 }
 
+.section-h2 {
+  font-size: 1.3rem !important;
+}
+.section-p {
+  font-size: 1rem;
+}
 
 
 

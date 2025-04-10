@@ -81,6 +81,12 @@
     <div class="sections section-2" data-aos="flip-right">
         <div class="title">
             <h1>Editar Perfil</h1>
+
+            {% if rol_usuario == 1 %}
+                <a href="{{ url_for('cuestionario.cuestionario') }}" class="ficha-alumno btn-open-ficha">
+                    <i class='bx bxs-file'></i> Ver Ficha
+                </a>
+            {% endif %}
         </div>
 
         {% if rol_usuario == 1 %}

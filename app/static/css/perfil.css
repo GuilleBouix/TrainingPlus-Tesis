@@ -209,16 +209,52 @@ main {
     display: flex;
 }
 
+.section-2 .title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .section-2 .title h1 {
     font-size: 1.5rem;
     line-height: 100%;
     font-weight: 600;
 }
 
+.title .ficha-alumno {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    outline: none;
+    border: none;
+    background: var(--color-button-primary);
+    color: var(--color-background);
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition:  0.1s;
+}
+.ficha-alumno:hover {
+    background: var(--color-button-hover);
+}
+.ficha-alumno:active {
+    background: var(--color-button-active);
+}
+
+
+.title .ficha-alumno i {
+    color: var(--color-background);
+    margin-right: .3rem;
+    font-size: 1.1rem;
+}
+
 .section-2 form {
     display: flex;
     flex-direction: column;
     margin-top: 1rem;
+    padding: 0;
+    border: none;
 }
 
 form .input-container {

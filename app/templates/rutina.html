@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block content %}
+
     <div class="routine-container">
         <div class="routine-header">
             <div class="title">
@@ -110,7 +111,7 @@
                                         </div>
                                     </div>
                                 
-                                    <label for="observations_{{ ejercicio.id_dia_ejercicio }}">Observaciones</label>
+                                    <label id="observations" for="observations_{{ ejercicio.id_dia_ejercicio }}">Observaciones</label>
                                     <textarea name="observaciones">{{ ejercicio.observaciones }}</textarea>
 
                                     <!--Si el rol del usuario en la sesion es 2, ocultar el boton-->
