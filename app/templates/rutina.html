@@ -127,7 +127,7 @@
             </div>
         {% endfor %}
 
-        <!-- Reemplazar la sección de progreso semanal con esto: -->
+        <!-- Progreso semanal -->
         {% for semana in semanas %}
             <div class="week-progress" data-week="{{ semana.numero_semana }}" 
                 {% if semana.numero_semana != 1 %}style="display:none"{% endif %}>
@@ -143,7 +143,7 @@
                             <strong>Fotografía del Progreso</strong>
                             <p>Adjunta una fotografía de tu físico actual.</p>
 
-                            <input type="file" name="progress-file" id="progress-file-{{ semana.id_semana }}" accept="image/*">
+                            <input type="file" required name="progress-file" id="progress-file-{{ semana.id_semana }}" accept="image/*">
 
                             <div class="photo-container">
                                 {% if semana.progreso and semana.progreso.foto_fisico %}
@@ -159,7 +159,7 @@
                             <strong>Observaciones</strong>
                             <p>Registra tus sensaciones (máx. 200 caracteres)</p>
 
-                            <textarea maxlength="200" name="sensations" id="sensations-{{ semana.id_semana }}" placeholder="Escribe tus sensaciones durante esta semana">{% if semana.progreso %}{{ semana.progreso.observaciones }}{% endif %}</textarea>
+                            <textarea required maxlength="200" name="sensations" id="sensations-{{ semana.id_semana }}" placeholder="Escribe tus sensaciones durante esta semana">{% if semana.progreso %}{{ semana.progreso.observaciones }}{% endif %}</textarea>
 
                             <button type="submit">Guardar Progreso Semanal</button>
                         </div>

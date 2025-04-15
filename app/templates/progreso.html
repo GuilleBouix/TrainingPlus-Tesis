@@ -5,16 +5,23 @@
 {% endblock %}
 
 {% block content %}
-
     <div class="progreso-title">
         <h1>Mi Progreso</h1>
         <p>Visualiza tu rendimiento y progreso</p>
     </div>
 
-    <!-- Select para seleccionar el plan de entrenamiento -->
+    <!-- Formulario para seleccionar entrenamiento -->
     <div class="select-training">
-        <select id="select-training">
-            <option value="" selected>Plan de Entrenamiento</option>
+        <select id="entrenamiento-select" onchange="cambiarEntrenamiento(this)">
+            <option value="" disabled {% if not id_entrenamiento_actual %}selected{% endif %}>
+                Selecciona un entrenamiento
+            </option>
+            {% for entrenamiento in entrenamientos %}
+                <option value="{{ entrenamiento.id_entrenamiento }}" 
+                        {% if id_entrenamiento_actual and entrenamiento.id_entrenamiento == id_entrenamiento_actual %}selected{% endif %}>
+                    {{ entrenamiento.nombre_entrenamiento }}
+                </option>
+            {% endfor %}
         </select>
     </div>
 
@@ -26,12 +33,47 @@
                 <i class='bx bx-trending-up'></i>
             </div>
 
-            <div class="card-data">
-                <h3>0%</h3>
+            <div id="progreso-container">
+                {% if entrenamientos %}
 
-                <div class="bar bar-progress" data-progreso=""></div>
+                <div class="card-data">
+                    {% if entrenamiento_actual %}
+                        <h3 id="porcentaje-texto">{{ "%.1f"|format(entrenamiento_actual.progreso) }}%</h3>
 
-                <p>0% completado</p>
+                        <div class="bar">
+                            <div class="bar-progress" 
+                                 id="barra-progreso" 
+                                 data-progreso="{{ "%.1f"|format(entrenamiento_actual.progreso) }}">
+                            </div>
+                        </div>
+
+                        <p id="texto-completado">Has completado un {{ "%.1f"|format(entrenamiento_actual.progreso) }}% de la rutina.</p>
+
+                    {% else %}
+
+                        {% set primer_entrenamiento = entrenamientos[0] %}
+
+                        <h3 id="porcentaje-texto">{{ "%.1f"|format(primer_entrenamiento.progreso) }}%</h3>
+
+                        <div class="bar">
+                            <div class="bar-progress" 
+                                 id="barra-progreso" 
+                                 data-progreso="{{ "%.1f"|format(primer_entrenamiento.progreso) }}">
+                            </div>
+                        </div>
+
+                        <p id="texto-completado">Has completado un {{ "%.1f"|format(primer_entrenamiento.progreso) }}% de la rutina.</p>
+
+                    {% endif %}
+                </div>
+
+                {% else %}
+
+                <div class="card-data">
+                    <p>No tienes entrenamientos registrados</p>
+                </div>
+
+                {% endif %}
             </div>
         </div>
 
@@ -42,11 +84,28 @@
             </div>
 
             <div class="card-data">
-                <h3>0/N</h3>
+                {% if id_entrenamiento_actual %}
+                    <h3>{{ dias_completados }}/{{ total_dias }}</h3>
 
-                <div class="bar day-progress" data-progreso=""></div>
+                    <div class="bar day-progress">
+                        <div class="bar-progress-day"
+                            id="barra-dias"
+                            data-progreso="{{ (dias_completados / total_dias * 100) if total_dias != 0 else 0 }}">
+                        </div>
+                    </div>
+                    
+                    <p>Has completado {{ dias_completados }} día{{ 's' if dias_completados != 1 else '' }} de {{ total_dias }} {{ 's' if dias_completados != 1 else '' }}</p>
 
-                <p>0 días completado</p>
+                {% else %}
+
+                    <h3>0/0</h3>
+
+                    <div class="bar day-progress">
+                        <div class="bar-progress-day" style="width: 0%"></div>
+                    </div>
+
+                    <p>0 días completado</p>
+                {% endif %}
             </div>
         </div>
 
@@ -57,8 +116,10 @@
             </div>
 
             <div class="card-data">
+                <pre>{{ entrenamiento_actual }}</pre>
+
                 <h3>
-                    <a href="">Joe Smith</a>
+                    <a href="">{{ entrenamiento_actual.entrenador }}</a>
                 </h3>
 
                 <p>Entrenador asignado a este plan.</p>
@@ -288,5 +349,32 @@
             </div>
         </div>
     </section>
+
+    <script>
+        function cambiarEntrenamiento(select) {
+            const idEntrenamiento = select.value;
+            if (idEntrenamiento) {
+                window.location.href = `/progreso/${idEntrenamiento}`;
+            } else {
+                window.location.href = '/progreso';
+            }
+        }
+    </script>
+
+    <script>
+        // Barra de progreso rutina
+        const barra = document.getElementById("barra-progreso");
+        const progreso = barra.dataset.progreso;
+
+        barra.style.width = progreso + "%";
+
+        // Barra de progreso día
+        const barraDias = document.getElementById("barra-dias");
+        if (barraDias) {
+            const progresoDias = barraDias.dataset.progreso;
+            barraDias.style.width = progresoDias + "%";
+        }
+    </script>
+
 
 {% endblock %}

@@ -13,7 +13,6 @@ entrenamiento_bp = Blueprint('entrenamiento', __name__)
 @verificar_formulario_completo
 def entrenamiento():
     user_id = session.get('id_usuario')
-
     db = conexion_basedatos()
 
     # Obtener id_alumno si el usuario es un alumno
@@ -24,68 +23,52 @@ def entrenamiento():
     usuario = db.execute("SELECT rol FROM usuario WHERE id_usuario = ?", (user_id,)).fetchone()
     rol_usuario = usuario["rol"] if usuario else None
 
-    # Obtener información del alumno o entrenador asociado
-    if rol_usuario == 1:  # Alumno
-        info_entrenador = db.execute("""
-            SELECT e.nombre AS nombre, e.apellido AS apellido, COALESCE(e.foto_perfil, 'profile.webp') AS foto_perfil
-            FROM entrenador e
-            JOIN entrenamiento et ON e.id_usuario = et.id_entrenador
-            WHERE et.id_alumno = ?
-        """, (user_id,)).fetchone()
-        asociacion = {"tipo": "Entrenador", "datos": info_entrenador}
-    elif rol_usuario == 2:  # Entrenador
-        info_alumno = db.execute("""
-            SELECT a.nombre AS nombre, a.apellido AS apellido, COALESCE(a.foto_perfil, 'profile.webp') AS foto_perfil
-            FROM alumno a
-            JOIN entrenamiento et ON a.id_usuario = et.id_alumno
-            WHERE et.id_entrenador = ?
-        """, (user_id,)).fetchone()
-        asociacion = {"tipo": "Alumno", "datos": info_alumno}
-    else:
-        asociacion = None
-
-    # Buscar entrenamientos del usuario logueado
-    entrenamientos = []
-
     # Función para calcular progreso basado en ejercicios completados
     def calcular_progreso(id_entrenamiento):
         query = """
-        SELECT 
-            COUNT(DISTINCT p.id_progreso) * 100.0 / COUNT(DISTINCT de.id_dia_ejercicio) AS progreso
-        FROM entrenamiento e
-        JOIN semanas s ON e.id_entrenamiento = s.id_entrenamiento
-        JOIN dias d ON s.id_semana = d.id_semana
-        JOIN dia_ejercicio de ON d.id_dia = de.id_dia
-        LEFT JOIN progreso_alumno p ON de.id_dia_ejercicio = p.id_dia_ejercicio
-        WHERE e.id_entrenamiento = ?
-        GROUP BY e.id_entrenamiento;
+            SELECT 
+                COUNT(DISTINCT p.id_progreso) * 100.0 / NULLIF(COUNT(DISTINCT de.id_dia_ejercicio), 0) AS progreso
+            FROM entrenamiento e
+            JOIN semanas s ON e.id_entrenamiento = s.id_entrenamiento
+            JOIN dias d ON s.id_semana = d.id_semana
+            JOIN dia_ejercicio de ON d.id_dia = de.id_dia
+            LEFT JOIN progreso_alumno p ON de.id_dia_ejercicio = p.id_dia_ejercicio AND p.id_alumno = ?
+            WHERE e.id_entrenamiento = ?
+            GROUP BY e.id_entrenamiento;
         """
-        result = db.execute(query, (id_entrenamiento,)).fetchone()
+        result = db.execute(query, (id_alumno if id_alumno else user_id, id_entrenamiento)).fetchone()
         return round(result["progreso"], 1) if result and result["progreso"] is not None else 0.0
 
-    # Si el usuario es entrenador, buscar entrenamientos donde id_entrenador = id_usuario
-    entrenamientos += db.execute("""
-        SELECT entrenamiento.*, 
-            COALESCE(entrenador.nombre, 'Desconocido') AS entrenador_nombre, 
-            COALESCE(entrenador.apellido, '') AS entrenador_apellido,
-            disciplina.nombre AS nombre_disciplina
-        FROM entrenamiento
-        LEFT JOIN entrenador ON entrenamiento.id_entrenador = entrenador.id_usuario
-        LEFT JOIN disciplina ON entrenamiento.id_disciplina = disciplina.id_disciplina
-        WHERE entrenamiento.id_entrenador = ?
-    """, (user_id,)).fetchall()
-
-    # Si el usuario es alumno, buscar entrenamientos donde id_alumno = id_alumno
-    if id_alumno:
+    entrenamientos = []
+    
+    if rol_usuario == 2:  # Entrenador
+        # Entrenamientos creados por el entrenador
         entrenamientos += db.execute("""
-            SELECT entrenamiento.*, 
-                COALESCE(entrenador.nombre, 'Desconocido') AS entrenador_nombre, 
-                COALESCE(entrenador.apellido, '') AS entrenador_apellido,
-                disciplina.nombre AS nombre_disciplina
-            FROM entrenamiento
-            LEFT JOIN entrenador ON entrenamiento.id_entrenador = entrenador.id_usuario
-            LEFT JOIN disciplina ON entrenamiento.id_disciplina = disciplina.id_disciplina
-            WHERE entrenamiento.id_alumno = ?
+            SELECT 
+                e.*, 
+                d.nombre AS nombre_disciplina,
+                a.nombre AS alumno_nombre,
+                a.apellido AS alumno_apellido,
+                COALESCE(a.foto_perfil, 'profile.webp') AS alumno_foto_perfil
+            FROM entrenamiento e
+            LEFT JOIN disciplina d ON e.id_disciplina = d.id_disciplina
+            LEFT JOIN alumno a ON e.id_alumno = a.id_alumno
+            WHERE e.id_entrenador = ?
+        """, (user_id,)).fetchall()
+    
+    elif rol_usuario == 1 and id_alumno:  # Alumno
+        # Entrenamientos asignados al alumno
+        entrenamientos += db.execute("""
+            SELECT 
+                e.*, 
+                d.nombre AS nombre_disciplina,
+                t.nombre AS entrenador_nombre,
+                t.apellido AS entrenador_apellido,
+                COALESCE(t.foto_perfil, 'profile.webp') AS entrenador_foto_perfil
+            FROM entrenamiento e
+            LEFT JOIN disciplina d ON e.id_disciplina = d.id_disciplina
+            LEFT JOIN entrenador t ON e.id_entrenador = t.id_usuario
+            WHERE e.id_alumno = ?
         """, (id_alumno,)).fetchall()
 
     # Agregar progreso a cada entrenamiento
@@ -98,7 +81,6 @@ def entrenamiento():
 
     return render_template('entrenamiento.html',
                            entrenamientos=entrenamientos_con_progreso,
-                           asociacion=asociacion,
                            rol_usuario=rol_usuario)
 
 

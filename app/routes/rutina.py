@@ -115,6 +115,21 @@ def rutina(id_entrenamiento):
         for dia in dias:
             id_dia = dia['id_dia']
 
+            ejercicios_con_progreso = DB.execute("""
+                SELECT COUNT(*) FROM dia_ejercicio de
+                LEFT JOIN progreso_alumno pa ON de.id_dia_ejercicio = pa.id_dia_ejercicio AND pa.id_alumno = ?
+                WHERE de.id_dia = ? AND (
+                    pa.series_realizadas IS NULL OR pa.repeticiones_realizadas IS NULL
+                )
+            """, (id_alumno, id_dia)).fetchone()[0]
+
+            if ejercicios_con_progreso == 0:
+                # Todos tienen progreso, marcar como completado
+                DB.execute("""
+                    UPDATE dias SET completado = 1 WHERE id_dia = ?
+                """, (id_dia,))
+                DB.commit()
+
             ejercicios = [dict(ejercicio) for ejercicio in DB.execute("""
                 SELECT de.id_dia_ejercicio, e.nombre_ejercicio, 
                     de.series, de.repeticiones, de.peso, de.tiempo_descanso, e.imagen_url,
@@ -140,6 +155,8 @@ def rutina(id_entrenamiento):
                 ejercicio["observaciones"] = ejercicio["observaciones"] or ""
 
             dia["ejercicios"] = ejercicios  # Agregar los ejercicios al día
+
+
 
         semana["dias"] = dias  # Agregar los días a la semana
 

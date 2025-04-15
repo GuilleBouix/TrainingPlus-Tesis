@@ -67,7 +67,7 @@ main {
 }
 
 /* BARRA DE PROGRESO */
-.progreso-container {
+.progreso-container-rutina {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -376,7 +376,7 @@ details[open] div {
         gap: 1rem;
     }
 
-    .progreso-container {
+    .progreso-container-rutina {
         gap: 0;
         margin-bottom: 1rem;
     }
