@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash
+from flask import Blueprint, render_template, request, redirect, url_for, session, json
 from app.utils.helpers import login_required
 from app.utils.conexion import conexion_basedatos
 from datetime import date
@@ -8,16 +8,158 @@ progreso_bp = Blueprint('progreso', __name__)
 
 
 # Función para obtener datos para el gráfico 'rendimiento'
-def obtener_datos_rendimiento(id_entrenamiento):
-    pass
+def obtener_datos_rendimiento(id_entrenamiento, id_alumno):
+    conn = conexion_basedatos()
+    cur = conn.cursor()
+    
+    # Consulta para obtener el progreso por semana
+    query = """
+        SELECT 
+            s.numero_semana,
+            COUNT(d.id_dia) as total_dias,
+            SUM(CASE WHEN d.completado = 1 THEN 1 ELSE 0 END) as dias_completados
+        FROM semanas s
+        JOIN dias d ON s.id_semana = d.id_semana
+        WHERE s.id_entrenamiento = ?
+        GROUP BY s.numero_semana
+        ORDER BY s.numero_semana
+    """
+    
+    cur.execute(query, (id_entrenamiento,))
+    semanas_data = cur.fetchall()
+    
+    # Procesar los datos para el gráfico
+    semanas = []
+    porcentajes = []
+    
+    for semana in semanas_data:
+        numero_semana, total_dias, dias_completados = semana
+        porcentaje = round((dias_completados / total_dias) * 100) if total_dias > 0 else 0
+        
+        semanas.append(f"Sem {numero_semana}")
+        porcentajes.append(porcentaje)
+    
+    conn.close()
+    
+    return {
+        'semanas': semanas,
+        'porcentajes': porcentajes,
+        'total_semanas': len(semanas)
+    }
 
 # Función para obtener datos para el gráfico 'fuerza'
-def obtener_datos_fuerza(id_entrenamiento):
-    pass
+def obtener_datos_fuerza(id_entrenamiento, id_alumno):
+    conn = conexion_basedatos()
+    cur = conn.cursor()
+    
+    # Consulta para obtener el progreso de fuerza por tipo
+    query = """
+        SELECT 
+            e.tipo_fuerza,
+            COUNT(DISTINCT de.id_dia_ejercicio) as total_ejercicios,
+            AVG(COALESCE(p.peso_utilizado, 0)) as avg_peso,
+            AVG(COALESCE(p.repeticiones_realizadas, 0)) as avg_repeticiones,
+            MAX(COALESCE(p.peso_utilizado, 0)) as max_peso,
+            MAX(COALESCE(p.repeticiones_realizadas, 0)) as max_repeticiones
+        FROM dia_ejercicio de
+        JOIN ejercicios e ON de.id_ejercicio = e.id_ejercicio
+        JOIN dias d ON de.id_dia = d.id_dia
+        JOIN semanas s ON d.id_semana = s.id_semana
+        LEFT JOIN progreso_alumno p ON de.id_dia_ejercicio = p.id_dia_ejercicio AND p.id_alumno = ?
+        WHERE s.id_entrenamiento = ?
+        GROUP BY e.tipo_fuerza
+        HAVING e.tipo_fuerza IS NOT NULL
+    """
+    
+    cur.execute(query, (id_alumno, id_entrenamiento))
+    fuerza_data = cur.fetchall()
+    
+    # Procesar los datos para el gráfico
+    tipos_fuerza = ['Empuje', 'Jale', 'Resistencia']
+    datos_grafico = {tipo: 0 for tipo in tipos_fuerza}
+    
+    for registro in fuerza_data:
+        tipo, total, avg_peso, avg_rep, max_peso, max_rep = registro
+        
+        # Calcular un índice de fuerza combinando peso y repeticiones
+        if tipo in datos_grafico:
+            # Fórmula simple: (peso promedio * repeticiones promedio) / 10
+            # Para Resistencia: más peso a las repeticiones
+            if tipo == 'Resistencia':
+                indice = (avg_peso * 0.3 + avg_rep * 0.7) * 2
+            else:
+                indice = (avg_peso * 0.7 + avg_rep * 0.3) * 2
+                
+            datos_grafico[tipo] = round(indice)
+    
+    # Normalizar los valores para que el máximo sea 100
+    max_valor = max(datos_grafico.values()) if datos_grafico.values() else 1
+    if max_valor > 0:
+        for tipo in datos_grafico:
+            datos_grafico[tipo] = round((datos_grafico[tipo] / max_valor) * 100)
+    
+    conn.close()
+    
+    return {
+        'tipos_fuerza': tipos_fuerza,
+        'valores': [datos_grafico[tipo] for tipo in tipos_fuerza],
+        'detalle': {
+            'Empuje': {'avg_peso': next((r[2] for r in fuerza_data if r[0] == 'Empuje'), 0)},
+            'Jale': {'avg_peso': next((r[2] for r in fuerza_data if r[0] == 'Jale'), 0)},
+            'Resistencia': {'avg_rep': next((r[3] for r in fuerza_data if r[0] == 'Resistencia'), 0)}
+        }
+    }
 
 # Función para obtener las mejores marcas (ejercicios con mayor peso levantado)
-def obtener_mejores_marcas(id_entrenamiento):
-    pass
+def obtener_mejores_marcas(id_entrenamiento, id_alumno):
+    conn = conexion_basedatos()
+    cur = conn.cursor()
+    
+    # Consulta para obtener los ejercicios con mayor peso
+    query = """
+        SELECT 
+            ej.nombre_ejercicio,
+            MAX(pa.peso_utilizado) as max_peso,
+            pa.repeticiones_realizadas,
+            pa.series_realizadas
+        FROM progreso_alumno pa
+        JOIN dia_ejercicio de ON pa.id_dia_ejercicio = de.id_dia_ejercicio
+        JOIN dias d ON de.id_dia = d.id_dia
+        JOIN semanas s ON d.id_semana = s.id_semana
+        JOIN ejercicios ej ON de.id_ejercicio = ej.id_ejercicio
+        WHERE s.id_entrenamiento = ? AND pa.id_alumno = ?
+        GROUP BY ej.nombre_ejercicio, pa.repeticiones_realizadas, pa.series_realizadas
+        ORDER BY max_peso DESC
+        LIMIT 3
+    """
+    
+    cur.execute(query, (id_entrenamiento, id_alumno))
+    mejores_marcas = cur.fetchall()
+    
+    # Formatear los datos
+    resultados = []
+    for marca in mejores_marcas:
+        nombre, peso, repeticiones, series = marca
+        resultados.append({
+            'nombre': nombre,
+            'peso': peso,
+            'repeticiones': repeticiones,
+            'series': series,
+            'display': f"{peso} Kg x {repeticiones} (Series: {series})"
+        })
+    
+    # Rellenar con datos vacíos si no hay suficientes resultados
+    while len(resultados) < 3:
+        resultados.append({
+            'nombre': 'Sin datos',
+            'peso': 0,
+            'repeticiones': 0,
+            'series': 0,
+            'display': 'No completado'
+        })
+    
+    conn.close()
+    return resultados
 
 # Función para obtener el progreso semanal
 def obtener_progreso_semanal(id_entrenamiento):
@@ -126,7 +268,25 @@ def progreso(id_entrenamiento=None):
             print(f"Porcentaje de dias: {porcentaje_dias}")
 
     # -------- Gráficos y datos adicionales -----------
-    # Datos de rendimiento
+
+    # Obtener datos para el gráfico de rendimiento
+    datos_rendimiento = None
+    if id_entrenamiento:
+        datos_rendimiento = obtener_datos_rendimiento(id_entrenamiento, id_alumno)
+    
+    # Convertir datos a JSON para pasarlos al template
+    datos_json = json.dumps(datos_rendimiento) if datos_rendimiento else 'null'
+
+    # Obtener datos para el gráfico de fuerza
+    datos_fuerza = None
+    if id_entrenamiento:
+        datos_fuerza = obtener_datos_fuerza(id_entrenamiento, id_alumno)
+
+    # Obtener top 3 de los mejores ejercicios
+    mejores_marcas = None
+    if id_entrenamiento:
+        mejores_marcas = obtener_mejores_marcas(id_entrenamiento, id_alumno)
+    
 
 
     conn.close()
@@ -137,4 +297,7 @@ def progreso(id_entrenamiento=None):
                         id_entrenamiento_actual=id_entrenamiento,
                         dias_completados=dias_completados,
                         total_dias=total_dias,
-                        porcentaje_dias=porcentaje_dias)
+                        porcentaje_dias=porcentaje_dias,
+                        datos_rendimiento_json=datos_json,
+                        datos_fuerza_json=json.dumps(datos_fuerza) if datos_fuerza else 'null',
+                        mejores_marcas=mejores_marcas)
