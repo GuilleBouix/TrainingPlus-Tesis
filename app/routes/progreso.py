@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
-from app.utils.helpers import login_required, verificar_formulario_completo
+from app.utils.helpers import login_required
 from app.utils.conexion import conexion_basedatos
 from datetime import date
 
@@ -7,6 +7,24 @@ from datetime import date
 progreso_bp = Blueprint('progreso', __name__)
 
 
+# Función para obtener datos para el gráfico 'rendimiento'
+def obtener_datos_rendimiento(id_entrenamiento):
+    pass
+
+# Función para obtener datos para el gráfico 'fuerza'
+def obtener_datos_fuerza(id_entrenamiento):
+    pass
+
+# Función para obtener las mejores marcas (ejercicios con mayor peso levantado)
+def obtener_mejores_marcas(id_entrenamiento):
+    pass
+
+# Función para obtener el progreso semanal
+def obtener_progreso_semanal(id_entrenamiento):
+    pass
+
+
+# Ruta principal para el progreso del alumno
 @progreso_bp.route('/progreso')
 @progreso_bp.route('/progreso/<int:id_entrenamiento>')
 @login_required
@@ -58,12 +76,14 @@ def progreso(id_entrenamiento=None):
 
     # Si se seleccionó un entrenamiento, obtener sus datos específicos
     if id_entrenamiento:
+        # Consulta modificada para manejar correctamente la relación con el entrenador
         query_entrenamiento = """
             SELECT e.id_entrenamiento, e.nombre_entrenamiento, 
-                en.nombre || ' ' || en.apellido as entrenador,
+                en.nombre, en.apellido, u.id_usuario,
                 e.fecha_inicio, e.duracion_semanas
             FROM entrenamiento e
-            JOIN entrenador en ON e.id_entrenador = en.id_entrenador
+            JOIN usuario u ON e.id_entrenador = u.id_usuario
+            JOIN entrenador en ON u.id_usuario = en.id_usuario
             WHERE e.id_entrenamiento = ? AND e.id_alumno = ?
         """
         cur.execute(query_entrenamiento, (id_entrenamiento, id_alumno))
@@ -72,6 +92,8 @@ def progreso(id_entrenamiento=None):
         if entrenamiento_raw:
             columnas = [desc[0] for desc in cur.description]
             entrenamiento_actual = dict(zip(columnas, entrenamiento_raw))
+            # Construir el nombre completo del entrenador
+            entrenamiento_actual['entrenador'] = f"{entrenamiento_actual['nombre']} {entrenamiento_actual['apellido']}"
             
             # Buscar el progreso en la lista de entrenamientos
             for ent in entrenamientos:
@@ -103,7 +125,8 @@ def progreso(id_entrenamiento=None):
             print(f"Total de dias: {total_dias}")
             print(f"Porcentaje de dias: {porcentaje_dias}")
 
-
+    # -------- Gráficos y datos adicionales -----------
+    # Datos de rendimiento
 
 
     conn.close()

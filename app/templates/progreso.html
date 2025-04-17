@@ -5,13 +5,13 @@
 {% endblock %}
 
 {% block content %}
-    <div class="progreso-title">
+    <div class="progreso-title" data-aos="fade-right">
         <h1>Mi Progreso</h1>
         <p>Visualiza tu rendimiento y progreso</p>
     </div>
 
     <!-- Formulario para seleccionar entrenamiento -->
-    <div class="select-training">
+    <div class="select-training" data-aos="fade-right">
         <select id="entrenamiento-select" onchange="cambiarEntrenamiento(this)">
             <option value="" disabled {% if not id_entrenamiento_actual %}selected{% endif %}>
                 Selecciona un entrenamiento
@@ -27,7 +27,7 @@
 
     <!-- Progreso en general -->
     <section class="progreso-general">
-        <div class="card">
+        <div class="card" data-aos="fade-in" data-aos-delay="100">
             <div class="card-title">
                 <h2>Progreso General</h2>
                 <i class='bx bx-trending-up'></i>
@@ -77,7 +77,7 @@
             </div>
         </div>
 
-        <div class="card">
+        <div class="card" data-aos="fade-in" data-aos-delay="200">
             <div class="card-title">
                 <h2>Días Completados</h2>
                 <i class='bx bx-calendar'></i>
@@ -109,17 +109,15 @@
             </div>
         </div>
 
-        <div class="card">
+        <div class="card" data-aos="fade-in" data-aos-delay="300">
             <div class="card-title">
                 <h2>Entrenador</h2>
                 <i class='bx bxs-medal'></i>
             </div>
 
             <div class="card-data">
-                <pre>{{ entrenamiento_actual }}</pre>
-
                 <h3>
-                    <a href="">{{ entrenamiento_actual.entrenador }}</a>
+                    <a href="{{ url_for('usuario.usuario', id_usuario=entrenamiento_actual.id_usuario) }}">{{ entrenamiento_actual.entrenador }}</a>
                 </h3>
 
                 <p>Entrenador asignado a este plan.</p>
@@ -128,7 +126,7 @@
     </section>
 
     <!-- Grafico de rendimiento (lineal) -->
-    <section class="rendimiento-container">
+    <section class="rendimiento-container" data-aos="fade-down" data-aos-delay="300">
         <h2>Gráfico de Rendimiento</h2>
 
         <canvas id="lineChart"></canvas>
@@ -178,7 +176,7 @@
     </section>
 
     <!-- Grafico de fuerza -->
-    <section class="rendimiento-container">
+    <section class="rendimiento-container" data-aos="fade-down">
         <h2>Evolución de Fuerza</h2>
 
         <canvas id="fuerzaMovChart"></canvas>
@@ -258,7 +256,7 @@
     </section>
 
     <!-- Mejores Marcas-->
-    <section class="marcadores-container-alumno">
+    <section class="marcadores-container-alumno" data-aos="fade-down">
         <h2>Mejores Marcas</h2>
 
         <div class="marcadores-alumno">
@@ -283,7 +281,7 @@
     </section>
 
     <!-- Progreso Semanal -->
-    <section class="progreso-semanal-container">
+    <section class="progreso-semanal-container" data-aos="fade-down">
         <h2>Progreso Semanal</h2>
         
         <div class="semana">

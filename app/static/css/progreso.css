@@ -276,6 +276,13 @@
 }
 
 @media screen and (max-width: 768px) {
+    .progreso-title h1 {
+        font-size: 1.8rem;
+    }
+    .progreso-title p {
+        font-size: .9rem;
+    }
+
     .select-training select {
         width: 100%;
     }
@@ -290,8 +297,7 @@
 
     .semana .datos {
         flex-direction: column;
+        align-items: start;
         gap: 0;
     }
-
-
 }

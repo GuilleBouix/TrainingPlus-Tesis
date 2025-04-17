@@ -278,6 +278,13 @@ main .notificactions-title {
         padding: 0px 20px;
     }
 
+    .notificactions-title h1 {
+        font-size: 1.8rem;
+    }
+    .notificactions-title p {
+        font-size: .9rem;
+    }
+
     .notifications-container {
         flex-direction: column;
     }
