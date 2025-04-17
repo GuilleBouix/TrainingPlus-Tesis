@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, json
 from app.utils.helpers import login_required
 from app.utils.conexion import conexion_basedatos
-from datetime import date
+from datetime import datetime, timedelta
 
 
 progreso_bp = Blueprint('progreso', __name__)
@@ -12,38 +12,53 @@ def obtener_datos_rendimiento(id_entrenamiento, id_alumno):
     conn = conexion_basedatos()
     cur = conn.cursor()
     
-    # Consulta para obtener el progreso por semana
+    # Consulta corregida para obtener el progreso por semana y el peso total
     query = """
         SELECT 
             s.numero_semana,
             COUNT(d.id_dia) as total_dias,
-            SUM(CASE WHEN d.completado = 1 THEN 1 ELSE 0 END) as dias_completados
+            SUM(CASE WHEN d.completado = 1 THEN 1 ELSE 0 END) as dias_completados,
+            COALESCE(SUM(pa.peso_utilizado * pa.repeticiones_realizadas * pa.series_realizadas), 0) as total_peso
         FROM semanas s
         JOIN dias d ON s.id_semana = d.id_semana
+        LEFT JOIN dia_ejercicio de ON d.id_dia = de.id_dia
+        LEFT JOIN progreso_alumno pa ON de.id_dia_ejercicio = pa.id_dia_ejercicio AND pa.id_alumno = ?
         WHERE s.id_entrenamiento = ?
         GROUP BY s.numero_semana
         ORDER BY s.numero_semana
     """
     
-    cur.execute(query, (id_entrenamiento,))
+    cur.execute(query, (id_alumno, id_entrenamiento))
     semanas_data = cur.fetchall()
     
     # Procesar los datos para el gráfico
     semanas = []
     porcentajes = []
+    total_pesos = []
+    max_peso = 1  # Para evitar división por cero
     
     for semana in semanas_data:
-        numero_semana, total_dias, dias_completados = semana
+        numero_semana, total_dias, dias_completados, peso_total = semana
         porcentaje = round((dias_completados / total_dias) * 100) if total_dias > 0 else 0
         
         semanas.append(f"Sem {numero_semana}")
         porcentajes.append(porcentaje)
+        total_pesos.append(peso_total)
+        
+        if peso_total > max_peso:
+            max_peso = peso_total
+    
+    # Normalizar los pesos para que estén en escala 0-100
+    pesos_normalizados = [round((p / max_peso) * 100) for p in total_pesos] if max_peso > 0 else [0] * len(semanas)
     
     conn.close()
     
     return {
         'semanas': semanas,
         'porcentajes': porcentajes,
+        'pesos': total_pesos,
+        'pesos_normalizados': pesos_normalizados,
+        'max_peso': max_peso,
         'total_semanas': len(semanas)
     }
 
@@ -162,8 +177,54 @@ def obtener_mejores_marcas(id_entrenamiento, id_alumno):
     return resultados
 
 # Función para obtener el progreso semanal
-def obtener_progreso_semanal(id_entrenamiento):
-    pass
+def obtener_progreso_semanal(id_entrenamiento, id_alumno):
+    conn = conexion_basedatos()
+    cur = conn.cursor()
+    
+    # Obtener la fecha de inicio del entrenamiento
+    cur.execute("SELECT fecha_inicio FROM entrenamiento WHERE id_entrenamiento = ?", (id_entrenamiento,))
+    fecha_inicio = cur.fetchone()[0]
+    
+    # Consulta para obtener el progreso por semana
+    query = """
+        SELECT 
+            s.numero_semana,
+            COUNT(DISTINCT d.id_dia) as total_dias,
+            SUM(CASE WHEN d.completado = 1 THEN 1 ELSE 0 END) as dias_completados,
+            COUNT(DISTINCT de.id_dia_ejercicio) as total_ejercicios,
+            COUNT(DISTINCT CASE WHEN p.id_progreso IS NOT NULL THEN de.id_dia_ejercicio END) as ejercicios_completados
+        FROM semanas s
+        LEFT JOIN dias d ON s.id_semana = d.id_semana
+        LEFT JOIN dia_ejercicio de ON d.id_dia = de.id_dia
+        LEFT JOIN progreso_alumno p ON de.id_dia_ejercicio = p.id_dia_ejercicio AND p.id_alumno = ?
+        WHERE s.id_entrenamiento = ?
+        GROUP BY s.numero_semana
+        ORDER BY s.numero_semana
+    """
+    
+    cur.execute(query, (id_alumno, id_entrenamiento))
+    semanas_data = cur.fetchall()
+    
+    # Procesar los datos para el template
+    progreso_semanal = []
+    for semana in semanas_data:
+        numero_semana, total_dias, dias_completados, total_ejercicios, ejercicios_completados = semana
+        
+        # Calcular fecha de la semana (fecha_inicio + (numero_semana-1) semanas)
+        fecha_semana = None
+        if fecha_inicio:
+            fecha_semana = (datetime.strptime(fecha_inicio, '%Y-%m-%d') + 
+                          timedelta(weeks=numero_semana-1)).strftime('%d/%m/%Y')
+        
+        progreso_semanal.append({
+            'numero_semana': numero_semana,
+            'fecha_semana': fecha_semana or "Sin fecha",
+            'dias_completados': f"{dias_completados}/{total_dias}",
+            'ejercicios_completados': f"{ejercicios_completados}/{total_ejercicios}"
+        })
+    
+    conn.close()
+    return progreso_semanal
 
 
 # Ruta principal para el progreso del alumno
@@ -287,7 +348,10 @@ def progreso(id_entrenamiento=None):
     if id_entrenamiento:
         mejores_marcas = obtener_mejores_marcas(id_entrenamiento, id_alumno)
     
-
+    # Obtener datos de progreso semanal
+    progreso_semanal = None
+    if id_entrenamiento:
+        progreso_semanal = obtener_progreso_semanal(id_entrenamiento, id_alumno)
 
     conn.close()
     
@@ -300,4 +364,5 @@ def progreso(id_entrenamiento=None):
                         porcentaje_dias=porcentaje_dias,
                         datos_rendimiento_json=datos_json,
                         datos_fuerza_json=json.dumps(datos_fuerza) if datos_fuerza else 'null',
-                        mejores_marcas=mejores_marcas)
+                        mejores_marcas=mejores_marcas,
+                        progreso_semanal=progreso_semanal)

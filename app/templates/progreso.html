@@ -126,8 +126,8 @@
     </section>
 
     <!-- Grafico de rendimiento (lineal) -->
-    <section class="rendimiento-container" data-aos="fade-down" data-aos-delay="300">
-        <h2>Gráfico de Rendimiento</h2>
+    <section class="rendimiento-container" data-aos="fade-right" data-aos-delay="300">
+        <h2><span><i class='bx bx-line-chart'></i></span> Gráfico de Rendimiento</h2>
 
         <canvas id="lineChart" data-rendimiento='{{ datos_rendimiento_json }}'></canvas>
 
@@ -147,37 +147,125 @@
                     type: 'line',
                     data: {
                         labels: rendimientoData.semanas,
-                        datasets: [{
-                            data: rendimientoData.porcentajes,
-                            borderColor: '#DC2626',
-                            backgroundColor: 'rgba(220, 38, 38, 0.2)',
-                            fill: true,
-                            tension: 0.3,
-                            pointRadius: 5,
-                            pointHoverRadius: 8,
-                        }]
+                        datasets: [
+                            {
+                                label: 'Cumplimiento Semanal',
+                                data: rendimientoData.porcentajes,
+                                borderColor: '#DC2626', // Rojo
+                                backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                                borderWidth: 3,
+                                tension: 0.3,
+                                pointRadius: 5,
+                                pointHoverRadius: 8,
+                                yAxisID: 'y'
+                            },
+                            {
+                                label: 'Total Peso Levantado',
+                                data: rendimientoData.pesos_normalizados,
+                                borderColor: '#2563EB', // Azul
+                                backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                                borderWidth: 3,
+                                tension: 0.3, // Eliminado borderDash para línea continua
+                                pointRadius: 5,
+                                pointHoverRadius: 8,
+                                yAxisID: 'y1'
+                            }
+                        ]
                     },
                     options: {
                         responsive: true,
+                        interaction: {
+                            mode: 'index',
+                            intersect: false,
+                        },
                         plugins: {
-                            legend: { display: false },
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    color: '#374151',
+                                    font: {
+                                        weight: 'bold'
+                                    },
+                                    // Estilo de iconos en la leyenda
+                                    usePointStyle: true,
+                                    pointStyle: 'line'
+                                }
+                            },
                             tooltip: {
                                 callbacks: {
                                     label: function(context) {
-                                        return context.raw + '% completado';
+                                        let label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.datasetIndex === 0) {
+                                            label += context.raw + '% completado';
+                                        } else {
+                                            const pesoReal = rendimientoData.pesos[context.dataIndex];
+                                            label += pesoReal + ' kg totales (' + context.raw + '% del máximo)';
+                                        }
+                                        return label;
+                                    },
+                                    afterLabel: function(context) {
+                                        return 'Semana: ' + rendimientoData.semanas[context.dataIndex];
                                     }
                                 }
                             }
                         },
                         scales: {
                             y: {
-                                beginAtZero: true,
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'Porcentaje completado',
+                                    color: '#DC2626'
+                                },
+                                min: 0,
                                 max: 100,
-                                title: { display: true, text: 'Porcentaje completado' },
-                                ticks: { callback: function(value) { return value + '%'; } }
+                                ticks: {
+                                    stepSize: 10,
+                                    callback: function(value) { return value + '%'; }
+                                },
+                                grid: {
+                                    drawOnChartArea: false
+                                }
+                            },
+                            y1: {
+                                type: 'linear',
+                                display: true,
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'Peso levantado (% del máximo)',
+                                    color: '#2563EB'
+                                },
+                                min: 0,
+                                max: 100,
+                                ticks: {
+                                    stepSize: 10,
+                                    callback: function(value) { return value + '%'; }
+                                },
+                                grid: {
+                                    drawOnChartArea: false
+                                }
                             },
                             x: {
-                                title: { display: true, text: 'Semanas de entrenamiento' }
+                                title: {
+                                    display: true,
+                                    text: 'Semanas de entrenamiento',
+                                    color: '#374151'
+                                },
+                                ticks: {
+                                    color: '#6b7280'
+                                }
+                            }
+                        },
+                        elements: {
+                            line: {
+                                fill: false
                             }
                         }
                     }
@@ -187,8 +275,8 @@
     </section>
 
     <!-- Grafico de fuerza -->
-    <section class="rendimiento-container" data-aos="fade-down">
-        <h2>Evolución de Fuerza</h2>
+    <section class="rendimiento-container" data-aos="fade-right">
+        <h2><span><i class='bx bx-bar-chart-alt-2'></i></span> Evolución de Fuerza</h2>
 
         <canvas id="fuerzaMovChart" data-fuerza='{{ datos_fuerza_json }}'></canvas>
 
@@ -204,31 +292,37 @@
                 
                 const ctx2 = canvasFuerza.getContext('2d');
                 new Chart(ctx2, {
-                    type: 'polarArea',
+                    type: 'bar',
                     data: {
                         labels: fuerzaData.tipos_fuerza,
                         datasets: [{
+                            label: 'Índice de Fuerza',
                             data: fuerzaData.valores,
                             backgroundColor: [
-                                'rgba(220,38,38,0.7)',  // rojo - Empuje
-                                'rgba(59,130,246,0.7)', // azul - Jale
-                                'rgba(34,197,94,0.7)'   // verde - Resistencia
+                                'rgba(220, 38, 38, 0.7)',  // Empuje - rojo
+                                'rgba(59, 130, 246, 0.7)',  // Jale - azul
+                                'rgba(34, 197, 94, 0.7)'     // Resistencia - verde
                             ],
-                            borderWidth: 0
+                            borderColor: [
+                                'rgba(220, 38, 38, 1)',
+                                'rgba(59, 130, 246, 1)',
+                                'rgba(34, 197, 94, 1)'
+                            ],
+                            borderWidth: 1
                         }]
                     },
                     options: {
                         responsive: true,
+                        indexAxis: 'y',
                         plugins: {
                             legend: {
-                                position: 'right',
-                                labels: { color: '#374151' }
+                                display: false
                             },
                             tooltip: {
                                 backgroundColor: '#1f2937',
                                 titleColor: '#fff',
                                 bodyColor: '#fff',
-                                cornerRadius: 6,
+                                cornerRadius: 5,
                                 callbacks: {
                                     label: function(context) {
                                         const label = context.label;
@@ -251,19 +345,37 @@
                             }
                         },
                         scales: {
-                            r: {
-                                angleLines: { color: '#e5e7eb' },
-                                grid: { color: '#d1d5db' },
-                                pointLabels: {
-                                    color: '#374151',
-                                    font: { weight: 'bold' }
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                title: {
+                                    display: true,
+                                    text: 'Índice de Fuerza',
+                                    color: '#374151'
                                 },
                                 ticks: {
                                     color: '#6b7280',
-                                    backdropColor: 'transparent'
+                                    stepSize: 20, // Cambia este valor para definir el intervalo
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
                                 },
-                                suggestedMin: 0,
-                                suggestedMax: 100
+                                grid: {
+                                    color: 'rgba(209, 213, 219, 0.5)'
+                                }
+                            },
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Tipo de Fuerza',
+                                    color: '#374151'
+                                },
+                                ticks: {
+                                    color: '#6b7280',
+                                },
+                                grid: {
+                                    display: false
+                                }
                             }
                         }
                     }
@@ -273,16 +385,19 @@
     </section>
 
     <!-- Mejores Marcas-->
-    <section class="marcadores-container-alumno" data-aos="fade-down">
-        <h2>Mejores Marcas</h2>
+    <section class="marcadores-container-alumno" data-aos="fade-right">
+        <h2><span><i class='bx bx-trophy'></i></span> Mejores Marcas</h2>
 
         <div class="marcadores-alumno">
             {% for marca in mejores_marcas %}
                 <div class="marcador">
-                    <strong class="ejercicio-marcador">{{ marca.nombre }}</strong>
+                    <strong class="ejercicio-marcador">
+                        <i class='bx bxs-trophy {% if loop.index == 1 %}gold{% elif loop.index == 2 %}silver{% elif loop.index == 3 %}bronze{% endif %}'></i> 
+                        {{ marca.nombre }}
+                    </strong>
                     <span class="valor-marcador">
                         {% if marca.peso > 0 %}
-                            {{ marca.peso }} Kg x {{ marca.repeticiones }} ({{ marca.series }} series)
+                            {{ marca.peso }} Kg x {{ marca.repeticiones }} <strong>({{ marca.series }} series)</strong>
                         {% else %}
                             {{ marca.display }}
                         {% endif %}
@@ -293,73 +408,38 @@
     </section>
 
     <!-- Progreso Semanal -->
-    <section class="progreso-semanal-container" data-aos="fade-down">
-        <h2>Progreso Semanal</h2>
+    <section class="progreso-semanal-container" data-aos="fade-right">
+        <h2><span><i class='bx bx-calendar'></i></span> Progreso Semanal</h2>
         
-        <div class="semana">
-            <div class="semana-title">
-                <strong>Semana 1</strong>
-                <p>01/01/2023</p>
-            </div>
-
-            <div class="datos">
-                <div class="dias">
-                    <p>
-                        Días completados: <span>3/7</span>
-                    </p>
+        {% if progreso_semanal %}
+            {% for semana in progreso_semanal %}
+            <div class="semana">
+                <div class="semana-title">
+                    <strong>Semana {{ semana.numero_semana }}</strong>
+                    <p>{{ semana.fecha_semana }}</p>
                 </div>
 
-                <div class="ejercicios">
-                    <p>
-                        Ejercicios completados: <span>12/16</span>
-                    </p>
+                <div class="datos">
+                    <div class="dias">
+                        <p>
+                            Días completados: <span>{{ semana.dias_completados }}</span>
+                        </p>
+                    </div>
+
+                    <div class="ejercicios">
+                        <p>
+                            Ejercicios completados: <span>{{ semana.ejercicios_completados }}</span>
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <div class="semana">
-            <div class="semana-title">
-                <strong>Semana 2</strong>
-                <p>07/01/2023</p>
-            </div>
-
-            <div class="datos">
-                <div class="dias">
-                    <p>
-                        Días completados: <span>4/6</span>
-                    </p>
-                </div>
-
-                <div class="ejercicios">
-                    <p>
-                        Ejercicios completados: <span>10/12</span>
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <div class="semana">
-            <div class="semana-title">
-                <strong>Semana 3</strong>
-                <p>14/01/2023</p>
-            </div>
-
-            <div class="datos">
-                <div class="dias">
-                    <p>
-                        Días completados: <span>3/3</span>
-                    </p>
-                </div>
-
-                <div class="ejercicios">
-                    <p>
-                        Ejercicios completados: <span>8/8</span>
-                    </p>
-                </div>
-            </div>
-        </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-gray-500">No hay datos de progreso semanal disponibles</p>
+        {% endif %}
     </section>
 
+    <!-- Cambiar Entrenamiento -->
     <script>
         function cambiarEntrenamiento(select) {
             const idEntrenamiento = select.value;
@@ -371,6 +451,7 @@
         }
     </script>
 
+    <!-- Barra de progreso -->
     <script>
         // Barra de progreso rutina
         const barra = document.getElementById("barra-progreso");
@@ -385,6 +466,5 @@
             barraDias.style.width = progresoDias + "%";
         }
     </script>
-
 
 {% endblock %}

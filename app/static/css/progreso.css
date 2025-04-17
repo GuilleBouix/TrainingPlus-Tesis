@@ -158,9 +158,18 @@
     position: relative;
 }
 .rendimiento-container h2 {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
     font-weight: 600;
     font-size: 1.3rem;
     color: var(--color-text-primary);
+}
+.rendimiento-container h2 span {
+    color: var(--color-primary);
+}
+.rendimiento-container h2 .bx-bar-chart-alt-2 {
+    transform: rotate(90deg);
 }
 
 .rendimiento-container #lineChart {
@@ -168,8 +177,9 @@
 }
 
 .rendimiento-container #fuerzaMovChart {
-    width: 75% !important;
+    width: 100% !important;
     height: auto !important;
+    margin-top: 1rem;
 }
 
 /* Marcadores */
@@ -180,9 +190,15 @@
     margin: 1rem 0;
 }
 .marcadores-container-alumno h2 {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
     font-weight: 600;
     font-size: 1.3rem;
     color: var(--color-text-primary);
+}
+.marcadores-container-alumno h2 span {
+    color: var(--color-primary);
 }
 
 .marcadores-container-alumno .marcadores-alumno {
@@ -197,10 +213,22 @@
     margin-bottom: 1rem;
 }
 .marcadores-alumno .marcador .ejercicio-marcador {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
     font-weight: 500;
     font-size: 1rem;
     color: var(--color-text-primary);
     margin-bottom: .75rem;
+}
+.ejercicio-marcador i.gold {
+    color: oklch(85.2% 0.199 91.936);
+}
+.ejercicio-marcador i.silver {
+    color: oklch(70.4% 0.04 256.788);
+}
+.ejercicio-marcador i.bronze {
+    color: oklch(75% 0.183 55.934); /* Color bronce */
 }
 .marcadores-alumno .marcador .valor-marcador {
     font-size: 1rem;
@@ -209,6 +237,10 @@
     border-radius: 50px;
     padding: 0 10px;
     margin-bottom: .75rem;
+}
+.marcador .valor-marcador strong {
+    font-weight: 400;
+    color: var(--color-text-secondary);
 }
 
 
@@ -221,9 +253,15 @@
     margin: 1rem 0;
 }
 .progreso-semanal-container h2 {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
     font-weight: 600;
     font-size: 1.3rem;
     color: var(--color-text-primary);
+}
+.progreso-semanal-container h2 span {
+    color: var(--color-primary);
 }
 
 .progreso-semanal-container .semana {
@@ -254,14 +292,14 @@
     gap: 2rem;
 }
 .datos .dias p, 
-.ejercicios p {
+.datos .ejercicios p {
     color: var(--color-text-secondary);
     font-size: .9rem;
 }
 .datos .dias span, 
-.ejercicios span {
-    font-weight: 500;
-    color: var(--color-text-secondary);
+.datos .ejercicios span {
+    font-weight: 600;
+    color: var(--color-text-primary);
     font-size: .9rem;
     margin-left: .2rem;
 }
@@ -299,5 +337,18 @@
         flex-direction: column;
         align-items: start;
         gap: 0;
+    }
+
+    .ejercicio-marcador,
+    .valor-marcador {
+        font-size: .9rem !important;
+    }
+
+    .ejercicio-marcador i {
+        display: none;
+    }
+
+    .valor-marcador strong {
+        display: none;
     }
 }

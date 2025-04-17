@@ -29,8 +29,11 @@
     --color-flash-success-text: #37A437;
 }
 
-body {
+
+html, body {
     background-color: var(--color-background);
+    width: 100%;
+    max-width: 100%;
 }
 
 
@@ -219,6 +222,8 @@ main {
 
 .user-info .side-2 {
     margin-left: 15rem !important;
+    margin-left: 5rem !important; /* Reduce el margen fijo */
+
 }
 
 .section-2 .connect-container {
@@ -620,6 +625,10 @@ body.modal-open {
         width: 50px;
         height: 50px;
         font-size: 2rem;
+    }
+
+    .btn-certificacion {
+        margin: 1rem 0;
     }
 
 }
