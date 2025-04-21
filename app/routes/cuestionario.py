@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from app.utils.conexion import conexion_basedatos
 from app.utils.helpers import login_required
+from datetime import date
 
 
 cuestionario_bp = Blueprint('cuestionario', __name__)
@@ -84,6 +85,8 @@ def cuestionario():
             ))
             mensaje = "Ficha actualizada correctamente"
         else:
+            fecha = date.today().isoformat()
+
             # Crear nuevo registro
             cursor.execute("""
                 INSERT INTO cuestionario (
@@ -91,12 +94,13 @@ def cuestionario():
                     nivel_actividad, experiencia, frecuencia_entreno, duracion_sesion,
                     estado_salud, lesiones, condicion_cardio, nivel_estres,
                     notas_alumno, fecha_completado
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, DATE('now'))
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
                 id_alumno, datos['objetivo'], datos['edad'], datos['peso'], datos['altura'],
                 datos['actividad'], datos['experiencia'], datos['frecuencia'], 
                 datos['duracion_sesion'], datos['estado_general'], datos['lesiones'],
-                datos['condicion_cardio'], datos['nivel_estres'], datos['comentarios']
+                datos['condicion_cardio'], datos['nivel_estres'], datos['comentarios'],
+                fecha
             ))
             mensaje = "Ficha creada correctamente"
 
@@ -105,7 +109,6 @@ def cuestionario():
         flash(mensaje, "success")
         return redirect(url_for('entrenamiento.entrenamiento'))
 
-    # Manejar GET (mostrar formulario)
     # Buscar cuestionario existente
     cursor.execute("""
         SELECT 

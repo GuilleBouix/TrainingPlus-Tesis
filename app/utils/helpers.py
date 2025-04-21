@@ -1,4 +1,4 @@
-from flask import session, redirect, url_for, flash
+from flask import session, redirect, url_for, flash, request
 from functools import wraps
 from app.utils.conexion import conexion_basedatos
 
@@ -52,6 +52,55 @@ def verificar_formulario_completo(func):
     
     return wrapper
 
+
+def verificar_vinculo_y_rutina(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        # Obtener el ID de usuario de la sesión
+        id_usuario = session.get('id_usuario')
+        
+        if not id_usuario:
+            flash('Debes iniciar sesión para acceder a esta sección', 'error')
+            return redirect(url_for('auth.login'))
+        
+        # Verificar si es alumno (rol 1)
+        conn = conexion_basedatos()
+        cursor = conn.cursor()
+        
+        # Obtener el rol del usuario
+        cursor.execute("SELECT rol FROM usuario WHERE id_usuario = ?", (id_usuario,))
+        usuario = cursor.fetchone()
+        
+        if not usuario or usuario['rol'] != 1:  # Si no es alumno
+            conn.close()
+            return f(*args, **kwargs)  # Permitir acceso a otros roles
+            
+        # Verificar si tiene vinculación con un entrenador
+        cursor.execute("""
+            SELECT COUNT(*) as count 
+            FROM vinculaciones 
+            WHERE id_usuario_destino = ? AND estado = 'aceptada'
+        """, (id_usuario,))
+        vinculacion = cursor.fetchone()
+        
+        # Verificar si tiene al menos un entrenamiento asignado
+        cursor.execute("""
+            SELECT COUNT(*) as count 
+            FROM entrenamiento e
+            JOIN alumno a ON e.id_alumno = a.id_alumno
+            WHERE a.id_usuario = ?
+        """, (id_usuario,))
+        entrenamiento = cursor.fetchone()
+        
+        conn.close()
+        
+        # Si no tiene vinculación o no tiene entrenamiento
+        if vinculacion['count'] == 0 or entrenamiento['count'] == 0:
+            flash('No tienes ninguna rutina de entrenamiento asignada para ver tu progreso.', 'error')
+            return redirect(url_for('entrenamiento.entrenamiento'))
+        
+        return f(*args, **kwargs)
+    return decorated_function
 
 
 # Función para verificar si un archivo tiene una extension permitida

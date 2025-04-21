@@ -24,7 +24,11 @@ def entrenamiento():
     rol_usuario = usuario["rol"] if usuario else None
 
     # Función para calcular progreso basado en ejercicios completados
-    def calcular_progreso(id_entrenamiento):
+    def calcular_progreso(id_entrenamiento, id_alumno_entrenamiento=None):
+        # Si se provee un id_alumno_entrenamiento (para entrenadores), usarlo
+        # Si no, usar el id_alumno del usuario logueado (para alumnos)
+        alumno_id = id_alumno_entrenamiento if id_alumno_entrenamiento else id_alumno
+        
         query = """
             SELECT 
                 COUNT(DISTINCT p.id_progreso) * 100.0 / NULLIF(COUNT(DISTINCT de.id_dia_ejercicio), 0) AS progreso
@@ -36,7 +40,7 @@ def entrenamiento():
             WHERE e.id_entrenamiento = ?
             GROUP BY e.id_entrenamiento;
         """
-        result = db.execute(query, (id_alumno if id_alumno else user_id, id_entrenamiento)).fetchone()
+        result = db.execute(query, (alumno_id, id_entrenamiento)).fetchone()
         return round(result["progreso"], 1) if result and result["progreso"] is not None else 0.0
 
     entrenamientos = []
@@ -74,7 +78,9 @@ def entrenamiento():
     # Agregar progreso a cada entrenamiento
     entrenamientos_con_progreso = []
     for entrenamiento in entrenamientos:
-        progreso = calcular_progreso(entrenamiento["id_entrenamiento"])
+        # Para entrenadores, usar el id_alumno del entrenamiento
+        id_alumno_entrenamiento = entrenamiento["id_alumno"] if rol_usuario == 2 else None
+        progreso = calcular_progreso(entrenamiento["id_entrenamiento"], id_alumno_entrenamiento)
         entrenamiento_dict = dict(entrenamiento)
         entrenamiento_dict["progreso"] = progreso
         entrenamientos_con_progreso.append(entrenamiento_dict)

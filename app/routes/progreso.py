@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, json
-from app.utils.helpers import login_required
+from app.utils.helpers import login_required, verificar_vinculo_y_rutina
 from app.utils.conexion import conexion_basedatos
 from datetime import datetime, timedelta
 
@@ -231,6 +231,7 @@ def obtener_progreso_semanal(id_entrenamiento, id_alumno):
 @progreso_bp.route('/progreso')
 @progreso_bp.route('/progreso/<int:id_entrenamiento>')
 @login_required
+@verificar_vinculo_y_rutina
 def progreso(id_entrenamiento=None):
     id_usuario = session.get('id_usuario')
     
