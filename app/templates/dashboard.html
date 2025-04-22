@@ -20,7 +20,7 @@
           </div>
 
           <div class="card-data">
-              <h3>{{ total_alumnos }}</h3>
+              <h3>{{ total_alumnos }}/6</h3>
 
               <p>{{ total_alumnos }} {% if total_alumnos == 1 %}alumno{% else %}alumnos{% endif %} de 6.</p>
           </div>
@@ -33,62 +33,81 @@
           </div>
 
           <div class="card-data">
-              <h3>0%</h3>
-
-              <div class="bar average-progress-student" data-progreso=""></div>
-
-              <p>Promedio de cumplimiento de los alumnos.</p>
+              <h3>{{ cumplimiento_promedio }}%</h3>
+              
+              <div class="bar day-progress">
+                  <div class="bar-progress-day"
+                      id="barra-dias"
+                      data-progreso="{{ cumplimiento_promedio }}">
+                  </div>
+              </div>
+              
+              <p>Promedio de cumplimiento tus alumnos.</p>
           </div>
       </div>
 
       <div class="card">
           <div class="card-title">
-              <h2>Progreso Promedio</h2>
-              <i class='bx bx-trending-up'></i>
+              <h2>Promedio de Duración</h2>
+              <i class='bx bxs-time-five'></i>
           </div>
 
           <div class="card-data">
-              <h3>0%</h3>
+              <h3>{{ promedio_semanas }}</h3>
 
-              <div class="bar average-progress" data-progreso=""></div>
+              <div class="bar day-progress">
+                  <div class="bar-progress-day"
+                      id="barra-semanas"
+                      data-progreso="{{ (promedio_semanas / 12 * 100) if promedio_semanas else 0 }}">
+                  </div>
+              </div>
 
-              <p>Promedio de progreso en los planes de entrenamiento.</p>
+              <p>Semanas promedio de tus rutinas de entrenamiento.</p>
           </div>
       </div>
   </section>
 
-  <!-- Vinculaciones reciente -->
+  <!-- Vinculaciones -->
   <section class="vinculaciones-container">
-      <h2 class="section-h2">Alumnos Vinculados</h2>
+    <h2 class="section-h2">Alumnos Vinculados</h2>
 
-      <div class="table-container">
-          <table class="dashboard-table">
-              <thead>
-                  <tr>
-                      <th scope="col">Alumno</th>
-                      <th scope="col">Rutina</th>
-                      <th scope="col">Fecha</th>
-                      <th scope="col">Acciones</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  <tr>
-                      <td data-label="alumno" id="alumno">
-                          <div class="foto-nombre">
-                              <img src="{{ url_for('static', filename='uploads/users/profile.webp') }}" alt="">
-                              <span class="nombre-alumno">Guille Bouix</span>
-                          </div>
-                      </td>
-                      <td class="dashboard-table-rutina" data-label="entrenamiento">Aumento Masa Muscular</td>
-                      <td class="dashboard-table-fecha" data-label="fecha">14/09/2025</td>
-                      <td class="dashboard-table-detalles" data-label="detalles">
-                          <a href="{{ url_for('dashboard.progreso_alumno', alumno_id=1) }}">Ver <i class='bx bx-chevron-right'></i></a>
-                      </td>
-                  </tr>
-              </tbody>
-          </table>
-      </div>
-
+    <div class="table-container">
+        <table class="dashboard-table">
+            <thead>
+                <tr>
+                    <th scope="col">Alumno</th>
+                    <th scope="col">Rutina</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for alumno in alumnos_vinculados %}
+                <tr>
+                    <td data-label="alumno" id="alumno">
+                        <div class="foto-nombre">
+                            <img src="{{ url_for('static', filename='uploads/users/' ~ alumno.foto_perfil) }}" alt="{{ alumno.nombre_completo }}">
+                            <span class="nombre-alumno">{{ alumno.nombre_completo }}</span>
+                        </div>
+                    </td>
+                    <td class="dashboard-table-rutina" data-label="entrenamiento">
+                        {{ alumno.rutina }}
+                        {% if not alumno.tiene_rutina %}
+                            <span class="no-rutina-badge"></span>
+                        {% endif %}
+                    </td>
+                    <td class="dashboard-table-fecha" data-label="fecha">{{ alumno.fecha }}</td>
+                    <td class="dashboard-table-detalles" data-label="detalles">
+                        <a href="{{ url_for('dashboard.progreso_alumno', alumno_id=alumno.id_alumno) }}" 
+                          class="{{ 'disabled-link' if not alumno.tiene_rutina else '' }}">
+                            Ver <i class='bx bx-chevron-right'></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
   </section>
 
   <!-- Evolución fuerza (Empuje/Jale/Resistencia) -->
@@ -100,40 +119,63 @@
         <canvas id="graficoDonaFuerza"></canvas>
       </div>
 
+      <div id="datosFuerza"
+          data-labels='{{ datos_fuerza.tipos_fuerza | tojson }}'
+          data-valores='{{ datos_fuerza.valores | tojson }}'
+          data-detalles='{{ datos_fuerza.detalle | tojson }}'>
+      </div>
+
+
       <script>
+        const datosFuerza = document.getElementById('datosFuerza');
+    
+        const labels = JSON.parse(datosFuerza.dataset.labels);
+        const valores = JSON.parse(datosFuerza.dataset.valores);
+        const detalles = JSON.parse(datosFuerza.dataset.detalles);
+    
         const ctxDonaFuerza = document.getElementById('graficoDonaFuerza').getContext('2d');
     
         new Chart(ctxDonaFuerza, {
-          type: 'doughnut',
-          data: {
-            labels: ['Empuje', 'Jale', 'Resistencia'],
-            datasets: [{
-              data: [80, 65, 50], // tus datos reales
-              backgroundColor: ['#FF7F9A', '#6ACECE', '#FFD778'],
-              borderWidth: 1
-            }]
-          },
-          options: {
-            responsive: true,
-            cutout: '65%',
-            plugins: {
-              legend: {
-                display: true,
-                position: 'bottom',
-                labels: {
-                  color: '#000'
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: valores,
+                    backgroundColor: ['#FF7F9A', '#6ACECE', '#FFD778'],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                cutout: '65%',
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        labels: {
+                            color: '#000'
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: context => {
+                                const tipo = context.label;
+                                const valor = context.raw;
+                                const info = detalles[tipo];
+    
+                                if (tipo === 'Resistencia') {
+                                    return `${tipo}: ${valor}%\nAvg rep: ${Math.round(info.avg_rep)} (${info.alumnos} alumnos)`;
+                                } else {
+                                    return `${tipo}: ${valor}%\nAvg peso: ${Math.round(info.avg_peso)}kg (${info.alumnos} alumnos)`;
+                                }
+                            }
+                        }
+                    }
                 }
-              },
-              tooltip: {
-                callbacks: {
-                  label: context => `${context.label}: ${context.raw}%`
-                }
-              }
             }
-          }
         });
-      </script>
-
+    </script>
+    
   </section>
 
   <!-- Ranking de cumplimiento -->
@@ -145,71 +187,113 @@
       <canvas id="graficoCumplimiento"></canvas>
     </div>
   
+    <div id="datosCumplimiento"
+        data-nombres='{{ ranking_cumplimiento.nombres | tojson }}'
+        data-porcentajes='{{ ranking_cumplimiento.porcentajes | tojson }}'
+        data-detalle='{{ ranking_cumplimiento.detalle | tojson }}'>
+    </div>
+
+
     <script>
-      function crearGraficoCumplimiento() {
-        const esPantallaChica = window.innerWidth <= 768;
-        const ctx = document.getElementById('graficoCumplimiento').getContext('2d');
-  
-        if (window.rankingCumplimientoChart) {
-          window.rankingCumplimientoChart.destroy();
-        }
-  
-        window.rankingCumplimientoChart = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: ['Marcos', 'Valentina', 'Juan', 'Florencia', 'Luis', 'Ayelen'],
-            datasets: [{
-              label: 'Cumplimiento',
-              data: [92, 85, 78, 65, 50, 35], // estos los podés generar desde tu backend
-              backgroundColor: '#DC2626',
-              borderRadius: 5,
-              barThickness: 40
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            indexAxis: esPantallaChica ? 'x' : 'y',
-            scales: {
-              [esPantallaChica ? 'y' : 'x']: {
-                beginAtZero: true,
-                max: 100,
-                ticks: {
-                  stepSize: 20,
-                  callback: value => value + '%'
-                },
-                grid: {
-                  drawBorder: false
-                }
-              },
-              [esPantallaChica ? 'x' : 'y']: {
-                grid: {
-                  drawBorder: false
-                },
-                ticks: {
-                  color: '#000'
-                }
-              }
-            },
-            plugins: {
-              legend: {
-                display: false
-              },
-              tooltip: {
-                backgroundColor: '#5B5B5B',
-                titleColor: '#fff',
-                bodyColor: '#fff',
-                callbacks: {
-                  label: context => `${context.label}: ${context.raw}%`
-                }
-              }
+        function crearGraficoCumplimiento() {
+            const esPantallaChica = window.innerWidth <= 768;
+            const ctx = document.getElementById('graficoCumplimiento').getContext('2d');
+
+            // Acceder a los datos desde el DOM
+            const datos = document.getElementById('datosCumplimiento');
+            const nombres = JSON.parse(datos.dataset.nombres);
+            const porcentajes = JSON.parse(datos.dataset.porcentajes);
+            const detalle = JSON.parse(datos.dataset.detalle);
+
+            // Destruir el gráfico anterior si existe
+            if (window.rankingCumplimientoChart) {
+                window.rankingCumplimientoChart.destroy();
             }
-          }
-        });
-      }
-  
-      crearGraficoCumplimiento();
-      window.addEventListener('resize', crearGraficoCumplimiento);
+
+            window.rankingCumplimientoChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: nombres,
+                    datasets: [{
+                        label: 'Cumplimiento',
+                        data: porcentajes,
+                        backgroundColor: '#DC2626',
+                        borderRadius: 5,
+                        barThickness: 40
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: esPantallaChica ? 'x' : 'y',
+                    scales: {
+                        [esPantallaChica ? 'y' : 'x']: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                stepSize: 20,
+                                callback: value => value + '%'
+                            },
+                            grid: {
+                                drawBorder: false
+                            }
+                        },
+                        [esPantallaChica ? 'x' : 'y']: {
+                            grid: {
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#000'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: '#5B5B5B',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            callbacks: {
+                                label: context => {
+                                    const alumno = detalle.find(a => a.nombre === context.label);
+                                    return [
+                                        `${context.label}: ${context.raw}%`,
+                                        `Semanas: ${alumno.completadas}/${alumno.totales}`
+                                    ];
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        crearGraficoCumplimiento();
+        window.addEventListener('resize', crearGraficoCumplimiento);
     </script>
+
   </section>
+
+  <!-- Barra de progreso -->
+  <script>
+      // Barra de progreso rutina
+      document.addEventListener("DOMContentLoaded", function() {
+          const barra = document.getElementById("barra-dias");
+          const progreso = barra.dataset.progreso;
+          
+          if (barra && progreso) {
+              barra.style.width = progreso + "%";
+          }
+
+          const barraSemanas = document.getElementById("barra-semanas");
+          const progresoSemanas = barraSemanas.dataset.progreso;
+          
+          if (barraSemanas && progresoSemanas) {
+              barraSemanas.style.width = progresoSemanas + "%";
+          }
+      });
+  </script>
+  
 {% endblock %}

@@ -61,7 +61,7 @@
             {% else %}
                 <li><a href="{{ url_for('progreso.progreso') }}">PROGRESO</a></li>
             {% endif %}
-            <li><a href="{{ url_for('notificaciones.listar_solicitudes') }}" class="menu-notificacion">NOTIFICACIONES</a>
+            <li class="menu-notificacion"><a href="{{ url_for('notificaciones.listar_solicitudes') }}">NOTIFICACIONES</a>
             </li>
             <li><a href="{{ url_for('auth.logout') }}">LOGOUT</a></li>
         </ul>

@@ -305,8 +305,6 @@ def progreso(id_entrenamiento=None):
                     entrenamiento_actual['progreso'] = ent['progreso']
                     break
 
-
-
         # Consulta para obtener días completados y total de días
         query_dias = """
             SELECT 
