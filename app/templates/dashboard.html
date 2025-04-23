@@ -187,93 +187,110 @@
       <canvas id="graficoCumplimiento"></canvas>
     </div>
   
+    <div style="max-width: 100%; height: 400px; margin-top: 1rem;">
+        <canvas id="graficoCumplimiento"></canvas>
+      </div>
+    
     <div id="datosCumplimiento"
         data-nombres='{{ ranking_cumplimiento.nombres | tojson }}'
         data-porcentajes='{{ ranking_cumplimiento.porcentajes | tojson }}'
         data-detalle='{{ ranking_cumplimiento.detalle | tojson }}'>
     </div>
-
-
+  
     <script>
-        function crearGraficoCumplimiento() {
-            const esPantallaChica = window.innerWidth <= 768;
-            const ctx = document.getElementById('graficoCumplimiento').getContext('2d');
-
-            // Acceder a los datos desde el DOM
-            const datos = document.getElementById('datosCumplimiento');
-            const nombres = JSON.parse(datos.dataset.nombres);
-            const porcentajes = JSON.parse(datos.dataset.porcentajes);
-            const detalle = JSON.parse(datos.dataset.detalle);
-
-            // Destruir el gráfico anterior si existe
-            if (window.rankingCumplimientoChart) {
-                window.rankingCumplimientoChart.destroy();
-            }
-
-            window.rankingCumplimientoChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: nombres,
-                    datasets: [{
-                        label: 'Cumplimiento',
-                        data: porcentajes,
-                        backgroundColor: '#DC2626',
-                        borderRadius: 5,
-                        barThickness: 40
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    indexAxis: esPantallaChica ? 'x' : 'y',
-                    scales: {
-                        [esPantallaChica ? 'y' : 'x']: {
-                            beginAtZero: true,
-                            max: 100,
-                            ticks: {
-                                stepSize: 20,
-                                callback: value => value + '%'
-                            },
-                            grid: {
-                                drawBorder: false
-                            }
-                        },
-                        [esPantallaChica ? 'x' : 'y']: {
-                            grid: {
-                                drawBorder: false
-                            },
-                            ticks: {
-                                color: '#000'
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            backgroundColor: '#5B5B5B',
-                            titleColor: '#fff',
-                            bodyColor: '#fff',
-                            callbacks: {
-                                label: context => {
-                                    const alumno = detalle.find(a => a.nombre === context.label);
-                                    return [
-                                        `${context.label}: ${context.raw}%`,
-                                        `Semanas: ${alumno.completadas}/${alumno.totales}`
-                                    ];
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        crearGraficoCumplimiento();
-        window.addEventListener('resize', crearGraficoCumplimiento);
-    </script>
-
+          function crearGraficoCumplimiento() {
+              const esPantallaChica = window.innerWidth <= 768;
+              const ctx = document.getElementById('graficoCumplimiento').getContext('2d');
+  
+              // Acceder a los datos desde el DOM
+              const datos = document.getElementById('datosCumplimiento');
+              const nombres = JSON.parse(datos.dataset.nombres);
+              const porcentajes = JSON.parse(datos.dataset.porcentajes);
+              const detalle = JSON.parse(datos.dataset.detalle);
+  
+              // Verificar si hay datos válidos
+              if (nombres.length === 0 || nombres[0] === "No hay datos") {
+                  nombres = ["No hay datos disponibles"];
+                  porcentajes = [0];
+                  detalle = [{
+                      nombre: "No hay datos disponibles",
+                      completados: 0,
+                      totales: 1,
+                      porcentaje: 0
+                  }];
+              }
+  
+              // Destruir el gráfico anterior si existe
+              if (window.rankingCumplimientoChart) {
+                  window.rankingCumplimientoChart.destroy();
+              }
+  
+              window.rankingCumplimientoChart = new Chart(ctx, {
+                  type: 'bar',
+                  data: {
+                      labels: nombres,
+                      datasets: [{
+                          label: 'Cumplimiento',
+                          data: porcentajes,
+                          backgroundColor: '#DC2626',
+                          borderRadius: 5,
+                          barThickness: 40
+                      }]
+                  },
+                  options: {
+                      responsive: true,
+                      maintainAspectRatio: false,
+                      indexAxis: esPantallaChica ? 'x' : 'y',
+                      scales: {
+                          [esPantallaChica ? 'y' : 'x']: {
+                              beginAtZero: true,
+                              max: 100,
+                              ticks: {
+                                  stepSize: 20,
+                                  callback: value => value + '%'
+                              },
+                              grid: {
+                                  drawBorder: false
+                              }
+                          },
+                          [esPantallaChica ? 'x' : 'y']: {
+                              grid: {
+                                  drawBorder: false
+                              },
+                              ticks: {
+                                  color: '#000'
+                              }
+                          }
+                      },
+                      plugins: {
+                          legend: {
+                              display: false
+                          },
+                          tooltip: {
+                              backgroundColor: '#5B5B5B',
+                              titleColor: '#fff',
+                              bodyColor: '#fff',
+                              callbacks: {
+                                  label: context => {
+                                      const alumno = detalle.find(a => a.nombre === context.label);
+                                      if (!alumno) return `${context.label}: ${context.raw}%`;
+                                      
+                                      return [
+                                          `${context.label}: ${context.raw}%`,
+                                          `Días completados: ${alumno.completados}/${alumno.totales}`
+                                      ];
+                                  }
+                              }
+                          }
+                      }
+                  }
+              });
+          }
+  
+          // Inicializar el gráfico cuando el DOM esté listo
+          document.addEventListener('DOMContentLoaded', crearGraficoCumplimiento);
+          window.addEventListener('resize', crearGraficoCumplimiento);
+      </script>
   </section>
 
   <!-- Barra de progreso -->

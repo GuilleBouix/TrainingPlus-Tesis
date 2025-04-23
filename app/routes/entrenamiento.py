@@ -138,12 +138,15 @@ def crear_entrenamiento():
                 WHERE u.id_usuario = ?
             """, (id_entrenador,)).fetchone()
 
-            # Insertar notificación para el alumno con el formato deseado
+            # Insertar notificación para el alumno con el formato deseado. Buscar el id_usuario correspondiente al id_alumno
+            cursor.execute("SELECT id_usuario FROM alumno WHERE id_alumno = ?", (id_alumno,)) 
+            usuario_alumno = cursor.fetchone()
+            id_usuario_alumno = usuario_alumno['id_usuario']
+    
             mensaje = f"El entrenador @{entrenador['nombre_usuario']} ha creado un nuevo plan de entrenamiento: {nombre_entrenamiento}."
 
             cursor.execute('''INSERT INTO notificaciones (id_usuario, mensaje, id_entrenamiento)
-                            VALUES (?, ?, ?)''', (id_alumno, mensaje, id_entrenamiento))
-
+                            VALUES (?, ?, ?)''', (id_usuario_alumno, mensaje, id_entrenamiento))
 
             # Procesar semanas, días y ejercicios
             for semana in range(1, duracion_semanas + 1):

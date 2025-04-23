@@ -227,20 +227,23 @@ def obtener_ranking_cumplimiento(id_entrenador):
         conn = conexion_basedatos()
         cur = conn.cursor()
         
-        # Consulta mejorada para obtener el cumplimiento por alumno
+        # Consulta para obtener el cumplimiento por día
         query = """
             SELECT 
                 a.nombre || ' ' || COALESCE(a.apellido, '') as nombre_completo,
-                COUNT(DISTINCT ps.id_semana) as semanas_completadas,
-                MAX(en.duracion_semanas) as semanas_totales,
-                (COUNT(DISTINCT ps.id_semana) * 100.0 / MAX(en.duracion_semanas)) as porcentaje_cumplimiento
+                COUNT(DISTINCT CASE WHEN d.completado = 1 OR pa.id_progreso IS NOT NULL THEN d.id_dia END) as dias_completados,
+                COUNT(DISTINCT d.id_dia) as dias_totales,
+                (COUNT(DISTINCT CASE WHEN d.completado = 1 OR pa.id_progreso IS NOT NULL THEN d.id_dia END) * 100.0 / 
+                 COUNT(DISTINCT d.id_dia)) as porcentaje_cumplimiento
             FROM alumno a
             JOIN entrenamiento en ON a.id_alumno = en.id_alumno
-            LEFT JOIN progreso_semana ps ON en.id_entrenamiento = ps.id_entrenamiento 
-                                        AND a.id_alumno = ps.id_alumno
+            JOIN semanas s ON en.id_entrenamiento = s.id_entrenamiento
+            JOIN dias d ON s.id_semana = d.id_semana
+            LEFT JOIN dia_ejercicio de ON d.id_dia = de.id_dia
+            LEFT JOIN progreso_alumno pa ON de.id_dia_ejercicio = pa.id_dia_ejercicio AND a.id_alumno = pa.id_alumno
             WHERE en.id_entrenador = ?
             GROUP BY a.id_alumno, a.nombre, a.apellido
-            HAVING semanas_totales > 0
+            HAVING dias_totales > 0
             ORDER BY porcentaje_cumplimiento DESC
             LIMIT 6
         """
@@ -258,22 +261,22 @@ def obtener_ranking_cumplimiento(id_entrenador):
         
         for registro in cumplimiento_data:
             nombre = registro[0] if registro[0] else "Alumno sin nombre"
-            completadas = registro[1] if registro[1] else 0
+            completados = registro[1] if registro[1] else 0
             totales = registro[2] if registro[2] else 1  # Evitar división por cero
-            porcentaje = (completadas * 100.0 / totales) if totales > 0 else 0
+            porcentaje = (completados * 100.0 / totales) if totales > 0 else 0
             
             nombres.append(nombre)
             porcentajes.append(round(porcentaje))
         
         # Si no hay datos, devolver valores por defecto
         if not cumplimiento_data:
-            print("No se encontraron datos de cumplimiento")
+            print("No se encontraron datos de cumplimiento diario")
             return {
                 'nombres': ["No hay datos"],
                 'porcentajes': [0],
                 'detalle': [{
                     'nombre': "No hay datos",
-                    'completadas': 0,
+                    'completados': 0,
                     'totales': 1,
                     'porcentaje': 0
                 }]
@@ -287,7 +290,7 @@ def obtener_ranking_cumplimiento(id_entrenador):
             'detalle': [
                 {
                     'nombre': registro[0] if registro[0] else "Alumno sin nombre",
-                    'completadas': registro[1] if registro[1] else 0,
+                    'completados': registro[1] if registro[1] else 0,
                     'totales': registro[2] if registro[2] else 1,
                     'porcentaje': round((registro[1] * 100.0 / registro[2]) if registro[2] > 0 else 0)
                 } for registro in cumplimiento_data
@@ -302,7 +305,7 @@ def obtener_ranking_cumplimiento(id_entrenador):
             'porcentajes': [0],
             'detalle': [{
                 'nombre': "Error al obtener datos",
-                'completadas': 0,
+                'completados': 0,
                 'totales': 1,
                 'porcentaje': 0
             }]
