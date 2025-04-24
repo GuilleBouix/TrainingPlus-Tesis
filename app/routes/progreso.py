@@ -160,7 +160,7 @@ def obtener_mejores_marcas(id_entrenamiento, id_alumno):
             'peso': peso,
             'repeticiones': repeticiones,
             'series': series,
-            'display': f"{peso} Kg x {repeticiones} (Series: {series})"
+            'display': f"{peso} Kg x {repeticiones}"
         })
     
     # Rellenar con datos vacíos si no hay suficientes resultados

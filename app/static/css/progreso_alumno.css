@@ -72,6 +72,24 @@
     color: var(--color-text-secondary);
     margin-top: .5rem;
 }
+.bar {
+    width: 100%;
+    height: 10px;
+    background-color: var(--color-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 3px;
+    margin: 0.5rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.bar-progress {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.5s ease, background-color 0.3s ease;
+    position: relative;
+}
+
 
 .info {
     padding: .75rem 0;
@@ -389,6 +407,16 @@
     padding: 0 10px;
     margin-bottom: .75rem;
 }
+.marcador strong i.gold {
+    color: oklch(85.2% 0.199 91.936);
+}
+.marcador strong i.silver {
+    color: oklch(70.4% 0.04 256.788);
+}
+.marcador strong i.bronze {
+    color: oklch(75% 0.183 55.934);
+}
+
 
 
 .observaciones-semanales {
@@ -447,15 +475,59 @@
     color: var(--color-button-active);
 }
 
-.observacion .observacion-texto {
+.observacion .observacion-texto,
+.sin-datos {
     color: var(--color-text-secondary);
     font-size: 1rem;
 }
 
+/*  Estilos para el modal de foto semanal */
+#fotoModal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    outline: none;
+    border: none;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    z-index: 9999;
+    visibility: hidden;
+    overflow: hidden;
+    border-radius: 10px;
+    padding: 0;
+    background: transparent; /* Para que no tenga fondo blanco */
+}
+#fotoModal::backdrop {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+#fotoModal[open] {
+    opacity: 1;
+    visibility: visible;
+}
 
+#imagenModal {
+    max-width: 90vw;
+    max-height: 90vh;
+    display: block;
+    margin: 0 auto;
+    border-radius: 10px;
+    object-fit: contain;
+}
 
-
-
+.close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 2rem;
+    font-weight: bold;
+    color: red;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 10000;
+    text-shadow: 1px 1px 3px #000;
+}
 
 
 

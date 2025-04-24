@@ -9,42 +9,45 @@
     <div class="progreso-alumno-container">
         <section class="alumno-container">
             <div class="datos">
-                <img src="{{ url_for('static', filename='uploads/users/profile.webp') }}" alt="">
+                <img src="{{ url_for('static', filename=alumno.foto_perfil) }}" alt="">
 
                 <div>
-                    <h1 style="text-align: center;">Guille Bouix</h1>
-                    <p>Rutina de Fuerza</p>
+                    <h1 style="text-align: center;">{{ alumno.nombre }} {{ alumno.apellido }}</h1>
+                    <p>{{ entrenamiento.nombre_entrenamiento }}</p>
                 </div>
             </div>
 
             <div class="progreso-plan">
                 <strong>Progreso del Plan</strong>
-                <span>100%</span>
+                <span>{{ porcentaje_progreso }}%</span>
     
-                <div class="progress-bar-container">
-                    <div class="progress-bar" data-progreso="0"></div>
+                <div class="bar">
+                    <div class="bar-progress" 
+                         id="barra-progreso" 
+                         data-progreso="{{ porcentaje_progreso }}">
+                    </div>
                 </div>
             </div>
 
             <div class="info">
                 <div class="edad">
                     <h3>Edad</h3>
-                    <span>23 años</span>
+                    <span>{{ cuestionario.edad }} años</span>
                 </div>
 
                 <div class="peso">
                     <h3>Peso</h3>
-                    <span>92 kg</span>
+                    <span>{{ cuestionario.peso }} kg</span>
                 </div>
 
                 <div class="altura">
                     <h3>Altura</h3>
-                    <span>182 cm</span>
+                    <span>{{ cuestionario.altura }} cm</span>
                 </div>
 
                 <div class="inicio">
                     <h3>Inicio</h3>
-                    <span>14/01/2023</span>
+                    <span>{{ entrenamiento.fecha_inicio }}</span>
                 </div>
             </div>
 
@@ -61,7 +64,7 @@
             <div class="modal-content">
                 <div class="header">
                     <div class="title">
-                        <strong>Ficha de Guillermo Bouix</strong>
+                        <strong>Ficha de {{ alumno.nombre }} {{ alumno.apellido }}</strong>
 
                         <i class='bx bx-x close-modal'></i>
                     </div>
@@ -76,17 +79,17 @@
 
                         <div class="datos">
                             <h3>Edad</h3>
-                            <span>23 años</span>
+                            <span>{{ cuestionario.edad }} años</span>
                         </div>
 
                         <div class="datos">
                             <h3>Experiencia</h3>
-                            <span>Ninguna</span>
+                            <span>{{ cuestionario.experiencia | capitalize }}</span>
                         </div>
 
                         <div class="datos">
                             <h3>Objetivo</h3>
-                            <span>Perder peso y ganar masa muscular</span>
+                            <span>{{ cuestionario.objetivo_general }}</span>
                         </div>
                     </div>
 
@@ -98,12 +101,12 @@
 
                         <div class="datos">
                             <h3>Peso</h3>
-                            <span>92.3 kg</span>
+                            <span>{{ cuestionario.peso }} kg</span>
                         </div>
 
                         <div class="datos">
                             <h3>Altura</h3>
-                            <span>182 cm</span>
+                            <span>{{ cuestionario.altura }} cm</span>
                         </div>
                     </div>
 
@@ -115,17 +118,17 @@
 
                         <div class="datos">
                             <h3>Nivel de Actividad</h3>
-                            <span>Moderado</span>
+                            <span>{{ cuestionario.nivel_actividad | capitalize }}</span>
                         </div>
 
                         <div class="datos">
                             <h3>Frecuencia</h3>
-                            <span>4 Veces por semana</span>
+                            <span>{{ cuestionario.frecuencia_entreno | capitalize }}</span>
                         </div>
 
                         <div class="datos">
                             <h3>Duración de Entrenamiento</h3>
-                            <span>60 minutos</span>
+                            <span>{{ cuestionario.duracion_sesion }}</span>
                         </div>
                     </div>
 
@@ -137,22 +140,22 @@
 
                         <div class="datos">
                             <h3>Estado General</h3>
-                            <span>Bien, sin condiciones médicas relevantes</span>
+                            <span>{{ cuestionario.estado_salud | capitalize }}</span>
                         </div>
 
                         <div class="datos">
                             <h3>Lesiones</h3>
-                            <span>Lesión de hombro hace dos años</span>
+                            <span>{{ cuestionario.lesiones | capitalize }}</span>
                         </div>
 
                         <div class="datos">
                             <h3>Condición Cardiovascular</h3>
-                            <span>Buena</span>
+                            <span>{{ cuestionario.condicion_cardio | capitalize }}</span>
                         </div>
 
                         <div class="datos">
                             <h3>Nivel de Estrés</h3>
-                            <span>Medio</span>
+                            <span>{{ cuestionario.nivel_estres | capitalize }}</span>
                         </div>
                     </div>
 
@@ -163,7 +166,7 @@
                         </h1>
 
                         <div class="datos">
-                            <span class="nota-adicional">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sit debitis, nobis non perferendis cupiditate at illo distinctio cumque, sed, ea repellat quo ut voluptate vero. Inventore, praesentium? Porro, temporibus eius.</span>
+                            <span class="nota-adicional">{{ cuestionario.nota_adicional if cuestionario.nota_adicional else 'No hay notas adicionales.' }}</span>
                         </div>
 
                         <button>Descargar (PDF)</button>
@@ -178,47 +181,70 @@
 
                 <canvas id="lineChart"></canvas>
 
+                <div id="datas"
+                    data-labels='{{ rendimiento_semanal.semanas|tojson }}'
+                    data-valores='{{ rendimiento_semanal.volumenes_normalizados|tojson }}'
+                    data-volumenes='{{ rendimiento_semanal.volumenes|tojson }}'>
+                </div>
+
                 <!-- Gráfico de Rendimiento (lineal) -->
                 <script>
-                   const ctx = document.getElementById('lineChart').getContext('2d');
-                   const lineChart = new Chart(ctx, {
-                       type: 'line',
-                       data: {
-                       labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5', 'Sem 6', 'Sem 7', 'Sem 8'],
-                       datasets: [{
-                           // label eliminado
-                           data: [30, 40, 55, 65, 70, 75, 85, 95],
-                           borderColor: '#DC2626',
-                           backgroundColor: 'rgba(220, 38, 38, 0.2)', // mismo color pero transparente
-                           fill: true,
-                           tension: 0.3,
-                           pointRadius: 5,
-                           pointHoverRadius: 8,
-                       }]
-                       },
-                       options: {
-                       responsive: true,
-                       plugins: {
-                           legend: {
-                           display: false // Oculta el rectángulo/label
-                           }
-                       },
-                       scales: {
-                           y: {
-                           beginAtZero: true,
-                           max: 100,
-                           title: {
-                               display: true,
-                           }
-                           },
-                           x: {
-                           title: {
-                               display: true,
-                           }
-                           }
-                       }
-                       }
-                   });
+                    document.addEventListener('DOMContentLoaded', function () {
+                        const datas = document.getElementById('datas');
+                        const labels = JSON.parse(datas.getAttribute('data-labels'));
+                        const valores = JSON.parse(datas.getAttribute('data-valores'));
+                        const volumenes = JSON.parse(datas.getAttribute('data-volumenes'));
+            
+                        const ctx = document.getElementById('lineChart').getContext('2d');
+                        const lineChart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    data: valores,
+                                    borderColor: '#DC2626',
+                                    backgroundColor: 'rgba(220, 38, 38, 0.2)',
+                                    fill: true,
+                                    tension: 0.3,
+                                    pointRadius: 5,
+                                    pointHoverRadius: 8,
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        display: false
+                                    },
+                                    tooltip: {
+                                        callbacks: {
+                                            label: function(context) {
+                                                const semana = labels[context.dataIndex];
+                                                const volumen = volumenes[context.dataIndex];
+                                                return `${semana}: ${volumen} kg (${context.raw}%)`;
+                                            }
+                                        }
+                                    }
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        max: 100,
+                                        title: {
+                                            display: true,
+                                            text: 'Rendimiento (%)'
+                                        }
+                                    },
+                                    x: {
+                                        title: {
+                                            display: true,
+                                            text: 'Semanas de entrenamiento'
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    });
                 </script>
             </section>
 
@@ -227,9 +253,9 @@
 
                 <div style="width: 100%; height: 400px;">
                     <canvas id="graficoEvolucion"></canvas>
-                  </div>
+                </div>
                   
-                  <div class="navigation-buttons">
+                <div class="navigation-buttons">
                     <button onclick="cambiarBloque(-1)">
                         <i class='bx bx-chevron-left'></i>
                     </button>
@@ -237,167 +263,144 @@
                     <button onclick="cambiarBloque(1)">
                         <i class='bx bx-chevron-right'></i>
                     </button>
-                  </div>
+                </div>
                   
-                  <script>
-                    const todasLasSemanas = [
-                      'Semana 1', 'Semana 2', 'Semana 3', 'Semana 4',
-                      'Semana 5', 'Semana 6', 'Semana 7', 'Semana 8',
-                      'Semana 9', 'Semana 10', 'Semana 11', 'Semana 12'
-                    ];
-                  
-                    const fuerza =   [60, 65, 68, 70, 72, 74, 76, 78, 80, 82, 84, 85];
-                    const jale =     [55, 58, 60, 62, 64, 67, 69, 72, 74, 76, 78, 80];
-                    const resistencia = [50, 52, 54, 56, 58, 61, 64, 67, 70, 73, 76, 78];
+                <div id="datas-fuerza"
+                    data-semanas='{{ progreso_fuerza.semanas|tojson }}'
+                    data-empuje='{{ progreso_fuerza.empuje|tojson }}'
+                    data-jale='{{ progreso_fuerza.jale|tojson }}'
+                    data-resistencia='{{ progreso_fuerza.resistencia|tojson }}'>
+                </div>
+
+                <script>
+                    // Obtener datos del elemento HTML
+                    const dataElement = document.getElementById('datas-fuerza');
+                    const todasLasSemanas = JSON.parse(dataElement.dataset.semanas);
+                    const fuerza = JSON.parse(dataElement.dataset.empuje);
+                    const jale = JSON.parse(dataElement.dataset.jale);
+                    const resistencia = JSON.parse(dataElement.dataset.resistencia);
                   
                     let bloqueActual = 0;
                     const semanasPorBloque = 4;
                   
                     const ctx2 = document.getElementById('graficoEvolucion').getContext('2d');
                     const chart = new Chart(ctx2, {
-                      type: 'bar',
-                      data: {
-                        labels: [],
-                        datasets: [
-                          {
-                            label: 'Empuje',
-                            data: [],
-                            backgroundColor: '#AAD18E',
-                            borderRadius: 3
-                          },
-                          {
-                            label: 'Jale',
-                            data: [],
-                            backgroundColor: '#FF99FF',
-                            borderRadius: 3
-                          },
-                          {
-                            label: 'Resistencia',
-                            data: [],
-                            backgroundColor: '#FFE69B',
-                            borderRadius: 3
-                          }
-                        ]
-                      },
-                      options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        scales: {
-                          y: {
-                            beginAtZero: true,
-                            max: 100,
-                            ticks: {
-                              callback: v => v + '%'
-                            }
-                          }
+                        type: 'bar',
+                        data: {
+                            labels: [],
+                            datasets: [
+                                {
+                                    label: 'Empuje',
+                                    data: [],
+                                    backgroundColor: '#AAD18E',
+                                    borderRadius: 3
+                                },
+                                {
+                                    label: 'Jale',
+                                    data: [],
+                                    backgroundColor: '#FF99FF',
+                                    borderRadius: 3
+                                },
+                                {
+                                    label: 'Resistencia',
+                                    data: [],
+                                    backgroundColor: '#FFE69B',
+                                    borderRadius: 3
+                                }
+                            ]
                         },
-                        plugins: {
-                          legend: {
-                            position: 'top'
-                          },
-                          tooltip: {
-                            callbacks: {
-                              label: ctx => `${ctx.dataset.label}: ${ctx.raw}%`
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 100,
+                                    ticks: {
+                                        callback: v => v + '%'
+                                    }
+                                }
+                            },
+                            plugins: {
+                                legend: {
+                                    position: 'top'
+                                },
+                                tooltip: {
+                                    callbacks: {
+                                        label: ctx => `${ctx.dataset.label}: ${ctx.raw}%`
+                                    }
+                                }
                             }
-                          }
                         }
-                      }
                     });
                   
                     function actualizarGrafico() {
-                      const inicio = bloqueActual * semanasPorBloque;
-                      const fin = inicio + semanasPorBloque;
-                  
-                      chart.data.labels = todasLasSemanas.slice(inicio, fin);
-                      chart.data.datasets[0].data = fuerza.slice(inicio, fin);
-                      chart.data.datasets[1].data = jale.slice(inicio, fin);
-                      chart.data.datasets[2].data = resistencia.slice(inicio, fin);
-                      chart.update();
+                        const inicio = bloqueActual * semanasPorBloque;
+                        const fin = inicio + semanasPorBloque;
+                    
+                        chart.data.labels = todasLasSemanas.slice(inicio, fin);
+                        chart.data.datasets[0].data = fuerza.slice(inicio, fin);
+                        chart.data.datasets[1].data = jale.slice(inicio, fin);
+                        chart.data.datasets[2].data = resistencia.slice(inicio, fin);
+                        chart.update();
                     }
                   
                     function cambiarBloque(direccion) {
-                      const totalBloques = Math.ceil(todasLasSemanas.length / semanasPorBloque);
-                      bloqueActual = Math.min(Math.max(0, bloqueActual + direccion), totalBloques - 1);
-                      actualizarGrafico();
+                        const totalBloques = Math.ceil(todasLasSemanas.length / semanasPorBloque);
+                        bloqueActual = Math.min(Math.max(0, bloqueActual + direccion), totalBloques - 1);
+                        actualizarGrafico();
                     }
                   
                     // Inicializar
                     actualizarGrafico();
                 </script>
-                  
-                  
-
-
             </section>
 
             <section class="mejores-marcas-alumno">
                 <h2>Mejores Marcas</h2>
 
                 <div class="marcadores-container">
-                    <div class="marcador">
-                        <strong>Press de Banca c/ Barra</strong>
-        
-                        <span>100 Kg x 8</span>
-                    </div>
-        
-                    <div class="marcador">
-                        <strong>Sentadilla</strong>
-        
-                        <span>175 Kg x 6</span>
-                    </div>
-        
-                    <div class="marcador">
-                        <strong>Peso Mueto c/ Barra</strong>
-        
-                        <span>250 Kg x 4</span>
-                    </div>
+                    {% for marca in mejores_marcas %}
+                        <div class="marcador">
+                            <strong>
+                                <i class='bx bxs-trophy {% if loop.index == 1 %}gold{% elif loop.index == 2 %}silver{% elif loop.index == 3 %}bronze{% endif %}'></i> {{ marca.nombre }}
+                            </strong>
+                            <span>{{ marca.display }}</span>
+                        </div>
+                    {% endfor %}
                 </div>
+                
             </section>
 
             <section class="observaciones-semanales">
                 <h2>Observaciones Semanales</h2>
-
-                <div class="observaciones">
+            
+                {% if observaciones_semanales %}
+                    {% for obs in observaciones_semanales %}
                     <div class="observacion">
-                        <div>
-                            <strong>Semana 1</strong>
-                            <button title="Ver Fotografía">
-                                <i class='bx bxs-show'></i>
+                        <div class="header-observacion">
+                            <strong class="semana">{{ obs.semana }}</strong>
+                            {% if obs.foto %}
+                            <button class="btn-ver-foto" data-src="{{ obs.foto }}">
+                                <i class='bx bxs-camera'></i>
                             </button>
+                            {% endif %}
                         </div>
-
-                        <p class="observacion-texto">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis molestias, ducimus repudiandae quo deserunt ad numquam expedita voluptatem sit cumque non quibusdam assumenda officia inventore facere. Porro nobis maxime magnam!</p>
+                        <p class="observacion-texto">{{ obs.observacion }}</p>
                     </div>
-                </div>
-
-                <div class="observaciones">
-                    <div class="observacion">
-                        <div>
-                            <strong>Semana 2</strong>
-                            <button title="Ver Fotografía">
-                                <i class='bx bxs-show'></i>
-                            </button>
-                        </div>
-
-                        <p class="observacion-texto">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis molestias, ducimus repudiandae quo deserunt ad numquam expedita voluptatem sit cumque non quibusdam assumenda officia inventore facere. Porro nobis maxime magnam!</p>
-                    </div>
-                </div>
-
-                <div class="observaciones">
-                    <div class="observacion">
-                        <div>
-                            <strong>Semana 3</strong>
-                            <button title="Ver Fotografía">
-                                <i class='bx bxs-show'></i>
-                            </button>
-                        </div>
-
-                        <p class="observacion-texto">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Officiis molestias, ducimus repudiandae quo deserunt ad numquam expedita voluptatem sit cumque non quibusdam assumenda officia inventore facere. Porro nobis maxime magnam!</p>
-                    </div>
-                </div>
-                
+                    {% endfor %}
+                {% else %}
+                    <p class="sin-datos observacion-texto">No hay registros de progreso semanal disponibles.</p>
+                {% endif %}
             </section>
+
         </div>
+
+        <!-- Modal para ver la foto del progreso semanal -->
+        <dialog id="fotoModal" class="modal">
+            <span class="close" onclick="cerrarModal()"><i class='bx bx-x'></i></span>
+            <img class="modal-content" id="imagenModal" src="">
+        </dialog>
     </div>
 
     <!-- Script para abrir y cerrar el modal del cuestionario -->
@@ -425,5 +428,46 @@
             });
         });
     </script>
+
+    <!-- Barra de progreso -->
+    <script>
+        // Barra de progreso rutina
+        const barraProgreso = document.getElementById("barra-progreso");
+        if (barraProgreso) {
+            const progreso = barraProgreso.dataset.progreso;
+            barraProgreso.style.width = progreso + "%";
+        }
+    </script>
+
+    <!-- Modal para ver la foto del progreso semanal -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const modal = document.getElementById("fotoModal");
+            const imagenModal = document.getElementById("imagenModal");
+            const cerrarBtn = modal.querySelector(".close");
+    
+            // Agregamos evento a cada botón
+            document.querySelectorAll(".btn-ver-foto").forEach((btn) => {
+                btn.addEventListener("click", () => {
+                    const src = btn.dataset.src;
+                    imagenModal.src = src;
+                    modal.showModal();
+                });
+            });
+    
+            // Cerrar modal
+            cerrarBtn.addEventListener("click", () => {
+                modal.close();
+            });
+    
+            modal.addEventListener("click", (e) => {
+                if (e.target === modal) {
+                    modal.close();
+                }
+            });
+        });
+    </script>
+    
+    
 
 {% endblock %}

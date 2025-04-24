@@ -143,7 +143,7 @@
                             <strong>Fotografía del Progreso</strong>
                             <p>Adjunta una fotografía de tu físico actual.</p>
 
-                            <input type="file" required name="progress-file" id="progress-file-{{ semana.id_semana }}" accept="image/*">
+                            <input type="file" required name="progress-file" id="progress-file-{{ semana.id_semana }}" accept=".jpg, .jpeg, .png">
 
                             <div class="photo-container">
                                 {% if semana.progreso and semana.progreso.foto_fisico %}

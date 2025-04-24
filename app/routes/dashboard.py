@@ -1,7 +1,8 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash
-from app.utils.helpers import login_required, verificar_formulario_completo
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash, json
 from app.utils.conexion import conexion_basedatos
+from app.utils.helpers import login_required
 from datetime import datetime
+from app.routes.progreso import obtener_mejores_marcas
 
 
 dashboard_bp = Blueprint('dashboard', __name__)
@@ -315,6 +316,7 @@ def obtener_ranking_cumplimiento(id_entrenador):
             conn.close()
 
 
+
 # Ruta de Dashboard
 @dashboard_bp.route('/dashboard', methods=['GET', 'POST'])
 @login_required
@@ -348,8 +350,370 @@ def dashboard():
                            ranking_cumplimiento=ranking_cumplimiento)
 
 
+
+# Obtener nombre, apellido y foto de perfil del alumno
+def obtener_datos_alumno(alumno_id):
+    conn = conexion_basedatos()
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT nombre, apellido, foto_perfil FROM alumno WHERE id_alumno = ?', (alumno_id,))
+    alumno = cursor.fetchone()
+    conn.close()
+
+    if alumno:
+        nombre = alumno['nombre']
+        apellido = alumno['apellido']
+        foto = alumno['foto_perfil'] if alumno['foto_perfil'] else 'profile.webp'
+        return {
+            'nombre': nombre,
+            'apellido': apellido,
+            'foto_perfil': f'uploads/users/{foto}'
+        }
+    else:
+        return None
+
+
+# Obtener entrenamiento del alumno
+def obtener_entrenamiento(alumno_id, entrenador_id):
+    conn = conexion_basedatos()
+    cursor = conn.cursor()
+    cursor.execute('''
+        SELECT id_entrenamiento, nombre_entrenamiento, fecha_inicio
+        FROM entrenamiento
+        WHERE id_alumno = ? AND id_entrenador = ?
+        LIMIT 1
+    ''', (alumno_id, entrenador_id))
+    row = cursor.fetchone()
+    conn.close()
+
+    if row:
+        id_entrenamiento = row[0]
+        nombre = row[1]
+        fecha_str = row[2]
+
+        # Si hay fecha, formatearla
+        if fecha_str:
+            fecha_obj = datetime.strptime(fecha_str, '%Y-%m-%d')
+            fecha_formateada = fecha_obj.strftime('%d/%m/%Y')
+        else:
+            fecha_formateada = None
+
+        return {
+            'id_entrenamiento': id_entrenamiento,
+            'nombre_entrenamiento': nombre,
+            'fecha_inicio': fecha_formateada
+        }
+    else:
+        return None
+
+
+# Obtener el porcentaje de progreso del alumno en su entrenamiento
+def obtener_porcentaje_progreso(alumno_id, id_entrenamiento):
+    conn = conexion_basedatos()
+    cur = conn.cursor()
+
+    query = """
+        SELECT 
+            COALESCE(
+                (SELECT COUNT(DISTINCT p.id_progreso) * 100.0 / NULLIF(COUNT(DISTINCT de.id_dia_ejercicio), 0)
+                 FROM semanas s 
+                 JOIN dias d ON s.id_semana = d.id_semana
+                 JOIN dia_ejercicio de ON d.id_dia = de.id_dia
+                 LEFT JOIN progreso_alumno p 
+                    ON de.id_dia_ejercicio = p.id_dia_ejercicio AND p.id_alumno = ?
+                 WHERE s.id_entrenamiento = ?
+                ), 0) as progreso
+    """
+    cur.execute(query, (alumno_id, id_entrenamiento))
+    resultado = cur.fetchone()
+    conn.close()
+
+    return resultado[0] if resultado else 0
+
+
+# Obtener datos del cuestionario del alumno
+def obtener_datos_cuestionario(alumno_id):
+    conn = conexion_basedatos()
+    cursor = conn.cursor()
+
+    cursor.execute('SELECT * FROM cuestionario WHERE id_alumno = ?', (alumno_id,))
+    fila = cursor.fetchone()
+    conn.close()
+
+    if fila:
+        columnas = [
+            "id_cuestionario", "id_alumno", "objetivo_general", "edad", "altura", "peso",
+            "nivel_actividad", "experiencia", "frecuencia_entreno", "duracion_sesion",
+            "estado_salud", "lesiones", "condicion_cardio", "nivel_estres",
+            "notas_alumno", "fecha_completado"
+        ]
+        return dict(zip(columnas, fila))
+    else:
+        return None
+
+
+# Obtener el rendimiento por semana del alumno en la rutina
+def obtener_rendimiento_semanal(alumno_id, id_entrenamiento):
+    conn = None
+    try:
+        conn = conexion_basedatos()
+        cur = conn.cursor()
+        
+        # Consulta para obtener el volumen de entrenamiento por semana
+        query = """
+            SELECT 
+                s.numero_semana,
+                SUM(pa.peso_utilizado * pa.repeticiones_realizadas * pa.series_realizadas) as volumen_total
+            FROM semanas s
+            JOIN dias d ON s.id_semana = d.id_semana
+            JOIN dia_ejercicio de ON d.id_dia = de.id_dia
+            JOIN progreso_alumno pa ON de.id_dia_ejercicio = pa.id_dia_ejercicio
+            WHERE s.id_entrenamiento = ? AND pa.id_alumno = ?
+            GROUP BY s.numero_semana
+            ORDER BY s.numero_semana ASC
+        """
+        
+        cur.execute(query, (id_entrenamiento, alumno_id))
+        rendimiento_data = cur.fetchall()
+        
+        # Obtener el número total de semanas del entrenamiento
+        query_semanas = """
+            SELECT duracion_semanas 
+            FROM entrenamiento 
+            WHERE id_entrenamiento = ?
+        """
+        cur.execute(query_semanas, (id_entrenamiento,))
+        total_semanas = cur.fetchone()[0]
+        
+        # Preparar los datos para el gráfico
+        semanas = []
+        volumenes = []
+        
+        # Inicializar todas las semanas con volumen 0
+        for semana in range(1, total_semanas + 1):
+            semanas.append(f"Sem {semana}")
+            volumenes.append(0)
+        
+        # Llenar los datos reales
+        for registro in rendimiento_data:
+            num_semana = registro[0]
+            volumen = registro[1] if registro[1] else 0
+            if 1 <= num_semana <= total_semanas:
+                volumenes[num_semana - 1] = round(volumen)
+        
+        # Normalizar los valores para que el máximo sea 100 (opcional)
+        max_volumen = max(volumenes) if volumenes else 1
+        if max_volumen > 0:
+            volumenes_normalizados = [round((v / max_volumen) * 100) for v in volumenes]
+        else:
+            volumenes_normalizados = volumenes
+        
+        return {
+            'semanas': semanas,
+            'volumenes': volumenes,
+            'volumenes_normalizados': volumenes_normalizados,
+            'detalle': [
+                {
+                    'semana': registro[0],
+                    'volumen': round(registro[1]) if registro[1] else 0
+                } for registro in rendimiento_data
+            ]
+        }
+        
+    except Exception as e:
+        print(f"Error en obtener_rendimiento_semanal: {str(e)}")
+        return {
+            'semanas': [],
+            'volumenes': [],
+            'volumenes_normalizados': [],
+            'detalle': []
+        }
+    finally:
+        if conn:
+            conn.close()
+
+
+# Obtener progreso de fuerza (empuje, jale y resistencia) del alumno en la rutina
+def obtener_progreso_fuerza(alumno_id, id_entrenamiento):
+    conn = None
+    try:
+        conn = conexion_basedatos()
+        cur = conn.cursor()
+        
+        # Consulta para obtener el progreso de fuerza por tipo y por semana
+        query = """
+            SELECT 
+                s.numero_semana,
+                e.tipo_fuerza,
+                AVG(COALESCE(pa.peso_utilizado, 0)) as avg_peso,
+                AVG(COALESCE(pa.repeticiones_realizadas, 0)) as avg_repeticiones,
+                COUNT(DISTINCT de.id_dia_ejercicio) as total_ejercicios
+            FROM semanas s
+            JOIN dias d ON s.id_semana = d.id_semana
+            JOIN dia_ejercicio de ON d.id_dia = de.id_dia
+            JOIN ejercicios e ON de.id_ejercicio = e.id_ejercicio
+            LEFT JOIN progreso_alumno pa ON de.id_dia_ejercicio = pa.id_dia_ejercicio AND pa.id_alumno = ?
+            WHERE s.id_entrenamiento = ? AND e.tipo_fuerza IN ('Empuje', 'Jale', 'Resistencia')
+            GROUP BY s.numero_semana, e.tipo_fuerza
+            ORDER BY s.numero_semana ASC, e.tipo_fuerza
+        """
+        
+        cur.execute(query, (alumno_id, id_entrenamiento))
+        fuerza_data = cur.fetchall()
+        
+        # Obtener el número total de semanas del entrenamiento
+        query_semanas = """
+            SELECT duracion_semanas 
+            FROM entrenamiento 
+            WHERE id_entrenamiento = ?
+        """
+        cur.execute(query_semanas, (id_entrenamiento,))
+        total_semanas = cur.fetchone()[0]
+        
+        # Preparar los datos para el gráfico
+        semanas = [f"Semana {i}" for i in range(1, total_semanas + 1)]
+        
+        # Inicializar datos para cada tipo de fuerza
+        empuje = [0] * total_semanas
+        jale = [0] * total_semanas
+        resistencia = [0] * total_semanas
+        
+        # Procesar los datos obtenidos
+        for registro in fuerza_data:
+            semana = registro[0] - 1  # Convertir a índice 0-based
+            tipo = registro[1]
+            avg_peso = registro[2]
+            avg_rep = registro[3]
+            total_ej = registro[4]
+            
+            # Calcular índice de fuerza (fórmula ajustable)
+            if tipo == 'Empuje':
+                indice = (avg_peso * 0.7 + avg_rep * 0.3) * (total_ej / 10)  # Ajustar división según necesidad
+                if semana < len(empuje):
+                    empuje[semana] = round(indice)
+            elif tipo == 'Jale':
+                indice = (avg_peso * 0.6 + avg_rep * 0.4) * (total_ej / 10)
+                if semana < len(jale):
+                    jale[semana] = round(indice)
+            elif tipo == 'Resistencia':
+                indice = (avg_peso * 0.3 + avg_rep * 0.7) * (total_ej / 10)
+                if semana < len(resistencia):
+                    resistencia[semana] = round(indice)
+        
+        # Normalizar los valores para que el máximo sea 100
+        max_valor = max(max(empuje), max(jale), max(resistencia)) or 1
+        empuje_norm = [round((v / max_valor) * 100) for v in empuje]
+        jale_norm = [round((v / max_valor) * 100) for v in jale]
+        resistencia_norm = [round((v / max_valor) * 100) for v in resistencia]
+        
+        return {
+            'semanas': semanas,
+            'empuje': empuje_norm,
+            'jale': jale_norm,
+            'resistencia': resistencia_norm,
+            'detalle': [
+                {
+                    'semana': registro[0],
+                    'tipo': registro[1],
+                    'avg_peso': registro[2],
+                    'avg_rep': registro[3],
+                    'total_ejercicios': registro[4]
+                } for registro in fuerza_data
+            ]
+        }
+        
+    except Exception as e:
+        print(f"Error en obtener_progreso_fuerza: {str(e)}")
+        return {
+            'semanas': [],
+            'empuje': [],
+            'jale': [],
+            'resistencia': [],
+            'detalle': []
+        }
+    finally:
+        if conn:
+            conn.close()
+
+
+# Obtener progreso semanal del alumno en la rutina
+def obtener_progreso_semanal(alumno_id, id_entrenamiento):
+    conn = None
+    try:
+        conn = conexion_basedatos()
+        cur = conn.cursor()
+        
+        # Consulta simplificada sin la fecha
+        query = """
+            SELECT 
+                s.numero_semana,
+                ps.observaciones,
+                ps.foto_fisico
+            FROM progreso_semana ps
+            JOIN semanas s ON ps.id_semana = s.id_semana
+            WHERE ps.id_alumno = ? AND ps.id_entrenamiento = ?
+            ORDER BY s.numero_semana ASC
+        """
+        
+        cur.execute(query, (alumno_id, id_entrenamiento))
+        progreso_data = cur.fetchall()
+        
+        # Procesamiento seguro de los datos
+        observaciones_semanales = []
+        for semana, observacion, foto in progreso_data:
+            observaciones_semanales.append({
+                'semana': f"Semana {semana}",
+                'observacion': observacion if observacion else "Sin observaciones",
+                'foto': f"/static/uploads/weekly_progress/{foto}" if foto else None
+            })
+        
+        print(f"Datos obtenidos: {observaciones_semanales}")  # Para depuración
+        return observaciones_semanales
+        
+    except Exception as e:
+        print(f"Error al obtener progreso semanal: {str(e)}")
+        return []  # Devuelve lista vacía si hay error
+    finally:
+        if conn:
+            conn.close()
+
+
+
 # Ruta de Progreso Alumno
 @dashboard_bp.route('/dashboard/progreso-alumno/<alumno_id>', methods=['GET', 'POST'])
 @login_required
 def progreso_alumno(alumno_id):
-    return render_template('progreso_alumno.html', alumno_id=alumno_id)
+    id_entrenador = session.get('id_usuario')
+
+    # Obtener datos del alumno
+    datos_alumno = obtener_datos_alumno(alumno_id)
+
+    # Obtener entrenamiento asociado al entrenador de la sesión
+    entrenamiento = obtener_entrenamiento(alumno_id, id_entrenador)
+    id_entrenamiento = entrenamiento['id_entrenamiento']
+    porcentaje_progreso = obtener_porcentaje_progreso(alumno_id, id_entrenamiento)
+
+    # Obtener datos del cuestionario del alumno
+    datos_cuestionario = obtener_datos_cuestionario(alumno_id)
+
+    # --------------- Gráfios ---------------
+    rendimiento_semanal = obtener_rendimiento_semanal(alumno_id, id_entrenamiento)
+    
+    progreso_fuerza = obtener_progreso_fuerza(alumno_id, id_entrenamiento)
+    print(f"Progreso de fuerza: {progreso_fuerza}")
+
+    mejores_marcas = obtener_mejores_marcas(entrenamiento['id_entrenamiento'], alumno_id)
+
+    observaciones_semanales = obtener_progreso_semanal(alumno_id, id_entrenamiento)
+    print(f"Observaciones semanales: {observaciones_semanales}")  # Para verificar
+
+
+    return render_template('progreso_alumno.html',
+                           alumno=datos_alumno,
+                           entrenamiento=entrenamiento,
+                           porcentaje_progreso=porcentaje_progreso,
+                           cuestionario=datos_cuestionario,
+                           rendimiento_semanal=rendimiento_semanal,
+                           progreso_fuerza=progreso_fuerza,
+                           mejores_marcas=mejores_marcas,
+                           observaciones_semanales=observaciones_semanales)

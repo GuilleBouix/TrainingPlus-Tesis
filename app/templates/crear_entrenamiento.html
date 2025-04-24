@@ -25,15 +25,15 @@
     <div class="seccion seccion-1">
         <div class="inputs" data-aos="fade-down" data-aos-delay="100">
             <label for="nombre_entrenamiento">Nombre del Entrenamiento</label>
-            <input type="text" id="nombre_entrenamiento" name="nombre_entrenamiento" value="Entrenamiento" placeholder="Ingresa un nombre para el entrenamiento" required>
+            <input type="text" id="nombre_entrenamiento" name="nombre_entrenamiento" placeholder="Ingresa un nombre para el entrenamiento" required>
         </div>
 
         <div class="inputs" data-aos="fade-down" data-aos-delay="200">
             <label for="alumno">Alumno</label>
             <select id="alumno" name="id_alumno" required>
-                <option value="">Seleccionar Alumno</option>
+                <option value="" disabled selected>Seleccionar Alumno</option>
                 {% for alumno in alumnos %}
-                <option value="{{ alumno.id_alumno }}" selected>{{ alumno.nombre }} {{ alumno.apellido }}</option>
+                <option value="{{ alumno.id_alumno }}">{{ alumno.nombre }} {{ alumno.apellido }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -41,13 +41,14 @@
         <div class="inputs" data-aos="fade-down" data-aos-delay="300">
             <label for="disciplina">Disciplina</label>
             <select name="disciplina" id="disciplina" required>
-                <option value="1" selected>Fitness</option>
+                <option value="" disabled selected>Seleccionar Disciplina</option>
+                <option value="1">Fitness</option>
             </select>
         </div>
 
         <div class="inputs" data-aos="fade-down" data-aos-delay="400">
             <label for="duracion_semanas">Duración (en semanas)</label>
-            <input type="number" id="duracion_semanas" name="duracion_semanas" value="2" min="1" placeholder="Ingresa la duración en semanas" required>
+            <input type="number" id="duracion_semanas" name="duracion_semanas" min="1" max="12" placeholder="Ingresa la duración en semanas" required>
         </div>
 
         <button type="button" onclick="generarSemanas()" data-aos="fade-right" data-aos-delay="500">Continuar</button>

@@ -452,19 +452,19 @@
     </script>
 
     <!-- Barra de progreso -->
-<script>
-    // Barra de progreso rutina
-    const barra = document.getElementById("barra-progreso");
-    const progreso = barra.dataset.progreso;
+    <script>
+        // Barra de progreso rutina
+        const barra = document.getElementById("barra-progreso");
+        const progreso = barra.dataset.progreso;
 
-    barra.style.width = progreso + "%";
+        barra.style.width = progreso + "%";
 
-    // Barra de progreso día
-    const barraDias = document.getElementById("barra-dias");
-    if (barraDias) {
-        const progresoDias = barraDias.dataset.progreso;
-        barraDias.style.width = progresoDias + "%";
-    }
-</script>
+        // Barra de progreso día
+        const barraDias = document.getElementById("barra-dias");
+        if (barraDias) {
+            const progresoDias = barraDias.dataset.progreso;
+            barraDias.style.width = progresoDias + "%";
+        }
+    </script>
 
 {% endblock %}
