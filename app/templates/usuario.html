@@ -92,15 +92,21 @@
             <div class="connect-container">
                 <div class="links">
                     <div class="link-items" data-aos="fade-in" data-aos-delay="300">
-                        <a class="instagram" href="{{ info.instagram }}" target="_blank"><i class='bx bxl-instagram'></i></a>
+                        <a class="instagram" href="{{ info.instagram if info.instagram else '' }}" {% if info.instagram %}target="_blank"{% endif %}>
+                            <i class='bx bxl-instagram'></i>
+                        </a>
                     </div>
 
                     <div class="link-items">
-                        <a class="facebook" data-aos="fade-in" data-aos-delay="400" href="{{ info.facebook }}" target="_blank"><i class='bx bxl-facebook'></i></a>
+                        <a class="facebook" data-aos="fade-in" data-aos-delay="400" href="{{ info.facebook if info.facebook else '' }}" {% if info.instagram %}target="_blank"{% endif %}>
+                            <i class='bx bxl-facebook'></i>
+                        </a>
                     </div>
 
                     <div class="link-items">
-                        <a class="phone" data-aos="fade-in" data-aos-delay="500" href="tel:{{ info.telefono }}"><i class='bx bxs-phone'></i></a>
+                        <a class="phone" data-aos="fade-in" data-aos-delay="500" href="tel:{{ info.telefono }}">
+                            <i class='bx bxs-phone'></i>
+                        </a>
                     </div>
                 </div>
 

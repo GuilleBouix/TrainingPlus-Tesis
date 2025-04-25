@@ -85,9 +85,9 @@
                             </a>
         
                             {% if rol_usuario == 2 %}
-                                <button class="btn-delete-training">
+                                <a href=" {{ url_for('entrenamiento.editar_entrenamiento', id_entrenamiento=entrenamiento.id_entrenamiento) }}" class="btn-edit-training" title="Editar Entrenamiento">
                                     <i class='bx bxs-pencil'></i>
-                                </button>
+                                </a>
                             {% endif %}
                         </div>
                     </div>

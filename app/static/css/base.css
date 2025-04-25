@@ -529,7 +529,7 @@ main {
     }
 }
 
-.actions .btn-delete-training {
+.actions .btn-edit-training {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -537,8 +537,18 @@ main {
     background: none;
     border: 1px solid var(--color-border);
     color: var(--color-text-primary);
+    transition: all .1s linear;
 }
-.btn-delete-training i {
+.actions .btn-edit-training:hover {
+    background-color: #ededed;
+    color: var(--color-primary);
+}
+.actions .btn-edit-training:active {
+    background-color: var(--color-button-active);
+    color: var(--color-background);
+    border: 1px solid var(--color-button-active);
+}
+.btn-edit-training i {
     font-size: 1.3rem;
 }
 
