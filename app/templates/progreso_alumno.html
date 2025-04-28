@@ -7,8 +7,8 @@
 {% block content %}
 
     <div class="progreso-alumno-container">
-        <section class="alumno-container">
-            <div class="datos">
+        <section class="alumno-container" data-aos="fade-in">
+            <div class="datos" data-aos="fade-in" data-aos-delay="100">
                 <img src="{{ url_for('static', filename=alumno.foto_perfil) }}" alt="">
 
                 <div>
@@ -17,9 +17,9 @@
                 </div>
             </div>
 
-            <div class="progreso-plan">
+            <div class="progreso-plan" data-aos="fade-in" data-aos-delay="200">
                 <strong>Progreso del Plan</strong>
-                <span>{{ porcentaje_progreso }}%</span>
+                <span>{{ "%.1f"|format(porcentaje_progreso) }}%</span>
     
                 <div class="bar">
                     <div class="bar-progress" 
@@ -29,7 +29,7 @@
                 </div>
             </div>
 
-            <div class="info">
+            <div class="info" data-aos="fade-in" data-aos-delay="300">
                 <div class="edad">
                     <h3>Edad</h3>
                     <span>{{ cuestionario.edad }} años</span>
@@ -51,7 +51,7 @@
                 </div>
             </div>
 
-            <div class="ficha">
+            <div class="ficha" data-aos="fade-in" data-aos-delay="400">
                 <button class="btn-open-cuestionario" id="abrir-cuestionario">
                     <i class='bx bxs-file'></i>
                     Ver Ficha Completa
@@ -176,7 +176,7 @@
         </dialog>
 
         <div class="progreso-container">
-            <section class="rendimiento">
+            <section class="rendimiento" data-aos="fade-in">
                 <h2>Rendimiento</h2>
 
                 <canvas id="lineChart"></canvas>
@@ -248,7 +248,7 @@
                 </script>
             </section>
 
-            <section class="evolucion-fuerza">
+            <section class="evolucion-fuerza" data-aos="fade-in" data-aos-delay="100">
                 <h2>Evolución de Fuerza</h2>
 
                 <div style="width: 100%; height: 400px;">
@@ -356,7 +356,7 @@
                 </script>
             </section>
 
-            <section class="mejores-marcas-alumno">
+            <section class="mejores-marcas-alumno" data-aos="fade-in" data-aos-delay="200">
                 <h2>Mejores Marcas</h2>
 
                 <div class="marcadores-container">
@@ -372,7 +372,7 @@
                 
             </section>
 
-            <section class="observaciones-semanales">
+            <section class="observaciones-semanales" data-aos="fade-in" data-aos-delay="300">
                 <h2>Observaciones Semanales</h2>
             
                 {% if observaciones_semanales %}
@@ -468,6 +468,4 @@
         });
     </script>
     
-    
-
 {% endblock %}

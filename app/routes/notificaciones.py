@@ -129,6 +129,7 @@ def eliminar_conexion(id_usuario_destino):
 @login_required
 def listar_solicitudes():
     id_usuario = session['id_usuario']
+    orden = request.args.get('orden', default='desc', type=str)  # Nuevo: obtener parámetro de orden
 
     conexion = conexion_basedatos()
     cursor = conexion.cursor()
@@ -139,15 +140,17 @@ def listar_solicitudes():
         FROM vinculaciones v
         JOIN usuario u ON v.id_usuario_origen = u.id_usuario
         WHERE v.id_usuario_destino = ? AND v.estado = 'pendiente'
+        ORDER BY v.fecha_solicitud DESC
     """, (id_usuario,))
     solicitudes = cursor.fetchall()
 
-    # Obtener notificaciones
-    cursor.execute("""
+    # Obtener notificaciones con ordenamiento dinámico
+    order_clause = "DESC" if orden == 'desc' else "ASC"  # Determinar el orden
+    cursor.execute(f"""
         SELECT id_notificacion, mensaje, fecha, id_entrenamiento
         FROM notificaciones
         WHERE id_usuario = ?
-        ORDER BY fecha DESC
+        ORDER BY fecha {order_clause}
     """, (id_usuario,))
     notificaciones = cursor.fetchall()
 
@@ -156,42 +159,27 @@ def listar_solicitudes():
     # Formatear solicitudes pendientes
     solicitudes_formateadas = []
     for solicitud in solicitudes:
-        id_vinculacion = solicitud[0]
-        nombre_usuario = solicitud[1]
-        fecha_solicitud = solicitud[2]
-
-        # Convertir y formatear la fecha
-        fecha_obj = datetime.strptime(fecha_solicitud, "%Y-%m-%d %H:%M")
-        fecha_formateada = fecha_obj.strftime("%d/%m/%Y - %H:%M")
-
         solicitudes_formateadas.append({
-            'id_vinculacion': id_vinculacion,
-            'nombre_usuario': nombre_usuario,
-            'fecha_solicitud': fecha_formateada
+            'id_vinculacion': solicitud[0],
+            'nombre_usuario': solicitud[1],
+            'fecha_solicitud': datetime.strptime(solicitud[2], "%Y-%m-%d %H:%M").strftime("%d/%m/%Y - %H:%M")
         })
 
     # Formatear notificaciones
     notificaciones_formateadas = []
     for notificacion in notificaciones:
-        id_notificacion = notificacion[0]
-        mensaje = notificacion[1]
-        fecha = notificacion[2]
-
-        # Convertir y formatear la fecha
-        fecha_obj = datetime.strptime(fecha, "%Y-%m-%d %H:%M:%S")
-        fecha_formateada = fecha_obj.strftime("%d/%m/%Y - %H:%M")
-
         notificaciones_formateadas.append({
-            'id_notificacion': id_notificacion,
-            'mensaje': mensaje,
-            'fecha': fecha_formateada,
-            'id_entrenamiento': notificacion[3]  # Añade esto
+            'id_notificacion': notificacion[0],
+            'mensaje': notificacion[1],
+            'fecha': datetime.strptime(notificacion[2], "%Y-%m-%d %H:%M:%S").strftime("%d/%m/%Y - %H:%M"),
+            'id_entrenamiento': notificacion[3]
         })
 
     return render_template(
         'notificaciones.html',
         solicitudes=solicitudes_formateadas,
-        notificaciones=notificaciones_formateadas
+        notificaciones=notificaciones_formateadas,
+        orden_actual=orden  # Pasar el orden actual al template
     )
 
 

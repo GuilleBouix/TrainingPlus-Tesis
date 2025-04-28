@@ -123,6 +123,17 @@ def crear_entrenamiento():
             duracion_semanas = int(request.form.get('duracion_semanas'))
             fecha_inicio = date.today().strftime('%Y-%m-%d')
 
+            # Antes de insertar un nuevo entrenamiento...
+            cursor.execute("""
+                SELECT 1 FROM entrenamiento
+                WHERE id_entrenador = ? AND id_alumno = ?
+            """, (id_entrenador, id_alumno))
+            existe_entrenamiento = cursor.fetchone()
+
+            if existe_entrenamiento:
+                flash('Ya existe un entrenamiento activo con este alumno.', 'error')
+                return redirect(url_for('entrenamiento.crear_entrenamiento'))
+
             # Insertar en la tabla entrenamiento
             cursor.execute("""
                 INSERT INTO entrenamiento (id_entrenador, id_alumno, nombre_entrenamiento, id_disciplina, duracion_semanas, fecha_inicio)

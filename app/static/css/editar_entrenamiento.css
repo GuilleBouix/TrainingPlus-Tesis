@@ -25,7 +25,7 @@
 
 .week-header {
     padding: 15px;
-    background-color: #f5f5f5;
+    background: linear-gradient(325deg, rgba(239,68,68,1) 0%, rgba(220,38,38,1) 100%);
     border-bottom: 1px solid var(--color-border);
     display: flex;
     flex-direction: column;
@@ -35,7 +35,7 @@
 .week-title {
     font-size: 1.2rem;
     font-weight: 600;
-    color: var(--color-text-primary);
+    color: var(--color-background);
     margin: 0;
 }
 
@@ -163,6 +163,7 @@
     font-size: 1rem;
     height: 40px;
     outline: none;
+    margin-left: auto;
 }
 .primary-button {
     background-color: var(--color-button-primary);

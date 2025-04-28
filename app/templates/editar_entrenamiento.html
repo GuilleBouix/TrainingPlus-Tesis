@@ -9,26 +9,26 @@
 <div id="data-ejercicios" data-ejercicios="{{ ejercicios|tojson }}" style="display: none;"></div>
 
 <div class="edit-training-container">
-    <h1 class="edit-training-title">Editar Entrenamiento</h1>
-    <p>Modifica o agrega ejercicios a la rutina de entrenamiento.</p>
+    <h1 class="edit-training-title" data-aos="fade-right">Editar Entrenamiento</h1>
+    <p data-aos="fade-right">Modifica o agrega ejercicios a la rutina de entrenamiento.</p>
     
     <form method="POST" class="edit-training-form">
         <!-- Nombre del entrenamiento -->
-        <div class="training-name-group">
+        <div class="training-name-group" data-aos="fade-in">
             <label class="input-label">Nombre del Entrenamiento</label>
             <input type="text" name="nombre_entrenamiento" class="text-input" 
-                   value="{{ entrenamiento.nombre_entrenamiento }}" required>
+                   value="{{ entrenamiento.nombre_entrenamiento }}" placeholder="Ingresa un nuevo nombre para el entrenamiento" required>
         </div>
         
         <!-- Días y ejercicios -->
         {% for dia in dias %}
-        <div class="week-container">
+        <div class="week-container" data-aos="fade-in" data-aos-delay="100">
             <div class="week-header">
                 <h3 class="week-title">
                     Semana {{ dia.numero_semana }} - Día {{ dia.numero_dia }}
                 </h3>
                 <input type="text" name="nombre_dia_{{ dia.id_dia }}" class="text-input day-name-input" 
-                       value="{{ dia.nombre_rutina }}" required>
+                       value="{{ dia.nombre_rutina }}" placeholder="Ingresa un nuevo nombre para la rutina del día {{ dia.numero_dia }} de la semana {{ dia.numero_semana }}" required>
             </div>
             
             <div class="exercises-container">

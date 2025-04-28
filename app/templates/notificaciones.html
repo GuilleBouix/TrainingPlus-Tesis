@@ -29,14 +29,15 @@
         <div class="notifications-sections section-filter" data-aos="flip-right" data-aos-delay="200">
             <h2 data-aos="fade-right" data-aos-delay="300">Filtros</h2>
 
-            <form action="{{ url_for('notificaciones.eliminar_notificaciones') }}" method="POST" data-aos="fade-right" data-aos-delay="300">
-                <select name="tipo" id="tipo">
-                    <option value="">Ordenar por</option>
-                    <option value="fecha">Fecha</option>
-                    <option value="tipo">Tipo</option>
+            <form id="filtro-form" data-aos="fade-right" data-aos-delay="300">
+                <select name="orden" id="orden-notificaciones">
+                    <option value="desc" {% if orden_actual=='desc' %}selected{% endif %}>Más Recientes primero</option>
+                    <option value="asc" {% if orden_actual=='asc' %}selected{% endif %}>Más Antiguas primero</option>
                 </select>
+            </form>
 
-                <button type="submit" data-aos="fade-right" data-aos-delay="300">Eliminar Todas</button>
+            <form action="{{ url_for('notificaciones.eliminar_notificaciones') }}" class="eliminar-notificaciones-form" method="POST" data-aos="fade-right" data-aos-delay="300">
+                <button type="submit">Eliminar Notificaciones</button>
             </form>
         </div>
 
@@ -108,6 +109,34 @@
             lista.innerHTML = "";
             notificaciones.forEach(noti => lista.appendChild(noti));
         });
+    </script>
+
+    <script>
+        // Manejar cambio en el filtro de orden
+        document.getElementById("orden-notificaciones").addEventListener("change", function() {
+            const orden = this.value;
+            // Recargar la página con el nuevo parámetro de orden
+            window.location.href = "{{ url_for('notificaciones.listar_solicitudes') }}?orden=" + orden;
+        });
+
+        // Alternativa con AJAX para evitar recargar la página completa
+        /*
+        document.getElementById("orden-notificaciones").addEventListener("change", async function() {
+            const orden = this.value;
+            try {
+                const response = await fetch(`/notificaciones?orden=${orden}`);
+                const html = await response.text();
+                
+                // Parsear la respuesta y actualizar solo la sección de notificaciones
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newContent = doc.querySelector('.section-notificaction').innerHTML;
+                document.querySelector('.section-notificaction').innerHTML = newContent;
+            } catch (error) {
+                console.error('Error al cambiar el orden:', error);
+            }
+        });
+        */
     </script>
 
 {% endblock %}
