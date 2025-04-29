@@ -1,51 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Saira:ital,wght@0,100..900;1,100..900&display=swap');
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Saira', sans-serif;
-    font-weight: 400;
-}
-
-:root {
-    /* ------ MAIN COLORS ------ */
-    --color-primary: #DC2626;
-    --color-secondary: #EDEDED;
-    --color-background: #FFFFFF;
-    /* ------ TEXT COLORS ------ */
-    --color-text-primary: #222222;
-    --color-text-secondary: #5B5B5B;
-    /* ------ BUTTON COLORS ------ */
-    --color-button-primary: #EF4444;
-    --color-button-hover: #DC2626;
-    --color-button-active: #B91C1C;
-    /* ------ OTHERS COLORS ------ */
-    --color-border: #DFDFDF;
-    --color-flash-error-bg: #EEC8C5;
-    --color-flash-error-text: #CA0000;
-    --color-flash-success-bg: #C6ECC6;
-    --color-flash-success-text: #37A437;
-}
-
-
-html, body {
-    background-color: var(--color-background);
-    width: 100%;
-    max-width: 100%;
-}
-
-
-
-/* MAIN */
-main {
-    font-size: 24px;
-    height: 100vh;
-    margin-top: 70px;
-    padding: 0 200px;
-    z-index: -1;
-}
 
 .flash-messages {
     list-style-type: none;
@@ -84,10 +36,11 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 100vh;
-    border-radius: 10px;
     border: 1px solid var(--color-border);
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
     padding: 1rem 3rem;
+    margin-top: 1rem !important;
 }
 
 .usuario-container .section-1,
@@ -96,6 +49,7 @@ main {
     width: 100%;
     display: flex;
     align-items: center;
+    gap: 1rem;
 }
 
 
@@ -108,10 +62,10 @@ main {
     width: 150px;
     height: 150px;
     border-radius: 50%;
+    border: 1px solid var(--color-border);
 }
 
 .usuario-container .section-1 .user-name {
-    margin-left: 1.5rem;
     color: var(--color-text-primary);
 }
 .user-name h1 {
@@ -153,13 +107,17 @@ main {
 }
 
 .section-2 .biography {
-    border-top: 1px solid var(--color-border);
+    padding: 0 1rem;
+    border-radius: 5px;
+    border: 1px solid var(--color-border);
     width: 100%;
+    
 }
 .section-2 .biography h3 {
     font-size: 1rem;
     font-weight: 500;
-    color: #909090;
+    color: var(--color-text-secondary);
+    opacity: 0.65;
     margin: 1rem 0;
     display: flex;
     align-items: center;
@@ -181,17 +139,20 @@ main {
 
 .section-2 .user-info {
     display: flex;
+    flex-direction: column;
+    gap: 1rem;
     width: 100%;
     margin-bottom: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--color-border);
+    padding: 1rem;
+    border-radius: 5px;
+    border: 1px solid var(--color-border);
+    margin-top: 1rem;
 }
 
-.side-1 .info-item,
-.side-2 .info-item  {
+.side-1 .info-item {
     display: flex;
     align-items: center;
-    margin-bottom: .5rem;
+    margin-bottom: 1rem;
 }
 
 .item-1 {
@@ -210,8 +171,8 @@ main {
 .info-item .item h3 {
     font-size: 1rem;
     font-weight: 500;
-    color: var(--color-text-primary);
-    opacity: 50%;
+    color: var(--color-text-secondary);
+    opacity: 0.65;
 }
 .info-item .item p {
     font-size: 1rem;
@@ -220,19 +181,11 @@ main {
     position: relative;
 }
 
-.user-info .side-2 {
-    margin-left: 15rem !important;
-    margin-left: 5rem !important; /* Reduce el margen fijo */
-
-}
-
 .section-2 .connect-container {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-top: 1px solid var(--color-border);
-    padding-top: 1rem;
 }
 
 .links {
@@ -545,12 +498,19 @@ body.modal-open {
     .usuario-container .section-1 {
         flex-direction: column;
         align-items: center;
+        border: 1px solid var(--color-border);
+        margin: 1rem 0;
+        border-radius: 10px;
+    }
+
+    .usuario-container .section-2 {
+        padding: 0;
     }
 
     .section-1 .user-name {
         display: flex;
-        align-items: center;
         flex-direction: column;
+        align-items: center;
         text-align: center;
         margin-left: 0;
     }
@@ -564,12 +524,20 @@ body.modal-open {
         font-size: 1rem;
     }
 
-    .user-info {
+    .section-2 .user-info {
         display: flex;
         flex-direction: column;
         border-top: 1px solid var(--color-border);
+        padding: 0 1rem;
+        border-radius: 10px;
     }
 
+    .section-2 .biography {
+        border-radius: 10px;
+    }
+
+
+    
     .side-1 .info-item,
     .side-2 .info-item  {
         display: flex;
@@ -627,14 +595,22 @@ body.modal-open {
         font-size: 2rem;
     }
 
-    .btn-certificacion {
-        margin: 1rem 0;
+    .connection-buttons {
+        width: 100%;
+        margin-bottom: 1rem;
     }
 
+    .btn-certificacion,
+    .btn-pendiente,
+    .btn-conectado,
+    .btn-conectar {
+        margin: 1rem 0;
+        width: 100%;
+    }
 }
 
 @media screen and (max-width: 480px) {
     .usuario-container  {
-        padding: 1rem 0;
+        padding: 0rem 0;
     }
 }

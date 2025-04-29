@@ -25,8 +25,8 @@
         </div>
 
         <div class="input-container">
-            <label for="telefono"><i class='bx bxs-phone'></i> Número de Teléfono</label>
-            <input type="text" id="telefono" name="telefono" value="{% if rol_usuario == 2 %}{{ usuario_data['entrenador_telefono'] or '' }}{% else %}{{ usuario_data['alumno_telefono'] or '' }}{% endif %}" placeholder="Número de Teléfono">
+            <label for="telefono"><i class='bx bxl-whatsapp'></i> WhatsApp</label>
+            <input type="text" id="telefono" name="telefono" value="{% if rol_usuario == 2 %}{{ usuario_data['entrenador_telefono'] or '' }}{% else %}{{ usuario_data['alumno_telefono'] or '' }}{% endif %}" placeholder="URL a tu WhatsApp">
         </div>
 
         <button type="submit" id="guardarRedes" class="btn-guardar-redes">Guardar</button>
@@ -60,7 +60,7 @@
         <div class="links" data-aos="fade-right" data-aos-delay="300">
             <p class="instagram open-modal" target="_blank"><i class='bx bxl-instagram'></i></p>
             <p class="facebook open-modal" target="_blank"><i class='bx bxl-facebook'></i></p>
-            <p class="phone open-modal" target="_blank"><i class='bx bxs-phone'></i></p>
+            <p class="phone open-modal" target="_blank"><i class='bx bxl-whatsapp'></i></p>
         </div>
 
         <!-- Mensajes Flash -->

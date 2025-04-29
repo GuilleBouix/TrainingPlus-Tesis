@@ -193,6 +193,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: .5rem;
 }
 
 .title strong {
@@ -203,7 +204,7 @@
 
 .title i {
     cursor: pointer;
-    font-size: 24px;
+    font-size: 1.5rem;
     color: var(--color-text-primary);
     transition: all 0.2s ease-in-out;
 }

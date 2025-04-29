@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    {{ info.nombre }} {{ info.apellido }} - Training+
+    {{ info.nombre|title }} {{ info.apellido|title }} - Training+
 {% endblock %}
 
 {% block content %}
@@ -25,9 +25,9 @@
                 <img src="{{ url_for('static', filename='uploads/users/' + (info.foto_perfil if info.foto_perfil else 'profile.webp')) }}" alt="Foto de perfil">
             </div>
 
-            <div class="user-name" data-aos="fade-left">
-                <h1 data-aos="fade-left">{{ info.nombre.upper() }} {{ info.apellido.upper() }}</h1>
-                <p data-aos="fade-left">@{{ usuario.nombre_usuario }}</p>
+            <div class="user-name" data-aos="fade-down">
+                <h1 data-aos="fade-down">{{ info.nombre.upper() }} {{ info.apellido.upper() }}</h1>
+                <p data-aos="fade-down">@{{ usuario.nombre_usuario }}</p>
                 <span class="user-type">
                     {% if usuario.rol == 1 %}
                         <i class='bx bxs-user'></i> 
@@ -44,13 +44,13 @@
 
         <div class="section-2">
             <div class="biography" data-aos="fade-down" data-aos-delay="100">
-                <h3><i class='bx bxs-message-square-detail'></i> Biografía</h3>
+                <h3><i class='bx bxs-message-dots'></i> Biografía</h3>
                 <p><i>"{{ info.biografia or 'No se ha proporcionado biografía.' }}"</i></p>
             </div>
 
             <div class="user-info" data-aos="fade-down" data-aos-delay="200">
                 <div class="side-1">
-                    <div class="info-item item-1">
+                    <div class="info-item">
                         <i class='bx bxs-map'></i>
                         <div class="item">
                             <h3>País</h3>
@@ -65,9 +65,8 @@
                             <p>{{ usuario.email }}</p>
                         </div>
                     </div>
-                </div>
-                <div class="side-2">
-                    <div class="info-item item-1">
+
+                    <div class="info-item">
                         {% if info.sexo|lower == 'masculino' %}
                             <i class='bx bx-male-sign'></i>
                         {% else %}
@@ -104,14 +103,14 @@
                     </div>
 
                     <div class="link-items">
-                        <a class="phone" data-aos="fade-in" data-aos-delay="500" href="tel:{{ info.telefono }}">
-                            <i class='bx bxs-phone'></i>
+                        <a class="phone" data-aos="fade-in" data-aos-delay="500" href="{{ info.telefono if info.telefono else '' }}">
+                            <i class='bx bxl-whatsapp'></i>
                         </a>
                     </div>
                 </div>
 
                 {% if es_entrenador_perfil %}
-                    <button class="btn-certificacion" data-imagen="{{ titulo_foto }}" data-aos="fade-left" data-aos-delay="200">
+                    <button class="btn-certificacion" data-imagen="{{ titulo_foto }}" data-aos="fade-up" data-aos-delay="200">
                         <i class='bx bx-certification'></i> Ver Certificación
                     </button>
 

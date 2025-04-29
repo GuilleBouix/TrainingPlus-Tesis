@@ -87,11 +87,10 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background-color: lightblue;
     height: 100vh;
     width: 600px;
     background-image: linear-gradient(to top, rgba(0, 0, 0, .7), rgba(0, 0, 0, 0) 80%), 
-                      url('https://wallpapercat.com/w/full/6/f/4/874336-3840x2160-desktop-4k-gym-background.jpg');
+                      url('/static/images/login-image.webp');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -279,11 +278,10 @@ form .register {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background-color: lightblue;
     height: 100vh;
     width: 600px;
     background: linear-gradient(to top, rgba(0, 0, 0, .7), rgba(0, 0, 0, 0) 80%), 
-                url('https://essentialtraining.es/wp-content/uploads/2023/02/beneficios-de-la-calistenia-scaled.jpg');
+                url('/static/images/signup-image.webp');
     background-size: cover;
     background-position: 90% 75%;
     background-repeat: no-repeat;
