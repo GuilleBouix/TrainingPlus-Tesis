@@ -1,8 +1,13 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, flash, json
-from app.utils.conexion import conexion_basedatos
-from app.utils.helpers import login_required
-from datetime import datetime
+from flask import Blueprint, render_template, session, send_file
 from app.routes.progreso import obtener_mejores_marcas
+from app.utils.conexion import conexion_basedatos
+from app.utils.helpers import login_required, entrenador_required
+from datetime import datetime
+from io import BytesIO
+from reportlab.lib.pagesizes import A4
+from reportlab.pdfgen import canvas
+import os
+
 
 
 dashboard_bp = Blueprint('dashboard', __name__)
@@ -316,7 +321,6 @@ def obtener_ranking_cumplimiento(id_entrenador):
             conn.close()
 
 
-
 # Ruta de Dashboard
 @dashboard_bp.route('/dashboard', methods=['GET', 'POST'])
 @login_required
@@ -350,21 +354,22 @@ def dashboard():
                            ranking_cumplimiento=ranking_cumplimiento)
 
 
-
 # Obtener nombre, apellido y foto de perfil del alumno
 def obtener_datos_alumno(alumno_id):
     conn = conexion_basedatos()
     cursor = conn.cursor()
 
-    cursor.execute('SELECT nombre, apellido, foto_perfil FROM alumno WHERE id_alumno = ?', (alumno_id,))
+    cursor.execute('SELECT id_alumno, nombre, apellido, foto_perfil FROM alumno WHERE id_alumno = ?', (alumno_id,))
     alumno = cursor.fetchone()
     conn.close()
 
     if alumno:
+        alumno_id = alumno['id_alumno']
         nombre = alumno['nombre']
         apellido = alumno['apellido']
         foto = alumno['foto_perfil'] if alumno['foto_perfil'] else 'profile.webp'
         return {
+            'id_alumno': alumno_id,
             'nombre': nombre,
             'apellido': apellido,
             'foto_perfil': f'uploads/users/{foto}'
@@ -677,6 +682,131 @@ def obtener_progreso_semanal(alumno_id, id_entrenamiento):
         if conn:
             conn.close()
 
+
+# Ruta para descargar la ficha del alumno en PDF
+@dashboard_bp.route('/descargar_ficha_pdf/<int:alumno_id>', methods=['GET'])
+@login_required
+@entrenador_required
+def descargar_ficha_pdf(alumno_id):
+    # Obtener datos del alumno
+    alumno = obtener_datos_alumno(alumno_id)
+    if not alumno:
+        return "Alumno no encontrado", 404
+    
+    # Obtener datos del cuestionario
+    cuestionario = obtener_datos_cuestionario(alumno_id)
+    if not cuestionario:
+        return "Cuestionario no encontrado", 404
+
+    # Crear buffer en memoria
+    buffer = BytesIO()
+    p = canvas.Canvas(buffer, pagesize=A4)
+    width, height = A4
+
+    # Estilos
+    p.setFont("Helvetica-Bold", 16)
+    p.drawString(100, height - 50, f"Ficha de {alumno['nombre']} {alumno['apellido']}")
+    
+    # Información Personal
+    p.setFont("Helvetica-Bold", 14)
+    p.drawString(100, height - 80, "1. Información Personal")
+    
+    p.setFont("Helvetica", 12)
+    y = height - 110
+    p.drawString(100, y, f"     Edad: {cuestionario.get('edad', 'N/A')} años")
+    y -= 20
+    p.drawString(100, y, f"     Experiencia: {cuestionario.get('experiencia', 'N/A').capitalize()}")
+    y -= 20
+    p.drawString(100, y, f"     Objetivo: {cuestionario.get('objetivo_general', 'N/A')}")
+    y -= 40
+
+    # Datos Físicos
+    p.setFont("Helvetica-Bold", 14)
+    p.drawString(100, y, "2. Datos Físicos")
+    
+    p.setFont("Helvetica", 12)
+    y -= 30
+    p.drawString(100, y, f"     Peso: {cuestionario.get('peso', 'N/A')} kg")
+    y -= 20
+    p.drawString(100, y, f"     Altura: {cuestionario.get('altura', 'N/A')} cm")
+    y -= 40
+
+    # Entrenamiento
+    p.setFont("Helvetica-Bold", 14)
+    p.drawString(100, y, "3. Entrenamiento")
+    
+    p.setFont("Helvetica", 12)
+    y -= 30
+    p.drawString(100, y, f"     Nivel de Actividad: {cuestionario.get('nivel_actividad', 'N/A').capitalize()}")
+    y -= 20
+    p.drawString(100, y, f"     Frecuencia: {cuestionario.get('frecuencia_entreno', 'N/A').capitalize()}")
+    y -= 20
+    p.drawString(100, y, f"     Duración de Entrenamiento: {cuestionario.get('duracion_sesion', 'N/A')}")
+    y -= 40
+
+    # Estado de Salud
+    p.setFont("Helvetica-Bold", 14)
+    p.drawString(100, y, "4. Estado de Salud")
+    
+    p.setFont("Helvetica", 12)
+    y -= 30
+    p.drawString(100, y, f"     Estado General: {cuestionario.get('estado_salud', 'N/A').capitalize()}")
+    y -= 20
+    p.drawString(100, y, f"     Lesiones: {cuestionario.get('lesiones', 'N/A').capitalize()}")
+    y -= 20
+    p.drawString(100, y, f"     Condición Cardiovascular: {cuestionario.get('condicion_cardio', 'N/A').capitalize()}")
+    y -= 20
+    p.drawString(100, y, f"     Nivel de Estrés: {cuestionario.get('nivel_estres', 'N/A').capitalize()}")
+    y -= 40
+
+    # Notas Adicionales
+    p.setFont("Helvetica-Bold", 14)
+    p.drawString(100, y, "5. Notas Adicionales")
+    
+    p.setFont("Helvetica", 12)
+    y -= 30
+    nota = cuestionario.get('nota_adicional', 'No hay notas adicionales.')
+    # Dividir texto largo en múltiples líneas
+    nota_lines = []
+    max_line_length = 80
+    words = nota.split()
+    current_line = []
+    current_length = 0
+    
+    for word in words:
+        if current_length + len(word) + len(current_line) <= max_line_length:
+            current_line.append(word)
+            current_length += len(word)
+        else:
+            nota_lines.append(' '.join(current_line))
+            current_line = [word]
+            current_length = len(word)
+    
+    if current_line:
+        nota_lines.append(' '.join(current_line))
+    
+    for line in nota_lines:
+        if y < 100:  # Si nos quedamos sin espacio, crear nueva página
+            p.showPage()
+            y = height - 50
+            p.setFont("Helvetica", 12)
+        p.drawString(100, y, f"     {line}")
+        y -= 20
+
+    # Pie de página
+    p.setFont("Helvetica", 10)
+    p.drawString(100, 30, f"Generado el {datetime.now().strftime('%d/%m/%Y %H:%M')}")
+
+    p.showPage()
+    p.save()
+    buffer.seek(0)
+
+    return send_file(
+        buffer,
+        as_attachment=True,
+        download_name=f"ficha_{alumno['nombre']}_{alumno['apellido']}.pdf",
+        mimetype='application/pdf'
+    )
 
 
 # Ruta de Progreso Alumno

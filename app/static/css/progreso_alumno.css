@@ -265,7 +265,7 @@
     font-weight: 400 !important;
 }
 
-.ficha-content .container button {
+.ficha-content .container .descargar-pdf {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -281,10 +281,10 @@
     margin-left: auto;
     outline: none;
 }
-.ficha-content .container button:hover {
+.ficha-content .container .descargar-pdf:hover {
     background: var(--color-button-hover);
 }
-.ficha-content .container button:active {
+.ficha-content .container .descargar-pdf:active {
     background: var(--color-button-active);
 }
 

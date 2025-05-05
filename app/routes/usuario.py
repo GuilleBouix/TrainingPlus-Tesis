@@ -65,7 +65,7 @@ def usuario(id_usuario):
     elif usuario_data['rol'] == 2:  # Entrenador
         cursor.execute("""
             SELECT id_entrenador, apellido, nombre, edad, id_pais, sexo, fecha_nacimiento, biografia, 
-                   foto_perfil, instagram, facebook, telefono 
+                   foto_perfil, especializacion, experiencia, titulo, instituto, instagram, facebook, telefono 
             FROM entrenador
             WHERE id_usuario = ?
         """, (id_usuario,))

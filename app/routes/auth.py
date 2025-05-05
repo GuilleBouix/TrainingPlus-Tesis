@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from app.utils.conexion import conexion_basedatos
-from app.utils.helpers import insertar_usuario
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -79,14 +78,28 @@ def signup():
         try:
             conn = conexion_basedatos()
             cursor = conn.cursor()
-            cursor.execute("SELECT * FROM usuario WHERE email = ?", (email,))
+            cursor.execute("SELECT * FROM usuario WHERE email = ? OR nombre_usuario = ?", (email, nombre_usuario))
             existing_user = cursor.fetchone()
         except Exception as e:
             flash(f"Error de base de datos: {str(e)}", 'error')
             return redirect(url_for('auth.signup'))
+        finally:
+            conn.close()
 
         if existing_user:
-            flash('Correo ya registrado.', 'error')
+            if existing_user[1] == email:  # email ya existe
+                flash('Correo ya registrado.', 'error')
+            else:  # nombre de usuario ya existe
+                flash('Nombre de usuario ya registrado.', 'error')
+            return redirect(url_for('auth.signup'))
+
+        # Validar contraseña (mínimo 8 caracteres y al menos una mayúscula)
+        if len(contrasena) < 8:
+            flash('La contraseña debe tener al menos 8 caracteres.', 'error')
+            return redirect(url_for('auth.signup'))
+        
+        if not any(c.isupper() for c in contrasena):
+            flash('La contraseña debe contener al menos una letra mayúscula.', 'error')
             return redirect(url_for('auth.signup'))
 
         # Insertar el nuevo usuario con contraseña hasheada
@@ -110,14 +123,13 @@ def signup():
             elif rol == 2:  # Entrenador
                 cursor.execute(
                     "INSERT INTO entrenador (id_usuario, form_complete) VALUES (?, ?)",
-                    (id_usuario, 'false')  # Guardar 'false' como texto
+                    (id_usuario, 'false')
                 )
             conn.commit()
             
             flash('Registro exitoso.', 'success')
             return redirect(url_for('auth.login'))
         except Exception as e:
-            print(f"Error al registrar el usuario: {e}")  # Esto imprime el error
             flash(f"Error al registrar el usuario: {str(e)}", 'error')
             return redirect(url_for('auth.signup'))
         finally:

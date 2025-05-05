@@ -3,7 +3,6 @@ from functools import wraps
 from app.utils.conexion import conexion_basedatos
 
 
-
 # Decorador para verificar si hay una sesión activa
 def login_required(f):
     @wraps(f)
@@ -17,7 +16,6 @@ def login_required(f):
     return funcion_decorador
 
 
-
 # Decorador para verificar si el usuario es un entrenador
 def entrenador_required(f):
     @wraps(f)
@@ -26,7 +24,6 @@ def entrenador_required(f):
             return redirect(url_for('auth.login'))
         return f(*args, **kwargs)
     return decorated_function
-
 
 
 # Decorador para verificar si el formulario de entrenador esta completo
@@ -53,6 +50,7 @@ def verificar_formulario_completo(func):
     return wrapper
 
 
+# Decorador para verificar si el usuario es un alumno y tiene una rutina asignada
 def verificar_vinculo_y_rutina(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -107,7 +105,6 @@ def verificar_vinculo_y_rutina(f):
 def allowed_file(filename):
     allowed_extensions = {'png', 'jpg', 'jpeg', 'gif'}
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
-
 
 
 # Función para insertar un usuario en la base de datos

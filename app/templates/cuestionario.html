@@ -121,7 +121,7 @@
                     <label for="condicion_cardio">Condición cardiovascular <span>*</span></label>
                     <select name="condicion_cardio" id="condicion_cardio" required>
                         <option value="">Seleccionar</option>
-                        <option value="muy_baja" {% if datos.condicion_cardio == 'muy_baja' %}selected{% endif %}>Muy baja - Se fatiga fácilmente</option>
+                        <option value="muy baja" {% if datos.condicion_cardio == 'muy baja' %}selected{% endif %}>Muy baja - Se fatiga fácilmente</option>
                         <option value="baja" {% if datos.condicion_cardio == 'baja' %}selected{% endif %}>Baja - Esfuerzo leve causa fatiga</option>
                         <option value="moderada" {% if datos.condicion_cardio == 'moderada' %}selected{% endif %}>Moderada - Resistencia aceptable</option>
                         <option value="buena" {% if datos.condicion_cardio == 'buena' %}selected{% endif %}>Buena - Realiza cardio regular</option>
@@ -135,11 +135,11 @@
                     <label for="nivel_estres">Nivel de estrés <span>*</span></label>
                     <select name="nivel_estres" id="nivel_estres" required>
                         <option value="">Seleccionar</option>
-                        <option value="muy_bajo" {% if datos.nivel_estres == 'muy_bajo' %}selected{% endif %}>Muy bajo - Tranquilo casi siempre</option>
+                        <option value="muy bajo" {% if datos.nivel_estres == 'muy bajo' %}selected{% endif %}>Muy bajo - Tranquilo casi siempre</option>
                         <option value="bajo" {% if datos.nivel_estres == 'bajo' %}selected{% endif %}>Bajo - Estrés ocasional</option>
                         <option value="moderado" {% if datos.nivel_estres == 'moderado' %}selected{% endif %}>Moderado - Tensión diaria leve</option>
                         <option value="alto" {% if datos.nivel_estres == 'alto' %}selected{% endif %}>Alto - Estrés frecuente</option>
-                        <option value="muy_alto" {% if datos.nivel_estres == 'muy_alto' %}selected{% endif %}>Muy alto - Afecta mi día a día</option>
+                        <option value="muy alto" {% if datos.nivel_estres == 'muy alto' %}selected{% endif %}>Muy alto - Afecta mi día a día</option>
                     </select>
                 </div>
             </div>

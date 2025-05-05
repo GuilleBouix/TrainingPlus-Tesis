@@ -59,7 +59,7 @@
             </div>
         </section>
 
-        <!-- Modal del cuestionario -->
+        <!-- Modal de ficha -->
         <dialog class="cuestionario-dialog" id="cuestionario-modal">
             <div class="modal-content">
                 <div class="header">
@@ -169,7 +169,7 @@
                             <span class="nota-adicional">{{ cuestionario.nota_adicional if cuestionario.nota_adicional else 'No hay notas adicionales.' }}</span>
                         </div>
 
-                        <button>Descargar (PDF)</button>
+                        <a class="descargar-pdf" href="{{ url_for('dashboard.descargar_ficha_pdf', alumno_id=alumno.id_alumno) }}">Descargar PDF</a>
                     </div>
                 </div>
             </div>
@@ -467,5 +467,5 @@
             });
         });
     </script>
-    
+
 {% endblock %}

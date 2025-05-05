@@ -1,30 +1,15 @@
+from dotenv import load_dotenv
 import sqlite3
+import os
+
+
+# Cargar variables del archivo .env
+load_dotenv()
+
 
 # Función para conectar a la base de datos SQLite3
 def conexion_basedatos():
-    # Conectamos a la base de datos "database.db" que está en la raíz del proyecto
-    conexion = sqlite3.connect('database.db')
-    conexion.row_factory = sqlite3.Row  # Esto nos permite acceder a los resultados como diccionarios
-    
+    db_path = os.getenv("DATABASE_PATH", "database.db")  # usa 'database.db' por defecto si no existe la variable
+    conexion = sqlite3.connect(db_path)
+    conexion.row_factory = sqlite3.Row
     return conexion
-
-
-
-# Función para insertar un usuario en la base de datos
-def insertar_usuario(correo, contraseña, rol):
-    conn = sqlite3.connect('database.db')
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO usuarios (correo, contraseña, rol) VALUES (?, ?, ?)", (correo, contraseña, rol))
-    conn.commit()
-    conn.close()
-
-
-
-# Función para obtener un usuario por correo
-def obtener_usuario_por_correo(correo):
-    conn = sqlite3.connect('database.db')
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM usuarios WHERE correo = ?", (correo,))
-    existing_user = cursor.fetchone()
-    conn.close()
-    return existing_user

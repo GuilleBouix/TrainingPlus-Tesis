@@ -49,43 +49,107 @@
             </div>
 
             <div class="user-info" data-aos="fade-down" data-aos-delay="200">
-                <div class="side-1">
-                    <div class="info-item">
-                        <i class='bx bxs-map'></i>
-                        <div class="item">
-                            <h3>País</h3>
-                            <p>{{ info.id_pais }}</p>
+                {% if usuario.rol == 1 %}
+                    <div class="side-1">
+                        <div class="info-item">
+                            <i class='bx bxs-map'></i>
+                            <div class="item">
+                                <h3>País</h3>
+                                <p>{{ info.id_pais }}</p>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="info-item">
-                        <i class='bx bxs-envelope'></i>
-                        <div class="item">
-                            <h3>Email</h3>
-                            <p>{{ usuario.email }}</p>
+                        <div class="info-item">
+                            <i class='bx bxs-envelope'></i>
+                            <div class="item">
+                                <h3>Email</h3>
+                                <p>{{ usuario.email }}</p>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="info-item">
-                        {% if info.sexo|lower == 'masculino' %}
-                            <i class='bx bx-male-sign'></i>
-                        {% else %}
-                            <i class='bx bx-female-sign'></i>
-                        {% endif %}
-                        <div class="item">
-                            <h3>Género</h3>
-                            <p>{{ info.sexo|capitalize }}</p>
+                        <div class="info-item">
+                            {% if info.sexo|lower == 'masculino' %}
+                                <i class='bx bx-male-sign'></i>
+                            {% else %}
+                                <i class='bx bx-female-sign'></i>
+                            {% endif %}
+                            <div class="item">
+                                <h3>Género</h3>
+                                <p>{{ info.sexo|capitalize }}</p>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="info-item">
-                        <i class='bx bxs-cake'></i>
-                        <div class="item">
-                            <h3>Fecha de Nacimiento</h3>
-                            <p>{{ info.fecha_nacimiento }}</p>
+                        <div class="info-item">
+                            <i class='bx bxs-cake'></i>
+                            <div class="item">
+                                <h3>Fecha de Nacimiento</h3>
+                                <p>{{ info.fecha_nacimiento }}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                {% else %}
+                    <div class="side-1">
+                        <div class="info-item">
+                            <i class='bx bxs-map'></i>
+                            <div class="item">
+                                <h3>País</h3>
+                                <p>{{ info.id_pais }}</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <i class='bx bxs-envelope'></i>
+                            <div class="item">
+                                <h3>Email</h3>
+                                <p>{{ usuario.email }}</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            {% if info.sexo|lower == 'masculino' %}
+                                <i class='bx bx-male-sign'></i>
+                            {% else %}
+                                <i class='bx bx-female-sign'></i>
+                            {% endif %}
+                            <div class="item">
+                                <h3>Género</h3>
+                                <p>{{ info.sexo|capitalize }}</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <i class='bx bxs-cake'></i>
+                            <div class="item">
+                                <h3>Fecha de Nacimiento</h3>
+                                <p>{{ info.fecha_nacimiento }}</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <i class='bx bxs-medal'></i>
+                            <div class="item">
+                                <h3>Especialización</h3>
+                                <p>{{ info.especializacion }}</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <i class='bx bxs-briefcase'></i>
+                            <div class="item">
+                                <h3>Experiencia</h3>
+                                <p>{{ info.experiencia }}</p>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <i class='bx bxs-graduation'></i>
+                            <div class="item">
+                                <h3>Títulación/Certificación</h3>
+                                <p>{{ info.titulo }} - <span style="font-weight: 300;">{{ info.instituto }}</span></p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
 
             <div class="connect-container">
