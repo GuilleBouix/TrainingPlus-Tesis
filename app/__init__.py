@@ -31,6 +31,7 @@ def create_app():
     # Registrar rutas desde la carpeta `routes`
     from .routes.entrenamiento import entrenamiento_bp
     from .routes.auth import auth_bp
+    from .routes.suscripcion import suscripcion_bp
     from .routes.perfil import perfil_bp
     from .routes.buscador import buscador_bp
     from .routes.usuario import usuario_bp
@@ -45,6 +46,7 @@ def create_app():
 
     # Registrar Blueprints
     app.register_blueprint(auth_bp)
+    app.register_blueprint(suscripcion_bp)
     app.register_blueprint(entrenamiento_bp)
     app.register_blueprint(perfil_bp)
     app.register_blueprint(buscador_bp)

@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, session, request, current_app,  redirect, url_for, flash
 from app.utils.helpers import login_required, verificar_formulario_completo
 from app.utils.conexion import conexion_basedatos
-from werkzeug.utils import secure_filename
 from app.utils.helpers import allowed_file
 from datetime import datetime
 import os

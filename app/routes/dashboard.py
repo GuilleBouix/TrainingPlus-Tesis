@@ -1,16 +1,15 @@
+from app.utils.helpers import login_required, entrenador_required, verificar_formulario_completo, verificar_suscripcion
 from flask import Blueprint, render_template, session, send_file
 from app.routes.progreso import obtener_mejores_marcas
 from app.utils.conexion import conexion_basedatos
-from app.utils.helpers import login_required, entrenador_required
-from datetime import datetime
-from io import BytesIO
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfgen import canvas
-import os
-
+from datetime import datetime
+from io import BytesIO
 
 
 dashboard_bp = Blueprint('dashboard', __name__)
+
 
 # Función para obtener el total de alumnos que tiene un entrenador
 def obtener_total_alumnos(id_entrenador):
@@ -324,6 +323,9 @@ def obtener_ranking_cumplimiento(id_entrenador):
 # Ruta de Dashboard
 @dashboard_bp.route('/dashboard', methods=['GET', 'POST'])
 @login_required
+@entrenador_required
+@verificar_suscripcion
+@verificar_formulario_completo
 def dashboard():
     id_entrenador = session.get('id_usuario')
     
@@ -687,6 +689,8 @@ def obtener_progreso_semanal(alumno_id, id_entrenamiento):
 @dashboard_bp.route('/descargar_ficha_pdf/<int:alumno_id>', methods=['GET'])
 @login_required
 @entrenador_required
+@verificar_suscripcion
+@verificar_formulario_completo
 def descargar_ficha_pdf(alumno_id):
     # Obtener datos del alumno
     alumno = obtener_datos_alumno(alumno_id)

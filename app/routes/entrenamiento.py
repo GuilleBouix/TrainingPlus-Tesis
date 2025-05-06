@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
-from app.utils.helpers import login_required, verificar_formulario_completo
+from app.utils.helpers import login_required, verificar_formulario_completo, verificar_suscripcion
 from app.utils.conexion import conexion_basedatos
 from datetime import date
 
@@ -10,6 +10,7 @@ entrenamiento_bp = Blueprint('entrenamiento', __name__)
 # Ruta de Entrenamiento
 @entrenamiento_bp.route('/entrenamiento')
 @login_required
+@verificar_suscripcion
 @verificar_formulario_completo
 def entrenamiento():
     user_id = session.get('id_usuario')
@@ -93,6 +94,8 @@ def entrenamiento():
 # Ruta para Crear Entrenamiento (Todo en uno)
 @entrenamiento_bp.route('/crear_entrenamiento', methods=['GET', 'POST'])
 @login_required
+@verificar_suscripcion
+@verificar_formulario_completo
 def crear_entrenamiento():
     # Obtener el rol del usuario de la sesion
     rol = session.get('rol')
@@ -222,6 +225,7 @@ def crear_entrenamiento():
 # Ruta para Editar Entrenamiento
 @entrenamiento_bp.route('/editar_entrenamiento/<int:id_entrenamiento>', methods=['GET', 'POST'])
 @login_required
+@verificar_suscripcion
 @verificar_formulario_completo
 def editar_entrenamiento(id_entrenamiento):
     user_id = session.get('id_usuario')

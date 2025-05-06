@@ -39,7 +39,7 @@
     border: 1px solid var(--color-border);
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
-    padding: 1rem 3rem;
+    padding: 1rem 5rem;
     margin-top: 1rem !important;
 }
 
@@ -107,17 +107,13 @@
 }
 
 .section-2 .biography {
-    padding: 0 1rem;
     border-radius: 5px;
-    border: 1px solid var(--color-border);
     width: 100%;
-    
 }
 .section-2 .biography h3 {
     font-size: 1rem;
     font-weight: 500;
     color: var(--color-text-secondary);
-    opacity: 0.65;
     margin: 1rem 0;
     display: flex;
     align-items: center;
@@ -143,10 +139,7 @@
     gap: 1rem;
     width: 100%;
     margin-bottom: 1rem;
-    padding: 1rem;
     border-radius: 5px;
-    border: 1px solid var(--color-border);
-    margin-top: 1rem;
 }
 
 .side-1 .info-item {
@@ -169,7 +162,7 @@
     line-height: 120%;
 }
 .info-item .item h3 {
-    font-size: .9rem;
+    font-size: 1rem;
     font-weight: 500;
     color: var(--color-text-secondary);
     opacity: 0.65;
@@ -202,7 +195,7 @@
     border-radius: 50%;
     background-color: transparent;
     text-decoration: none;
-    transition: all 0.3s ease;
+    transition: all 0.1s ease;
     border: 1px solid var(--color-border);
     outline: none;
     font-size: 1.75rem;

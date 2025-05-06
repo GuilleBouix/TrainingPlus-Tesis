@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/suscripcion.css') }}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <title>Suscripción Mensual - Training+</title>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen">
+        <div class="spinner"></div>
+    </div>
+
+    <main>
+        <div class="subscription-container">
+            <div class="subscription-title">
+                <h1>Suscripción Mensual</h1>
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Training+ Logo">
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="progress-container">
+                <div class="progress-steps">
+                    <div class="progress-step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-name">Plan</div>
+                    </div>
+                    <div class="progress-step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-name">Facturación</div>
+                    </div>
+                    <div class="progress-step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-name">Pago</div>
+                    </div>
+                    <div class="progress-step" data-step="4">
+                        <div class="step-number">4</div>
+                        <div class="step-name">Revisión</div>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 25%;"></div>
+                </div>
+            </div>
+            
+            <!-- Step 1: Plan Selection -->
+            <div class="subscription-step active" id="step-1">
+                <h2>Plan a Pagar</h2>
+                <div class="plan-options">
+                    <div class="plan-card selected">
+                        <h3>Entrenador <i class='bx bxs-medal'></i></h3>
+                        <div class="plan-price">$9.99<span>/mes</span></div>
+                        <ul class="plan-features">
+                            <li><i class='bx bx-check'></i> Vínculo y gestión completa de alumnos</li>
+                            <li><i class='bx bx-check'></i> Creación y edición de rutinas personalizadas</li>
+                            <li><i class='bx bx-check'></i> Panel de control para entrenadores</li>
+                            <li><i class='bx bx-check'></i> Seguimiento del progreso de sus alumnos</li>
+                            <li><i class='bx bx-check'></i> Perfil profesional visible para los usuarios</li>
+                            <li><i class='bx bx-check'></i> Control total sobre sus conexiones</li>
+                            <li><i class='bx bx-check'></i> Edición y actualización de perfil</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="step-actions">
+                    <button class="btn-next" onclick="nextStep(1)">Continuar</button>
+                </div>
+            </div>
+            
+            <!-- Step 2: Billing Information -->
+            <div class="subscription-step" id="step-2">
+                <h2>Información de Facturación</h2>
+                <form class="billing-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="first-name">Nombre <span class="billing-asterisk">*</span></label>
+                            <input type="text" id="first-name">
+                        </div>
+                        <div class="form-group">
+                            <label for="last-name">Apellido <span class="billing-asterisk">*</span></label>
+                            <input type="text" id="last-name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Correo Electrónico <span class="billing-asterisk">*</span></label>
+                        <input type="email" id="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Dirección <span class="billing-asterisk">*</span></label>
+                        <input type="text" id="address">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="city">Ciudad <span class="billing-asterisk">*</span></label>
+                            <input type="text" id="city">
+                        </div>
+                        <div class="form-group">
+                            <label for="zip-code">Código Postal <span class="billing-asterisk">*</span></label>
+                            <input type="text" id="zip-code">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="country">País <span class="billing-asterisk">*</span></label>
+                        <select id="country">
+                            <option value="" selected disabled>Seleccionar País</option>
+                            <option value="MX">México</option>
+                            <option value="US">Estados Unidos</option>
+                            <option value="ES">España</option>
+                            <!-- Add more countries as needed -->
+                        </select>
+                    </div>
+                </form>
+                
+                <div class="step-actions">
+                    <button class="btn-prev" onclick="prevStep(2)">Atrás</button>
+                    <button class="btn-next" onclick="nextStep(2)">Continuar</button>
+                </div>
+            </div>
+            
+            <!-- Step 3: Payment Method -->
+            <div class="subscription-step" id="step-3">
+                <h2>Método de Pago</h2>
+                <div class="payment-methods">
+                    <div class="payment-method selected">
+                        <div class="payment-logo">
+                            <i class='bx bxl-paypal'></i>
+                        </div>
+                        <div class="payment-info">
+                            <h3>PayPal</h3>
+                            <p>Paga de forma segura con tu cuenta de PayPal</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step-actions">
+                    <button class="btn-prev" onclick="prevStep(3)">Atrás</button>
+                    <button class="btn-next" onclick="nextStep(3)">Continuar</button>
+                </div>
+            </div>
+            
+            <!-- Step 4: Review -->
+            <div class="subscription-step" id="step-4">
+                <h2>Revisa tu Suscripción</h2>
+                <div class="review-summary">
+                    <div class="review-section">
+                        <h3>Plan Seleccionado</h3>
+                        <div class="review-item">
+                            <span>Entrenador</span>
+                            <span class="review-span">$9.99/mes</span>
+                        </div>
+                    </div>
+                    
+                    <div class="review-section">
+                        <h3>Información de Facturación</h3>
+                        <div class="review-item">
+                            <span>Nombre:</span>
+                            <span class="review-span" id="review-name">-</span>
+                        </div>
+                        <div class="review-item">
+                            <span>Correo:</span>
+                            <span class="review-span" id="review-email">-</span>
+                        </div>
+                        <div class="review-item">
+                            <span>Dirección:</span>
+                            <span class="review-span" id="review-address">-</span>
+                        </div>
+                    </div>
+                    
+                    <div class="review-section">
+                        <h3>Método de Pago</h3>
+                        <div class="review-item">
+                            <span>PayPal</span>
+                            <i class='bx bxl-paypal'></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step-actions">
+                    <button class="btn-prev" onclick="prevStep(4)">Atrás</button>
+                    <button class="btn-confirm" onclick="confirmSubscription()">Confirmar Suscripción</button>
+                </div>
+            </div>
+            <p class="terms-notice">Al suscribirte, aceptas nuestros <a href="#">Términos y Condiciones</a> y nuestra <a href="#">Política de Privacidad</a>.</p>
+        </div>
+    </main>
+    
+    <script>
+        function nextStep(currentStep) {
+            // Validate current step before proceeding
+            if (validateStep(currentStep)) {
+                document.getElementById(`step-${currentStep}`).classList.remove('active');
+                document.querySelector(`.progress-step[data-step="${currentStep}"]`).classList.remove('active');
+                
+                const nextStep = currentStep + 1;
+                document.getElementById(`step-${nextStep}`).classList.add('active');
+                document.querySelector(`.progress-step[data-step="${nextStep}"]`).classList.add('active');
+                
+                // Update progress bar
+                const progressPercentage = (nextStep / 4) * 100;
+                document.querySelector('.progress-fill').style.width = `${progressPercentage}%`;
+                
+                // Update review information if we're going to step 4
+                if (nextStep === 4) {
+                    updateReviewInfo();
+                }
+            }
+        }
+        
+        function prevStep(currentStep) {
+            document.getElementById(`step-${currentStep}`).classList.remove('active');
+            document.querySelector(`.progress-step[data-step="${currentStep}"]`).classList.remove('active');
+            
+            const prevStep = currentStep - 1;
+            document.getElementById(`step-${prevStep}`).classList.add('active');
+            document.querySelector(`.progress-step[data-step="${prevStep}"]`).classList.add('active');
+            
+            // Update progress bar
+            const progressPercentage = (prevStep / 4) * 100;
+            document.querySelector('.progress-fill').style.width = `${progressPercentage}%`;
+        }
+        
+        function validateStep(step) {
+            if (step === 2) {
+                // Validate billing information
+                const firstName = document.getElementById('first-name').value;
+                const lastName = document.getElementById('last-name').value;
+                const email = document.getElementById('email').value;
+                const address = document.getElementById('address').value;
+                
+                // if (!firstName || !lastName || !email || !address) {
+                //     alert('Por favor completa todos los campos requeridos');
+                //     return false;
+                // }
+                
+                // // Simple email validation
+                // if (!email.includes('@') || !email.includes('.')) {
+                //     alert('Por favor ingresa un correo electrónico válido');
+                //     return false;
+                // }
+            }
+            return true;
+        }
+        
+        function updateReviewInfo() {
+            document.getElementById('review-name').textContent = 
+                `${document.getElementById('first-name').value} ${document.getElementById('last-name').value}`;
+            document.getElementById('review-email').textContent = document.getElementById('email').value;
+            document.getElementById('review-address').textContent = document.getElementById('address').value;
+        }
+        
+        function confirmSubscription() {
+            // Here you would typically process the payment
+            alert('Redirigiendo a PayPal para completar el pago...');
+            // window.location.href = 'your-paypal-processing-url';
+        }
+    </script>
+
+    <script>
+        const loadingScreen = document.getElementById('loading-screen');
+        const content = document.getElementById('content');
+
+        // Espera a que la página cargue completamente
+        window.onload = () => {
+            loadingScreen.style.display = 'none'; // Oculta el loading
+            content.style.display = 'block'; // Muestra el contenido
+        };
+
+        AOS.init({
+            startEvent: 'DOMContentLoaded'
+        });
+    </script>
+</body>
+</html>

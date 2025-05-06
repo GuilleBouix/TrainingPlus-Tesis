@@ -37,12 +37,12 @@
     <!-- Sección 1 -->
     <div class="seccion seccion-1">
         <div class="inputs" data-aos="fade-down" data-aos-delay="100">
-            <label for="nombre_entrenamiento">Nombre del Entrenamiento</label>
-            <input type="text" id="nombre_entrenamiento" name="nombre_entrenamiento" placeholder="Ingresa un nombre para el entrenamiento" required>
+            <label for="nombre_entrenamiento">Nombre del Entrenamiento <span>*</span></label>
+            <input type="text" id="nombre_entrenamiento" name="nombre_entrenamiento" maxlength="50" placeholder="Ingresa un nombre para el entrenamiento (máx. 50 caracteres)" required>
         </div>
 
         <div class="inputs" data-aos="fade-down" data-aos-delay="200">
-            <label for="alumno">Alumno</label>
+            <label for="alumno">Alumno <span>*</span></label>
             <select id="alumno" name="id_alumno" required>
                 <option value="" disabled selected>Seleccionar Alumno</option>
                 {% for alumno in alumnos %}
@@ -52,7 +52,7 @@
         </div>
 
         <div class="inputs" data-aos="fade-down" data-aos-delay="300">
-            <label for="disciplina">Disciplina</label>
+            <label for="disciplina">Disciplina <span>*</span></label>
             <select name="disciplina" id="disciplina" required>
                 <option value="" disabled selected>Seleccionar Disciplina</option>
                 <option value="1">Fitness</option>
@@ -60,8 +60,8 @@
         </div>
 
         <div class="inputs" data-aos="fade-down" data-aos-delay="400">
-            <label for="duracion_semanas">Duración (en semanas)</label>
-            <input type="number" id="duracion_semanas" name="duracion_semanas" min="1" max="12" placeholder="Ingresa la duración en semanas" required>
+            <label for="duracion_semanas">Duración (en semanas) <span>*</span></label>
+            <input type="number" id="duracion_semanas" name="duracion_semanas" min="1" max="12" placeholder="Ingresa la duración en semanas" onkeydown="return false;" required>
         </div>
 
         <button type="button" onclick="generarSemanas()" data-aos="fade-right" data-aos-delay="500">Continuar</button>
@@ -101,7 +101,7 @@
                 <details class="details-semana">
                     <summary class='summary-semana'>Semana ${i}</summary>
                     <div class="dias-container">
-                        <label>Cantidad de Días:</label>
+                        <label>Cantidad de Días <span class="required-asterisk">*</span></label>
                         <input type="number" name="semanas[${i}][dias]" min="1" max="7" value="1" placeholder="Ingresa cuantos días se entrenarán en esta semana" required>
                     </div>
                 </details>
@@ -127,12 +127,12 @@
                         <summary class='summary-dia'>Día ${j}</summary>
                         <div class="rutina-container">
                             <div class="rutina">
-                                <label>Nombre de la Rutina:</label>
+                                <label>Nombre de la Rutina <span class="required-asterisk">*</span></label>
                                 <input type="text" name="semanas[${i+1}][dias][${j}][nombre_rutina]" placeholder="Ej: Pecho, Piernas" required>
                             </div>
 
                             <div class="rutina">
-                                <label>Cantidad de Ejercicios:</label>
+                                <label>Cantidad de Ejercicios <span class="required-asterisk">*</span></label>
                                 <input type="number" name="semanas[${i+1}][dias][${j}][ejercicios]" min="1" placeholder="Cantidad de ejercicios" required>
                             </div>
                         </div>
@@ -160,7 +160,7 @@
                 <details class="details-ejercicio">
                     <summary>Ejercicio ${i}</summary>
                     <div class="ejercicios-container">
-                        <label>Ejercicio:</label>
+                        <label>Ejercicio <span class="required-asterisk">*</span></label>
                         <select name="semanas[${semana}][dias][${dia}][ejercicios][${i}][id_ejercicio]" required>
                             <option value="">Seleccionar Ejercicio</option>
                             {% for ejercicio in ejercicios %}
@@ -171,26 +171,25 @@
 
                     <div class="inputs-container">
                         <div class="inputs">
-                            <label>Series:</label>
-                            <input type="number" name="semanas[${semana}][dias][${dia}][ejercicios][${i}][series]" min="1" required>
+                            <label>Series <span class="required-asterisk">*</span></label>
+                            <input type="number" name="semanas[${semana}][dias][${dia}][ejercicios][${i}][series]" max="20" min="1" required>
                         </div>
                         
                         <div class="inputs">
-                            <label>Repeticiones:</label>
-                            <input type="number" name="semanas[${semana}][dias][${dia}][ejercicios][${i}][repeticiones]" min="1" required>
+                            <label>Repeticiones <span class="required-asterisk">*</span></label>
+                            <input type="number" name="semanas[${semana}][dias][${dia}][ejercicios][${i}][repeticiones]"  max="100" min="1" required>
                         </div>  
                     </div>
 
-
                     <div class="inputs-container">
                         <div class="inputs">
-                            <label>Peso (kg):</label>
-                            <input type="number" name="semanas[${semana}][dias][${dia}][ejercicios][${i}][peso]" min="0" step="0.1" required>
+                            <label>Peso (kg)</label>
+                            <input type="number" name="semanas[${semana}][dias][${dia}][ejercicios][${i}][peso]" max="750" min="0" step="0.1" required>
                         </div>
                         
                         <div class="inputs">
-                            <label>Descanso (segundos):</label>
-                            <input type="number" name="semanas[${semana}][dias][${dia}][ejercicios][${i}][tiempo_descanso]" min="0" required>
+                            <label>Descanso (segundos)</label>
+                            <input type="number" name="semanas[${semana}][dias][${dia}][ejercicios][${i}][tiempo_descanso]"  max="1000" min="0" required>
                         </div>  
                     </div>
                 </details>
@@ -202,7 +201,7 @@
         // Reinicia todos los pasos y líneas
         document.querySelectorAll('.step').forEach(step => {
             step.classList.remove('completed', 'active');
-            step.textContent = step.id.split('-')[1]; // Restaura el número
+            step.textContent = step.id.split('-')[1];
         });
         document.querySelectorAll('.line').forEach(line => {
             line.classList.remove('completed');
@@ -214,7 +213,7 @@
             const line = document.getElementById(`line-${i}`);
 
             step.classList.add('completed');
-            step.textContent = ''; // Elimina el número
+            step.textContent = '';
             if (line) line.classList.add('completed');
         }
 

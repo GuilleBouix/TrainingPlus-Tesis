@@ -1,6 +1,8 @@
-from flask import session, redirect, url_for, flash, request
-from functools import wraps
+from flask import session, redirect, url_for, flash, request, g
 from app.utils.conexion import conexion_basedatos
+from datetime import datetime, timedelta, date
+from functools import wraps
+import sqlite3
 
 
 # Decorador para verificar si hay una sesión activa
@@ -49,6 +51,44 @@ def verificar_formulario_completo(func):
     
     return wrapper
 
+
+# Verificar si el entrenador tiene una suscripcion activa (estado_suscripcion = 1)
+def verificar_suscripcion(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        # Conectamos a la base de datos
+        conn = conexion_basedatos()
+        conn.row_factory = sqlite3.Row
+        cursor = conn.cursor()
+
+        id_usuario = session.get('id_usuario')
+
+        if not id_usuario:
+            return redirect(url_for('auth.login'))
+
+        # Traemos los datos del usuario
+        cursor.execute("SELECT rol, estado_suscripcion, fecha_fin_suscripcion FROM usuario WHERE id_usuario = ?", (id_usuario,))
+        usuario = cursor.fetchone()
+        conn.close()
+
+        if usuario:
+            # Solo se aplica a entrenadores (rol = 2)
+            if usuario['rol'] == 2:
+                fecha_fin = usuario['fecha_fin_suscripcion']
+                estado = usuario['estado_suscripcion']
+
+                if fecha_fin:
+                    fecha_fin = date.fromisoformat(fecha_fin)
+                    dias_vencido = (date.today() - fecha_fin).days
+                else:
+                    dias_vencido = 999  # si no tiene fecha, consideramos que está vencido
+
+                if estado != 1 or dias_vencido > 30:
+                    return redirect(url_for('suscripcion.suscripcion'))
+
+        return f(*args, **kwargs)
+
+    return decorated_function
 
 # Decorador para verificar si el usuario es un alumno y tiene una rutina asignada
 def verificar_vinculo_y_rutina(f):

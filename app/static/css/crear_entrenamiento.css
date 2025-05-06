@@ -102,6 +102,13 @@ main {
 .seccion-1 .inputs label {
     color: var(--color-text-primary);
 }
+.seccion-1 .inputs label span {
+    color: var(--color-primary);
+}
+.required-asterisk {
+    color: var(--color-primary);
+}
+
 .seccion-1 .inputs input,
 .seccion-1 .inputs select {
     outline: none;

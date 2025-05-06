@@ -175,7 +175,7 @@ a span {
     pointer-events: none; 
 }
 
-/* Estilo para el botón */
+/* Estilo para el botón de notificaciones */
 .btn-notificaciones-nav {
     position: relative;
     font-size: 16px;
@@ -230,7 +230,7 @@ a span {
     border: 1px solid var(--color-border);
 }
 .nav .busqueda-box:focus-within {
-    border: 1px solid var(--color-text-secondary);
+    border: 1px solid var(--color-primary);
 }
 .busqueda-box #resultadosBusqueda {
     display: none;
@@ -338,9 +338,9 @@ main {
     padding: 5px;
     cursor: pointer;
     color: var(--color-text-secondary);
-    transition: all .2s linear;
     font-size: 1rem;
     font-weight: 500;
+    transition: all .1s linear;
 }
 .filters-box .active {
     background-color: var(--color-button-primary);
@@ -552,6 +552,7 @@ main {
     font-size: 1.3rem;
 }
 
+/*  Botón de notificaciones */
 .btn-notification {
     position: fixed; /* Fijo en la ventana, no depende del flujo del documento */
     bottom: 20px; /* Separación del borde inferior */
@@ -650,6 +651,10 @@ main {
 
     .training-box .training {
         max-width: 400px;
+    }
+
+    .btn-notification {
+        right: 50px; /* Separación del borde derecho */
     }
 }
 
