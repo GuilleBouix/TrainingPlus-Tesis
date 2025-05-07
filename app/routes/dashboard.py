@@ -1,5 +1,5 @@
 from app.utils.helpers import login_required, entrenador_required, verificar_formulario_completo, verificar_suscripcion
-from flask import Blueprint, render_template, session, send_file
+from flask import Blueprint, render_template, session, send_file, flash, redirect, url_for
 from app.routes.progreso import obtener_mejores_marcas
 from app.utils.conexion import conexion_basedatos
 from reportlab.lib.pagesizes import A4
@@ -329,6 +329,21 @@ def obtener_ranking_cumplimiento(id_entrenador):
 def dashboard():
     id_entrenador = session.get('id_usuario')
     
+    # Verificar si el entrenador tiene al menos un entrenamiento asignado
+    conexion = conexion_basedatos()
+    cursor = conexion.cursor()
+    cursor.execute("""
+        SELECT COUNT(*) 
+        FROM entrenamiento 
+        WHERE id_entrenador = ?
+    """, (id_entrenador,))
+    resultado = cursor.fetchone()
+    conexion.close()
+
+    if resultado[0] == 0:
+        flash("Debes tener al menos una rutina de entrenamiento activa para acceder al dashboard.", "error")
+        return redirect(url_for('entrenamiento.entrenamiento'))
+
     # Obtener el total de alumnos con planes activos
     total_alumnos = obtener_total_alumnos(id_entrenador)
 

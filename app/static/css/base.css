@@ -605,7 +605,6 @@ main {
 
 
 
-
 /* RESPONSIVE */
 @media screen and (max-width: 1160px) {
     .nav {
@@ -628,6 +627,9 @@ main {
         padding: 10px;
     }
 
+    .footer {
+        padding: 1rem 100px;
+    }
 }
 
 @media screen and (max-width: 950px) {
@@ -655,6 +657,10 @@ main {
 
     .btn-notification {
         right: 50px; /* Separación del borde derecho */
+    }
+
+    .footer {
+        padding: 1rem 20px;
     }
 }
 

@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
-from app.utils.conexion import conexion_basedatos
 from werkzeug.security import generate_password_hash, check_password_hash
+from app.utils.conexion import conexion_basedatos
 
 
 auth_bp = Blueprint('auth', __name__)

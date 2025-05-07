@@ -22,7 +22,20 @@
                 <h1>Suscripción Mensual</h1>
                 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Training+ Logo">
             </div>
-            
+                
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <ul class="flash-messages">
+                        {% for category, message in messages %}
+                            <li class="flash {{ category }}">
+                                <i class="{{ 'bx bxs-error-circle' if category == 'error' else 'bx bxs-check-circle' }}"></i>
+                                {{ message }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+
             <!-- Progress Bar -->
             <div class="progress-container">
                 <div class="progress-steps">
@@ -106,12 +119,11 @@
                     </div>
                     <div class="form-group">
                         <label for="country">País <span class="billing-asterisk">*</span></label>
-                        <select id="country">
-                            <option value="" selected disabled>Seleccionar País</option>
-                            <option value="MX">México</option>
-                            <option value="US">Estados Unidos</option>
-                            <option value="ES">España</option>
-                            <!-- Add more countries as needed -->
+                        <select id="country" name="country">
+                            <option value="" disabled selected>Seleccionar País</option>
+                            {% for id_pais, nombre_pais in paises %}
+                                <option value="{{ id_pais }}">{{ nombre_pais }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                 </form>
@@ -179,10 +191,12 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="step-actions">
                     <button class="btn-prev" onclick="prevStep(4)">Atrás</button>
-                    <button class="btn-confirm" onclick="confirmSubscription()">Confirmar Suscripción</button>
+                    <form action="{{ url_for('suscripcion.suscripcion') }}" method="POST" style="display: inline;">
+                        <button type="submit" class="btn-confirm">Confirmar Suscripción</button>
+                    </form>
                 </div>
             </div>
             <p class="terms-notice">Al suscribirte, aceptas nuestros <a href="#">Términos y Condiciones</a> y nuestra <a href="#">Política de Privacidad</a>.</p>
@@ -232,16 +246,16 @@
                 const email = document.getElementById('email').value;
                 const address = document.getElementById('address').value;
                 
-                // if (!firstName || !lastName || !email || !address) {
-                //     alert('Por favor completa todos los campos requeridos');
-                //     return false;
-                // }
+                if (!firstName || !lastName || !email || !address) {
+                    alert('Por favor completa todos los campos requeridos.');
+                    return false;
+                }
                 
-                // // Simple email validation
-                // if (!email.includes('@') || !email.includes('.')) {
-                //     alert('Por favor ingresa un correo electrónico válido');
-                //     return false;
-                // }
+                // Simple email validation
+                if (!email.includes('@') || !email.includes('.')) {
+                    alert('Por favor ingresa un correo electrónico válido.');
+                    return false;
+                }
             }
             return true;
         }
@@ -251,12 +265,6 @@
                 `${document.getElementById('first-name').value} ${document.getElementById('last-name').value}`;
             document.getElementById('review-email').textContent = document.getElementById('email').value;
             document.getElementById('review-address').textContent = document.getElementById('address').value;
-        }
-        
-        function confirmSubscription() {
-            // Here you would typically process the payment
-            alert('Redirigiendo a PayPal para completar el pago...');
-            // window.location.href = 'your-paypal-processing-url';
         }
     </script>
 

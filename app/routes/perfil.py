@@ -27,48 +27,6 @@ def allowed_file(filename):
 
 
 # Función para comprimir y convertir a .webp
-# def compress_and_convert_to_webp(file, id_usuario, folder_type, filename_format):
-#     """
-#     Comprime y convierte una imagen a formato WEBP.
-    
-#     :param file: Archivo de imagen subido.
-#     :param id_usuario: ID del usuario o entrenador asociado.
-#     :param folder_type: Tipo de carpeta (users, trainers, studies).
-#     :param filename_format: Formato para el nombre del archivo.
-#     :return: Nombre del archivo guardado o None si falla.
-#     """
-#     # Verifica que el tipo de carpeta sea válido
-#     uploads_dir = UPLOAD_FOLDERS.get(folder_type)
-#     if not uploads_dir:
-#         raise ValueError("Tipo de carpeta no válido")
-
-#     # Genera el nombre de archivo basado en el formato proporcionado
-#     filename = filename_format.format(id=id_usuario)
-
-#     # Define el camino completo donde se guardará la imagen
-#     file_path = os.path.join(uploads_dir, filename)
-
-#     try:
-#         # Abre la imagen con PIL
-#         image = Image.open(file)
-
-#         # Obtener las dimensiones originales
-#         width, height = image.size
-
-#         # Redimensionar la imagen a la mitad del tamaño original
-#         new_width = width // 2
-#         new_height = height // 2
-
-#         # Redimensionar la imagen
-#         image = image.resize((new_width, new_height))
-
-#         image = image.convert("RGB")  # Convertir la imagen a RGB si es necesario
-#         image.save(file_path, format="WEBP", quality=60)  # Guarda con calidad 60%
-        
-#         return filename
-#     except Exception as e:
-#         print(f"Error al procesar la imagen: {e}")
-#         return None
 def compress_and_convert_to_webp(file, id_usuario, folder_type, filename_format):
     """
     Comprime y convierte una imagen a formato WEBP.

@@ -55,6 +55,7 @@ def compress_and_convert_to_webp(file, id_usuario, file_type):
 @form_entrenador_bp.route('/formulario-entrenador', methods=['GET', 'POST'])
 @login_required
 @entrenador_required
+@verificar_suscripcion
 def form_entrenador():
     db = conexion_basedatos()
     cursor = db.cursor()
