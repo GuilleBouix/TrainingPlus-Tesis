@@ -62,12 +62,16 @@
             {% else %}
                 <li><a href="{{ url_for('progreso.progreso') }}">PROGRESO</a></li>
             {% endif %}
+            <li class="menu-opciones"><a href="{{  url_for('opciones.opciones') }}">OPCIONES</a></li>
             <li class="menu-notificacion"><a href="{{ url_for('notificaciones.listar_solicitudes') }}">NOTIFICACIONES</a>
             </li>
             <li><a href="{{ url_for('auth.logout') }}">LOGOUT</a></li>
         </ul>
         
-        <i class='bx bx-search icono-busqueda' id="iconoBusqueda"></i>
+        <div class="search-setting-box">
+            <a title="Opciones" class="menu-opciones-icon" href="{{  url_for('opciones.opciones') }}"><i class='bx bx-dots-vertical-rounded'></i></a>
+            <i class='bx bx-search icono-busqueda' id="iconoBusqueda"></i>
+        </div>
 
         <div class="busqueda-box" id="busquedaBox">
             <i class="bx bx-search icono-busqueda" id="iconoBusqueda2"></i>

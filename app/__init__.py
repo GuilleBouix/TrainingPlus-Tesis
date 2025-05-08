@@ -33,6 +33,7 @@ def create_app():
     from .routes.auth import auth_bp
     from .routes.suscripcion import suscripcion_bp
     from .routes.perfil import perfil_bp
+    from .routes.opciones import opciones_bp
     from .routes.buscador import buscador_bp
     from .routes.usuario import usuario_bp
     from .routes.notificaciones import notificaciones_bp
@@ -49,6 +50,7 @@ def create_app():
     app.register_blueprint(suscripcion_bp)
     app.register_blueprint(entrenamiento_bp)
     app.register_blueprint(perfil_bp)
+    app.register_blueprint(opciones_bp)
     app.register_blueprint(buscador_bp)
     app.register_blueprint(usuario_bp)
     app.register_blueprint(notificaciones_bp)
