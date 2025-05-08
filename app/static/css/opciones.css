@@ -1,0 +1,229 @@
+.opciones-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    height: auto;
+    border: 1px solid var(--color-border);
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    margin: 1rem 0;
+}
+
+.opciones-container .opciones-menu {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    list-style: none;
+}
+.opciones-menu li {
+    font-size: 1rem;
+    font-weight: 500;
+    border-bottom: 1px solid var(--color-border);
+    width: 100%;
+    text-align: center;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all .2s linear;
+}
+.opciones-menu li:first-child {
+    border-top-left-radius: 10px;
+    border-right: 1px solid var(--color-border);
+}
+.opciones-menu li:nth-child(2) {
+    border-right: 1px solid var(--color-border);
+}
+.opciones-menu li:nth-child(3) {
+    border-right: 1px solid var(--color-border);
+}
+.opciones-menu li:last-child {
+    border-top-right-radius: 10px;
+}
+.opciones-menu li:hover {
+    background-color: var(--color-secondary);
+    color: var(--color-text-hover);
+}
+.opciones-menu .li-active {
+    background-color: var(--color-primary);
+    color: var(--color-background);
+}
+.opciones-menu .li-active:hover {
+    background-color: var(--color-primary);
+    color: var(--color-background);
+}
+
+.opciones-container .about,
+.opciones-container .terms-conditions,
+.opciones-container .privacy-policy,
+.opciones-container .support {
+    padding: 1rem;
+}
+
+.about .about-title {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+}
+.about-title a {
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: .3rem;
+    outline: none;
+    border: none;
+    background: var(--color-button-primary);
+    color: var(--color-background);
+    border-radius: 5px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition:  0.1s;
+    padding: 5px 10px;
+}
+.about-title a:hover {
+    background: var(--color-button-hover);
+}
+.about-title a:active {
+    background: var(--color-button-active);
+}
+
+.about h1,
+.terms-conditions h1,
+.privacy-policy h1,
+.support h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: 1rem;
+}
+
+.about p,
+.terms-conditions p,
+.privacy-policy p,
+.support p {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+}
+
+.about ul {
+    list-style: none;
+}
+
+.support form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 50%;
+    margin-top: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: 5px;
+    padding: 1rem;
+}
+
+.support form input,
+.support form textarea {
+    border: 1px solid var(--color-border);
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 1rem;
+    width: 100%;
+    height: 40px;
+    color: var(--color-text-primary);
+    outline: none;
+    transition: all 0.2s ease-in-out;
+    margin-bottom: 1rem;
+}
+.support form input:focus,
+.support form textarea:focus {
+    border: 1px solid var(--color-primary);
+}
+
+.support form label span {
+    color: var(--color-primary);
+} 
+
+.support form textarea {
+    height: 100px;
+    resize: none;
+}
+
+.support form button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    outline: none;
+    border: none;
+    background: var(--color-button-primary);
+    color: var(--color-background);
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition:  0.1s;
+}
+.support form button:hover {
+    background: var(--color-button-hover);
+}
+.support form button:active {
+    background: var(--color-button-active);
+}
+
+
+
+
+
+@media screen and (max-width: 768px) {
+    .opciones-container {
+        margin-top: 5rem;
+    }
+    .opciones-container .opciones-menu {
+        flex-direction: column;
+        width: 100%;
+        list-style: none;
+    }
+    .opciones-menu li {
+        font-size: 1rem;
+        font-weight: 500;
+        border-bottom: 1px solid var(--color-border);
+        width: 100%;
+        text-align: center;
+        padding: 1rem;
+        cursor: pointer;
+        transition: all .2s linear;
+    }
+    .opciones-menu li:first-child {
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        border-right: none;
+    }
+    .opciones-menu li:nth-child(2) {
+        border-right: none;
+    }
+    .opciones-menu li:nth-child(3) {
+        border-right: none;
+    }
+    .opciones-menu li:last-child {
+        border-radius: none;
+    }
+
+    .about h1,
+    .terms-conditions h1,
+    .privacy-policy h1,
+    .support h1 {
+        font-size: 1.3rem;
+    }
+
+    .about-title {
+        flex-direction: column;
+        align-items: start;
+        margin-bottom: 1rem;
+    }
+    .about-title a {
+        font-size: 1rem;
+    }
+
+    .support form {
+        width: 100%;
+        padding: 0;
+        border: none;
+    }
+}
