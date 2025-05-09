@@ -63,18 +63,40 @@
             <p class="phone open-modal" target="_blank"><i class='bx bxl-whatsapp'></i></p>
         </div>
 
+        <button class="btn-borrar-cuenta">Eliminar mi Cuenta</button>
+
+        <!-- Modal confirmar eliminación -->
+        <dialog class="confirmar-eliminacion-dialog" id="confirmar-eliminacion-modal">
+            <form action="{{ url_for('perfil.eliminar_cuenta') }}" method="POST" class="modal-content">
+                <div class="modal-header">
+                    <h1>Confirmar Eliminación</h1>
+                    <i class='bx bx-x close-modal'></i>
+                </div>
+
+                <p>¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.</p>
+                
+                <div>
+                    <label for="password">Contraseña</label>
+                    <input type="password" name="password" id="password" placeholder="Ingresa tu contraseña antes de continuar" required>
+                    <button type="submit" class="btn-confirmar">Confirmar Eliminación</button>
+                </div>
+
+            </form>
+        </dialog>
+
+
         <!-- Mensajes Flash -->
         {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <ul class="flash-messages">
-            {% for category, message in messages %}
-                <li class="flash {{ category }}">
-                <i class="{{ 'bx bxs-error-circle' if category == 'error' else 'bx bxs-check-circle' }}"></i>
-                {{ message }}
-                </li>
-            {% endfor %}
-            </ul>
-        {% endif %}
+            {% if messages %}
+                <ul class="flash-messages">
+                {% for category, message in messages %}
+                    <li class="flash {{ category }}">
+                    <i class="{{ 'bx bxs-error-circle' if category == 'error' else 'bx bxs-check-circle' }}"></i>
+                    {{ message }}
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
         {% endwith %}
     </div>
 
@@ -315,6 +337,31 @@
         {% endif %}
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const modal = document.getElementById("confirmar-eliminacion-modal");
+        const abrirBtn = document.querySelector(".btn-borrar-cuenta");
+        const cerrarBtn = modal.querySelector(".close-modal");
+    
+        // Abrir modal
+        abrirBtn.addEventListener("click", () => {
+            modal.showModal();
+        });
+    
+        // Cerrar con el icono <i>
+        cerrarBtn.addEventListener("click", () => {
+            modal.close();
+        });
+    
+        // Cerrar haciendo clic afuera del contenido
+        modal.addEventListener("click", (e) => {
+            if (e.target === modal) {
+                modal.close();
+            }
+        });
+    });
+</script>
 
 <script>
     // Función para eliminar espacios en blanco del input

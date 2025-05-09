@@ -218,7 +218,7 @@
         
             <p>Si tienes alguna duda o necesitas asistencia, no dudes en ponerte en contacto con el equipo de soporte. Estamos para ayudarte.</p>
         
-            <form action="" method="POST">
+            <form action="{{ url_for('opciones.opciones') }}" method="POST">
                 <input type="hidden" name="id_usuario" value="{{ session.id_usuario }}">
         
                 <label for="nombre">Nombre y Apellido <span>*</span></label>

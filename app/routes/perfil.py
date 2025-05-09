@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash, jsonify
-from app.utils.conexion import conexion_basedatos
 from app.utils.helpers import login_required, verificar_formulario_completo
+from app.utils.conexion import conexion_basedatos
+from werkzeug.security import check_password_hash
 from PIL import Image
 import os
 
@@ -270,6 +271,104 @@ def perfil(nombre_usuario):
 
     # Renderizar plantilla con los datos actuales del usuario
     return render_template('perfil.html', rol_usuario=rol_usuario, nombre_usuario=nombre_usuario, usuario_data=usuario_data, paises=paises)
+
+
+@perfil_bp.route('/eliminar-cuenta', methods=['POST'])
+@login_required
+def eliminar_cuenta():
+    if request.method == 'POST':
+        # Obtener la contraseña del formulario
+        password = request.form.get('password')
+        
+        if not password:
+            flash('Por favor ingresa tu contraseña', 'error')
+            return redirect(url_for('perfil.perfil', nombre_usuario=session['nombre_usuario']))
+        
+        # Obtener el usuario actual de la sesión
+        nombre_usuario = session['nombre_usuario']
+        
+        # Conectar a la base de datos
+        conn = conexion_basedatos()
+        cursor = conn.cursor()
+        
+        try:
+            # Obtener los datos completos del usuario
+            cursor.execute("""
+                SELECT u.id_usuario, u.contrasena, u.rol, 
+                       a.id_alumno, e.id_entrenador
+                FROM usuario u
+                LEFT JOIN alumno a ON u.id_usuario = a.id_usuario
+                LEFT JOIN entrenador e ON u.id_usuario = e.id_usuario
+                WHERE u.nombre_usuario = ?
+            """, (nombre_usuario,))
+            usuario = cursor.fetchone()
+            
+            if not usuario:
+                flash('Usuario no encontrado', 'error')
+                return redirect(url_for('perfil.perfil', nombre_usuario=nombre_usuario))
+            
+            # Verificar la contraseña
+            if not check_password_hash(usuario['contrasena'], password):
+                flash('Contraseña incorrecta', 'error')
+                return redirect(url_for('perfil.perfil', nombre_usuario=nombre_usuario))
+            
+            # Eliminar primero los registros relacionados según el rol
+            if usuario['rol'] == 1:  # Alumno
+                if usuario['id_alumno']:
+                    # Eliminar archivos de imagen primero si existen
+                    cursor.execute("SELECT foto_perfil FROM alumno WHERE id_alumno = ?", (usuario['id_alumno'],))
+                    alumno_data = cursor.fetchone()
+                    if alumno_data and alumno_data['foto_perfil']:
+                        try:
+                            foto_path = os.path.join(UPLOAD_FOLDERS['users'], alumno_data['foto_perfil'])
+                            if os.path.exists(foto_path):
+                                os.remove(foto_path)
+                        except Exception as e:
+                            print(f"Error al eliminar imagen de perfil: {e}")
+                    
+                    # Eliminar registro de alumno
+                    cursor.execute("DELETE FROM alumno WHERE id_alumno = ?", (usuario['id_alumno'],))
+            elif usuario['rol'] == 2:  # Entrenador
+                if usuario['id_entrenador']:
+                    # Eliminar archivos de imagen primero si existen
+                    cursor.execute("SELECT foto_perfil, titulo_foto FROM entrenador WHERE id_entrenador = ?", (usuario['id_entrenador'],))
+                    entrenador_data = cursor.fetchone()
+                    if entrenador_data:
+                        if entrenador_data['foto_perfil']:
+                            try:
+                                foto_path = os.path.join(UPLOAD_FOLDERS['trainers'], entrenador_data['foto_perfil'])
+                                if os.path.exists(foto_path):
+                                    os.remove(foto_path)
+                            except Exception as e:
+                                print(f"Error al eliminar imagen de perfil: {e}")
+                        
+                        if entrenador_data['titulo_foto']:
+                            try:
+                                titulo_path = os.path.join(UPLOAD_FOLDERS['studies'], entrenador_data['titulo_foto'])
+                                if os.path.exists(titulo_path):
+                                    os.remove(titulo_path)
+                            except Exception as e:
+                                print(f"Error al eliminar imagen de título: {e}")
+                    
+                    # Eliminar registro de entrenador
+                    cursor.execute("DELETE FROM entrenador WHERE id_entrenador = ?", (usuario['id_entrenador'],))
+            
+            # Finalmente eliminar el usuario
+            cursor.execute("DELETE FROM usuario WHERE id_usuario = ?", (usuario['id_usuario'],))
+            conn.commit()
+            
+            # Cerrar sesión y redirigir al login
+            session.clear()
+            flash('Tu cuenta y todos tus datos han sido eliminados correctamente', 'success')
+            return redirect(url_for('auth.login'))
+            
+        except Exception as e:
+            conn.rollback()
+            flash(f'Error al eliminar la cuenta: {str(e)}', 'error')
+            return redirect(url_for('perfil.perfil', nombre_usuario=nombre_usuario))
+        finally:
+            cursor.close()
+            conn.close()
 
 
 # Ruta para actualizar las Redes Sociales

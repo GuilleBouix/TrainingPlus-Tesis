@@ -1,8 +1,17 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
-from app.utils.helpers import login_required, verificar_formulario_completo, verificar_suscripcion
+from app.utils.helpers import login_required
 from app.utils.conexion import conexion_basedatos
+from email.mime.text import MIMEText
+from dotenv import load_dotenv
 from datetime import date
+import smtplib
+import os
 
+
+load_dotenv()
+
+EMAIL_DESTINO = os.getenv("EMAIL_OUTLOOK")
+EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 
 opciones_bp = Blueprint('opciones', __name__)
 
@@ -65,12 +74,54 @@ def obtener_datos_usuario():
         return None
 
 
+def enviar_mensaje_soporte(nombre, email_usuario, mensaje_usuario):
+    asunto = "Soporte - Mensaje desde TRAINING+"
+    cuerpo = f"""
+    Nombre: {nombre}
+    Email: {email_usuario}
+    Fecha: {date.today().strftime('%d/%m/%Y')}
+    
+    Mensaje:
+    {mensaje_usuario}
+    """
+
+    msg = MIMEText(cuerpo, 'plain')
+    msg['Subject'] = asunto
+    msg['From'] = email_usuario
+    msg['To'] = EMAIL_DESTINO
+
+    with smtplib.SMTP('smtp.office365.com', 587) as server:
+        server.starttls()
+        server.login(EMAIL_DESTINO, EMAIL_PASSWORD)
+        server.sendmail(email_usuario, EMAIL_DESTINO, msg.as_string())
+
+
 # Ruta de Opciones
 @opciones_bp.route('/opciones', methods=['GET', 'POST'])
 @login_required
 def opciones():
     # Obtener datos para el formulario de soporte
     datos_soporte = obtener_datos_usuario()
+
+    if request.method == 'POST':
+        mensaje_usuario = request.form.get('mensaje')
+
+        if not datos_soporte:
+            flash('Error al obtener datos del usuario para enviar el mensaje.', 'error')
+            return redirect(url_for('opciones.opciones'))
+
+        try:
+            enviar_mensaje_soporte(
+                datos_soporte['nombre_completo'],
+                datos_soporte['email'],
+                mensaje_usuario
+            )
+            flash('Mensaje enviado correctamente ✅', 'success')
+        except Exception as e:
+            print(f"Error al enviar correo: {e}")
+            flash('Hubo un error al enviar el mensaje. Intenta más tarde.', 'error')
+
+        return redirect(url_for('opciones.opciones'))
 
     return render_template('opciones.html', 
                            datos_soporte=datos_soporte)
