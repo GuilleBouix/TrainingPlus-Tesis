@@ -277,17 +277,13 @@ def perfil(nombre_usuario):
 @login_required
 def eliminar_cuenta():
     if request.method == 'POST':
-        # Obtener la contraseña del formulario
         password = request.form.get('password')
         
         if not password:
             flash('Por favor ingresa tu contraseña', 'error')
             return redirect(url_for('perfil.perfil', nombre_usuario=session['nombre_usuario']))
         
-        # Obtener el usuario actual de la sesión
         nombre_usuario = session['nombre_usuario']
-        
-        # Conectar a la base de datos
         conn = conexion_basedatos()
         cursor = conn.cursor()
         
@@ -314,44 +310,12 @@ def eliminar_cuenta():
             
             # Eliminar primero los registros relacionados según el rol
             if usuario['rol'] == 1:  # Alumno
-                if usuario['id_alumno']:
-                    # Eliminar archivos de imagen primero si existen
-                    cursor.execute("SELECT foto_perfil FROM alumno WHERE id_alumno = ?", (usuario['id_alumno'],))
-                    alumno_data = cursor.fetchone()
-                    if alumno_data and alumno_data['foto_perfil']:
-                        try:
-                            foto_path = os.path.join(UPLOAD_FOLDERS['users'], alumno_data['foto_perfil'])
-                            if os.path.exists(foto_path):
-                                os.remove(foto_path)
-                        except Exception as e:
-                            print(f"Error al eliminar imagen de perfil: {e}")
-                    
-                    # Eliminar registro de alumno
-                    cursor.execute("DELETE FROM alumno WHERE id_alumno = ?", (usuario['id_alumno'],))
+                self_delete_alumno(cursor, usuario)
             elif usuario['rol'] == 2:  # Entrenador
-                if usuario['id_entrenador']:
-                    # Eliminar archivos de imagen primero si existen
-                    cursor.execute("SELECT foto_perfil, titulo_foto FROM entrenador WHERE id_entrenador = ?", (usuario['id_entrenador'],))
-                    entrenador_data = cursor.fetchone()
-                    if entrenador_data:
-                        if entrenador_data['foto_perfil']:
-                            try:
-                                foto_path = os.path.join(UPLOAD_FOLDERS['trainers'], entrenador_data['foto_perfil'])
-                                if os.path.exists(foto_path):
-                                    os.remove(foto_path)
-                            except Exception as e:
-                                print(f"Error al eliminar imagen de perfil: {e}")
-                        
-                        if entrenador_data['titulo_foto']:
-                            try:
-                                titulo_path = os.path.join(UPLOAD_FOLDERS['studies'], entrenador_data['titulo_foto'])
-                                if os.path.exists(titulo_path):
-                                    os.remove(titulo_path)
-                            except Exception as e:
-                                print(f"Error al eliminar imagen de título: {e}")
-                    
-                    # Eliminar registro de entrenador
-                    cursor.execute("DELETE FROM entrenador WHERE id_entrenador = ?", (usuario['id_entrenador'],))
+                self_delete_entrenador(cursor, usuario)
+            
+            # Eliminar datos comunes a ambos roles
+            delete_common_user_data(cursor, usuario['id_usuario'])
             
             # Finalmente eliminar el usuario
             cursor.execute("DELETE FROM usuario WHERE id_usuario = ?", (usuario['id_usuario'],))
@@ -359,7 +323,7 @@ def eliminar_cuenta():
             
             # Cerrar sesión y redirigir al login
             session.clear()
-            flash('Tu cuenta y todos tus datos han sido eliminados correctamente', 'success')
+            flash('Tu cuenta ha sido eliminada correctamente', 'success')
             return redirect(url_for('auth.login'))
             
         except Exception as e:
@@ -369,6 +333,126 @@ def eliminar_cuenta():
         finally:
             cursor.close()
             conn.close()
+
+def self_delete_alumno(cursor, usuario):
+    if not usuario['id_alumno']:
+        return
+    
+    # Eliminar archivos de imagen primero si existen
+    cursor.execute("SELECT foto_perfil FROM alumno WHERE id_alumno = ?", (usuario['id_alumno'],))
+    alumno_data = cursor.fetchone()
+    if alumno_data and alumno_data['foto_perfil']:
+        try:
+            foto_path = os.path.join(UPLOAD_FOLDERS['users'], alumno_data['foto_perfil'])
+            if os.path.exists(foto_path):
+                os.remove(foto_path)
+        except Exception as e:
+            print(f"Error al eliminar imagen de perfil: {e}")
+    
+    # Obtener todos los entrenamientos del alumno
+    cursor.execute("SELECT id_entrenamiento FROM entrenamiento WHERE id_alumno = ?", (usuario['id_alumno'],))
+    entrenamientos = cursor.fetchall()
+    
+    # Eliminar datos relacionados con cada entrenamiento
+    for entrenamiento in entrenamientos:
+        delete_entrenamiento_data(cursor, entrenamiento['id_entrenamiento'])
+    
+    # Eliminar vinculaciones donde el alumno es origen o destino
+    cursor.execute("DELETE FROM vinculaciones WHERE id_usuario_origen = ? OR id_usuario_destino = ?", 
+                  (usuario['id_usuario'], usuario['id_usuario']))
+    
+    # Eliminar notificaciones del alumno
+    cursor.execute("DELETE FROM notificaciones WHERE id_usuario = ?", (usuario['id_usuario'],))
+    
+    # Eliminar cuestionarios del alumno
+    cursor.execute("DELETE FROM cuestionario WHERE id_alumno = ?", (usuario['id_alumno'],))
+    
+    # Eliminar registro de alumno
+    cursor.execute("DELETE FROM alumno WHERE id_alumno = ?", (usuario['id_alumno'],))
+
+def self_delete_entrenador(cursor, usuario):
+    if not usuario['id_entrenador']:
+        return
+    
+    # Eliminar archivos de imagen primero si existen
+    cursor.execute("SELECT foto_perfil, titulo_foto FROM entrenador WHERE id_entrenador = ?", (usuario['id_entrenador'],))
+    entrenador_data = cursor.fetchone()
+    if entrenador_data:
+        if entrenador_data['foto_perfil']:
+            try:
+                foto_path = os.path.join(UPLOAD_FOLDERS['trainers'], entrenador_data['foto_perfil'])
+                if os.path.exists(foto_path):
+                    os.remove(foto_path)
+            except Exception as e:
+                print(f"Error al eliminar imagen de perfil: {e}")
+        
+        if entrenador_data['titulo_foto']:
+            try:
+                titulo_path = os.path.join(UPLOAD_FOLDERS['studies'], entrenador_data['titulo_foto'])
+                if os.path.exists(titulo_path):
+                    os.remove(titulo_path)
+            except Exception as e:
+                print(f"Error al eliminar imagen de título: {e}")
+    
+    # Obtener todos los entrenamientos del entrenador
+    cursor.execute("SELECT id_entrenamiento FROM entrenamiento WHERE id_entrenador = ?", (usuario['id_entrenador'],))
+    entrenamientos = cursor.fetchall()
+    
+    # Eliminar datos relacionados con cada entrenamiento
+    for entrenamiento in entrenamientos:
+        delete_entrenamiento_data(cursor, entrenamiento['id_entrenamiento'])
+    
+    # Eliminar vinculaciones donde el entrenador es origen o destino
+    cursor.execute("DELETE FROM vinculaciones WHERE id_usuario_origen = ? OR id_usuario_destino = ?", 
+                  (usuario['id_usuario'], usuario['id_usuario']))
+    
+    # Eliminar notificaciones del entrenador
+    cursor.execute("DELETE FROM notificaciones WHERE id_usuario = ?", (usuario['id_usuario'],))
+    
+    # Eliminar registro de entrenador
+    cursor.execute("DELETE FROM entrenador WHERE id_entrenador = ?", (usuario['id_entrenador'],))
+
+def delete_entrenamiento_data(cursor, id_entrenamiento):
+    # Obtener todas las semanas del entrenamiento
+    cursor.execute("SELECT id_semana FROM semanas WHERE id_entrenamiento = ?", (id_entrenamiento,))
+    semanas = cursor.fetchall()
+    
+    for semana in semanas:
+        # Obtener todos los días de la semana
+        cursor.execute("SELECT id_dia FROM dias WHERE id_semana = ?", (semana['id_semana'],))
+        dias = cursor.fetchall()
+        
+        for dia in dias:
+            # Eliminar progreso de alumno relacionado con los ejercicios del día
+            cursor.execute("""
+                DELETE FROM progreso_alumno 
+                WHERE id_dia_ejercicio IN (
+                    SELECT id_dia_ejercicio FROM dia_ejercicio WHERE id_dia = ?
+                )
+            """, (dia['id_dia'],))
+            
+            # Eliminar ejercicios del día
+            cursor.execute("DELETE FROM dia_ejercicio WHERE id_dia = ?", (dia['id_dia'],))
+            
+            # Eliminar el día
+            cursor.execute("DELETE FROM dias WHERE id_dia = ?", (dia['id_dia'],))
+        
+        # Eliminar progreso semanal
+        cursor.execute("DELETE FROM progreso_semana WHERE id_semana = ?", (semana['id_semana'],))
+        
+        # Eliminar la semana
+        cursor.execute("DELETE FROM semanas WHERE id_semana = ?", (semana['id_semana'],))
+    
+    # Finalmente eliminar el entrenamiento
+    cursor.execute("DELETE FROM entrenamiento WHERE id_entrenamiento = ?", (id_entrenamiento,))
+
+def delete_common_user_data(cursor, id_usuario):
+    # Eliminar notificaciones del usuario
+    cursor.execute("DELETE FROM notificaciones WHERE id_usuario = ?", (id_usuario,))
+    
+    # Eliminar vinculaciones donde el usuario es origen o destino
+    cursor.execute("DELETE FROM vinculaciones WHERE id_usuario_origen = ? OR id_usuario_destino = ?", 
+                  (id_usuario, id_usuario))
 
 
 # Ruta para actualizar las Redes Sociales

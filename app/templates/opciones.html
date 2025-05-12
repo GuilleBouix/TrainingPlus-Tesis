@@ -14,6 +14,21 @@
 
         <!-- Contenido de la sección "Sobre la Aplicación" -->
         <div class="about">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <ul class="flash-messages">
+                        {% for category, message in messages %}
+                            <li class="flash {{ category }}">
+                                <i class="{{ 'bx bxs-error-circle' if category == 'error' else 'bx bxs-check-circle' }}"></i>
+                                {{ message }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+
+
+
             <div class="about-title">
                 <h1>Sobre la Aplicación</h1>
                 <a href=""><i class='bx bxs-file-pdf'></i> Manual de Usuario</a>

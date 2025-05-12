@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from app.utils.helpers import login_required, verificar_formulario_completo, verificar_suscripcion
 from app.utils.conexion import conexion_basedatos
-from datetime import date
+from datetime import date, datetime
 
 
 entrenamiento_bp = Blueprint('entrenamiento', __name__)
@@ -222,6 +222,16 @@ def crear_entrenamiento():
                            rol=rol)
 
 
+# Función para insertar notificaciones
+def enviar_notificacion(db, id_usuario, mensaje, id_entrenamiento=0):
+    fecha_formateada = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    db.execute("""
+        INSERT INTO notificaciones (id_usuario, mensaje, fecha, id_entrenamiento)
+        VALUES (?, ?, ?, ?)
+    """, (id_usuario, mensaje, fecha_formateada, id_entrenamiento))
+
+
+
 # Ruta para Editar Entrenamiento
 @entrenamiento_bp.route('/editar_entrenamiento/<int:id_entrenamiento>', methods=['GET', 'POST'])
 @login_required
@@ -230,23 +240,20 @@ def crear_entrenamiento():
 def editar_entrenamiento(id_entrenamiento):
     user_id = session.get('id_usuario')
     db = conexion_basedatos()
-    
+
     try:
-        # Verificar que el entrenamiento pertenece al entrenador
         entrenamiento = db.execute("""
             SELECT * FROM entrenamiento 
             WHERE id_entrenamiento = ? AND id_entrenador = ?
         """, (id_entrenamiento, user_id)).fetchone()
-        
+
         if not entrenamiento:
             flash("Entrenamiento no encontrado o no tienes permisos para editarlo", "error")
             return redirect(url_for('entrenamiento.entrenamiento'))
-        
-        # Obtener ejercicios disponibles
+
         ejercicios = db.execute("SELECT id_ejercicio, nombre_ejercicio FROM ejercicios ORDER BY nombre_ejercicio").fetchall()
-        
+
         if request.method == 'GET':
-            # Obtener la estructura actual del entrenamiento
             dias = db.execute("""
                 SELECT d.id_dia, d.nombre_rutina, s.numero_semana, d.numero_dia
                 FROM dias d
@@ -254,7 +261,7 @@ def editar_entrenamiento(id_entrenamiento):
                 WHERE s.id_entrenamiento = ?
                 ORDER BY s.numero_semana, d.numero_dia
             """, (id_entrenamiento,)).fetchall()
-            
+
             ejercicios_por_dia = {}
             for dia in dias:
                 ejercicios_dia = db.execute("""
@@ -265,8 +272,7 @@ def editar_entrenamiento(id_entrenamiento):
                     ORDER BY de.id_dia_ejercicio
                 """, (dia['id_dia'],)).fetchall()
                 ejercicios_por_dia[dia['id_dia']] = ejercicios_dia
-            
-            # Convertir los datos en diccionarios antes de pasarlos a la plantilla
+
             dias = [dict(dia) for dia in dias]
             ejercicios_por_dia = {dia_id: [dict(ejercicio) for ejercicio in ejercicios] for dia_id, ejercicios in ejercicios_por_dia.items()}
 
@@ -275,19 +281,21 @@ def editar_entrenamiento(id_entrenamiento):
                                    dias=dias,
                                    ejercicios_por_dia=ejercicios_por_dia,
                                    ejercicios=[dict(ejercicio) for ejercicio in ejercicios])
-        
+
         elif request.method == 'POST':
-            # Procesar cambios
+            cambios = []
             nuevo_nombre = request.form.get('nombre_entrenamiento')
-            
-            # Actualizar nombre del entrenamiento
+            nombre_actual = entrenamiento['nombre_entrenamiento']
+
+            if nuevo_nombre != nombre_actual:
+                cambios.append(f"Nombre de entrenamiento: '{nombre_actual}' → '{nuevo_nombre}'")
+
             db.execute("""
                 UPDATE entrenamiento 
                 SET nombre_entrenamiento = ?
                 WHERE id_entrenamiento = ?
             """, (nuevo_nombre, id_entrenamiento))
-            
-            # Procesar cambios en días y ejercicios
+
             for key, value in request.form.items():
                 if key.startswith('nombre_dia_'):
                     dia_id = key.replace('nombre_dia_', '')
@@ -296,24 +304,28 @@ def editar_entrenamiento(id_entrenamiento):
                         SET nombre_rutina = ?
                         WHERE id_dia = ?
                     """, (value, dia_id))
-                
+
                 elif key.startswith('ejercicio_'):
                     parts = key.split('_')
-                    if len(parts) < 2:
-                        continue  # Evitar errores si el formato de la clave no es el esperado
-                    dia_ejercicio_id = parts[1]  # Corregir índice para obtener el ID correcto
-                    
-                    # Actualizar datos del ejercicio
+                    dia_ejercicio_id = parts[1]
+                    ejercicio_actual = db.execute("""
+                        SELECT de.id_ejercicio, e.nombre_ejercicio
+                        FROM dia_ejercicio de
+                        JOIN ejercicios e ON de.id_ejercicio = e.id_ejercicio
+                        WHERE de.id_dia_ejercicio = ?
+                    """, (dia_ejercicio_id,)).fetchone()
+
+                    nuevo_id = request.form.get(f'ejercicio_{dia_ejercicio_id}')
+                    if nuevo_id and str(nuevo_id) != str(ejercicio_actual['id_ejercicio']):
+                        nuevo_nombre_ej = db.execute("SELECT nombre_ejercicio FROM ejercicios WHERE id_ejercicio = ?", (nuevo_id,)).fetchone()['nombre_ejercicio']
+                        cambios.append(f"Ejercicio cambiado: '{ejercicio_actual['nombre_ejercicio']}' → '{nuevo_nombre_ej}'")
+
                     db.execute("""
                         UPDATE dia_ejercicio 
-                        SET id_ejercicio = ?,
-                            series = ?,
-                            repeticiones = ?,
-                            peso = ?,
-                            tiempo_descanso = ?
+                        SET id_ejercicio = ?, series = ?, repeticiones = ?, peso = ?, tiempo_descanso = ?
                         WHERE id_dia_ejercicio = ?
                     """, (
-                        request.form.get(f'ejercicio_{dia_ejercicio_id}', None),
+                        nuevo_id,
                         request.form.get(f'series_{dia_ejercicio_id}', 1),
                         request.form.get(f'repeticiones_{dia_ejercicio_id}', 1),
                         request.form.get(f'peso_{dia_ejercicio_id}', 0),
@@ -321,44 +333,52 @@ def editar_entrenamiento(id_entrenamiento):
                         dia_ejercicio_id
                     ))
 
-            # Procesar nuevos ejercicios agregados
             for key in request.form:
                 if key.startswith('nuevo_ejercicio_'):
                     dia_id = key.replace('nuevo_ejercicio_', '')
                     if request.form.get(key):
+                        id_ej = request.form.get(key)
+                        nombre_ej = db.execute("SELECT nombre_ejercicio FROM ejercicios WHERE id_ejercicio = ?", (id_ej,)).fetchone()['nombre_ejercicio']
+                        cambios.append(f"Nuevo ejercicio agregado: '{nombre_ej}'")
                         db.execute("""
                             INSERT INTO dia_ejercicio (id_dia, id_ejercicio, series, repeticiones, peso, tiempo_descanso)
                             VALUES (?, ?, ?, ?, ?, ?)
                         """, (
                             dia_id,
-                            request.form.get(key),
+                            id_ej,
                             request.form.get(f'nuevo_series_{dia_id}', 1),
                             request.form.get(f'nuevo_repeticiones_{dia_id}', 1),
                             request.form.get(f'nuevo_peso_{dia_id}', 0),
                             request.form.get(f'nuevo_descanso_{dia_id}', 0)
                         ))
-            
-            # Procesar ejercicios eliminados (solo si no tienen progreso)
+
             ejercicios_eliminados = request.form.getlist('eliminar_ejercicio')
             for dia_ejercicio_id in ejercicios_eliminados:
-                # Verificar si tiene progreso antes de eliminar
-                tiene_progreso = db.execute("""
-                    SELECT 1 FROM progreso_alumno 
-                    WHERE id_dia_ejercicio = ? 
-                    LIMIT 1
-                """, (dia_ejercicio_id,)).fetchone()
-                
+                tiene_progreso = db.execute("SELECT 1 FROM progreso_alumno WHERE id_dia_ejercicio = ? LIMIT 1", (dia_ejercicio_id,)).fetchone()
                 if not tiene_progreso:
                     db.execute("DELETE FROM dia_ejercicio WHERE id_dia_ejercicio = ?", (dia_ejercicio_id,))
-            
+
+            # Enviar notificacion si hubo cambios
+            if cambios:
+                alumno = db.execute("""
+                    SELECT a.id_usuario 
+                    FROM entrenamiento e
+                    JOIN alumno a ON e.id_alumno = a.id_alumno
+                    WHERE e.id_entrenamiento = ?
+                """, (id_entrenamiento,)).fetchone()
+
+                if alumno:
+                    mensaje = f"Tu rutina '{nuevo_nombre}' fue modificada:\n\n" + "\n".join(cambios)
+                    enviar_notificacion(db, alumno['id_usuario'], mensaje, id_entrenamiento)
+
             db.commit()
             flash("Entrenamiento actualizado exitosamente", "success")
             return redirect(url_for('entrenamiento.entrenamiento'))
-    
+
     except Exception as e:
         db.rollback()
         flash(f"Error al actualizar el entrenamiento: {str(e)}", "error")
         return redirect(url_for('entrenamiento.editar_entrenamiento', id_entrenamiento=id_entrenamiento))
-    
+
     finally:
         db.close()

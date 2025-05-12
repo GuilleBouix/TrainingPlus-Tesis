@@ -77,6 +77,7 @@ def obtener_datos_usuario():
 def enviar_mensaje_soporte(nombre, email_usuario, mensaje_usuario):
     asunto = f"Soporte TRAINING+ - Mensaje de {email_usuario}"
     cuerpo = f"""
+    Código de Usuario: {session['id_usuario']}
     Nombre: {nombre}
     Email: {email_usuario}
     Fecha: {date.today().strftime('%d/%m/%Y')}
@@ -116,7 +117,7 @@ def opciones():
                 datos_soporte['email'],
                 mensaje_usuario
             )
-            flash('Mensaje enviado correctamente ✅', 'success')
+            flash('Mensaje enviado correctamente.', 'success')
         except Exception as e:
             print(f"Error al enviar correo: {e}")
             flash('Hubo un error al enviar el mensaje. Intenta más tarde.', 'error')
