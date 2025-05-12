@@ -10,7 +10,7 @@ import os
 
 load_dotenv()
 
-EMAIL_DESTINO = os.getenv("EMAIL_OUTLOOK")
+EMAIL_DESTINO = os.getenv("EMAIL_GMAIL")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 
 opciones_bp = Blueprint('opciones', __name__)
@@ -75,7 +75,7 @@ def obtener_datos_usuario():
 
 
 def enviar_mensaje_soporte(nombre, email_usuario, mensaje_usuario):
-    asunto = "Soporte - Mensaje desde TRAINING+"
+    asunto = f"Soporte TRAINING+ - Mensaje de {email_usuario}"
     cuerpo = f"""
     Nombre: {nombre}
     Email: {email_usuario}
@@ -87,10 +87,10 @@ def enviar_mensaje_soporte(nombre, email_usuario, mensaje_usuario):
 
     msg = MIMEText(cuerpo, 'plain')
     msg['Subject'] = asunto
-    msg['From'] = email_usuario
+    msg['From'] = EMAIL_DESTINO 
     msg['To'] = EMAIL_DESTINO
 
-    with smtplib.SMTP('smtp.office365.com', 587) as server:
+    with smtplib.SMTP('smtp.gmail.com', 587) as server:
         server.starttls()
         server.login(EMAIL_DESTINO, EMAIL_PASSWORD)
         server.sendmail(email_usuario, EMAIL_DESTINO, msg.as_string())
