@@ -1,7 +1,5 @@
 from flask import Flask, redirect, url_for
-from app.utils.helpers import allowed_file
 import os
-
 
 
 def create_app():
@@ -9,10 +7,10 @@ def create_app():
     app = Flask(__name__)
     
 
-
     # Configurar la clave secreta para las sesiones
+    app.config['TESTING'] = True
     app.config['SECRET_KEY'] = 'trainingpluskey'
-
+    app.config['DATABASE'] = 'sqlite:///:memory:'  # Si querés usar una DB temporal
 
 
     # Configuración de la carpeta para guardar las imágenes subidas
@@ -21,11 +19,9 @@ def create_app():
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 
-
     # Asegurarse de que la carpeta para subidas exista
     if not os.path.exists(UPLOAD_FOLDER):
         os.makedirs(UPLOAD_FOLDER)
-
 
 
     # Registrar rutas desde la carpeta `routes`
@@ -44,7 +40,6 @@ def create_app():
     from .routes.cuestionario import cuestionario_bp
 
 
-
     # Registrar Blueprints
     app.register_blueprint(auth_bp)
     app.register_blueprint(suscripcion_bp)
@@ -61,12 +56,9 @@ def create_app():
     app.register_blueprint(cuestionario_bp)
 
 
-
     # Ruta de redirección de la raíz
     @app.route('/')
     def home():
         return redirect(url_for('auth.login'))
-
-
 
     return app

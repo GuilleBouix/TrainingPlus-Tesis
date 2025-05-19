@@ -1,7 +1,6 @@
+from app.utils.helpers import login_required, verificar_formulario_completo
 from flask import Blueprint, render_template, request, session, jsonify
 from app.utils.conexion import conexion_basedatos
-from app.utils.helpers import login_required, verificar_formulario_completo
-import os
 
 
 buscador_bp = Blueprint('buscar', __name__)
@@ -56,7 +55,6 @@ def buscador():
     cursor.execute("SELECT id_pais, nombre FROM pais")
     paises = cursor.fetchall()
 
-    # Obtener lista de países para mostrar los códigos ISO
     cursor.execute("SELECT id_pais, codigo_iso FROM pais")
     paises_iso = cursor.fetchall()
 
@@ -96,7 +94,7 @@ def obtener_datos_usuario(id_usuario):
         return jsonify({'error': 'Usuario no encontrado'}), 404
 
     # Si el usuario es un alumno
-    if usuario[2] == 1:  # rol == 1 para alumno
+    if usuario[2] == 1:
         cursor.execute("""
             SELECT a.nombre, a.apellido, a.id_pais, a.sexo, a.biografia, a.foto_perfil, a.instagram, a.facebook, a.telefono
             FROM alumno a
@@ -109,7 +107,7 @@ def obtener_datos_usuario(id_usuario):
                 SELECT p.nombre
                 FROM pais p
                 WHERE p.id_pais = ?
-            """, (alumno[2],))  # Obtener el nombre del país según el id_pais
+            """, (alumno[2],))
             pais = cursor.fetchone()
 
             datos_usuario = {
@@ -130,7 +128,7 @@ def obtener_datos_usuario(id_usuario):
             return jsonify(datos_usuario)
 
     # Si el usuario es un entrenador
-    elif usuario[2] == 2:  # rol == 2 para entrenador
+    elif usuario[2] == 2:
         cursor.execute("""
             SELECT e.nombre, e.apellido, e.especializacion, e.experiencia, e.foto_perfil, e.instagram, e.facebook, e.telefono
             FROM entrenador e

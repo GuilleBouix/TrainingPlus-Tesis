@@ -1,6 +1,6 @@
-from flask import Blueprint, render_template, request, session, jsonify, abort
+from flask import Blueprint, render_template, session, abort
 from app.utils.conexion import conexion_basedatos
-from app.utils.helpers import login_required, verificar_formulario_completo
+from app.utils.helpers import login_required
 from datetime import datetime
 
 

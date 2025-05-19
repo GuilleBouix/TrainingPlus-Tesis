@@ -1,18 +1,20 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
-from app.utils.helpers import login_required
 from app.utils.conexion import conexion_basedatos
+from app.utils.helpers import login_required
 from email.mime.text import MIMEText
 from dotenv import load_dotenv
 from datetime import date
 import smtplib
 import os
 
-
+# Cargar las variables de entorno desde el archivo .env
 load_dotenv()
+
 
 EMAIL_DESTINO = os.getenv("EMAIL_GMAIL")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 
+# Crear un blueprint para las opciones
 opciones_bp = Blueprint('opciones', __name__)
 
 
@@ -74,6 +76,7 @@ def obtener_datos_usuario():
         return None
 
 
+# Enviar mensaje de soporte
 def enviar_mensaje_soporte(nombre, email_usuario, mensaje_usuario):
     asunto = f"Soporte TRAINING+ - Mensaje de {email_usuario}"
     cuerpo = f"""

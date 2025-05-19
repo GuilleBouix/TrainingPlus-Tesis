@@ -310,12 +310,12 @@ def eliminar_cuenta():
             
             # Eliminar primero los registros relacionados según el rol
             if usuario['rol'] == 1:  # Alumno
-                self_delete_alumno(cursor, usuario)
+                eliminar_alumno(cursor, usuario)
             elif usuario['rol'] == 2:  # Entrenador
-                self_delete_entrenador(cursor, usuario)
+                eliminar_entrenador(cursor, usuario)
             
             # Eliminar datos comunes a ambos roles
-            delete_common_user_data(cursor, usuario['id_usuario'])
+            eliminar_datos_relacionados(cursor, usuario['id_usuario'])
             
             # Finalmente eliminar el usuario
             cursor.execute("DELETE FROM usuario WHERE id_usuario = ?", (usuario['id_usuario'],))
@@ -334,7 +334,7 @@ def eliminar_cuenta():
             cursor.close()
             conn.close()
 
-def self_delete_alumno(cursor, usuario):
+def eliminar_alumno(cursor, usuario):
     if not usuario['id_alumno']:
         return
     
@@ -355,7 +355,7 @@ def self_delete_alumno(cursor, usuario):
     
     # Eliminar datos relacionados con cada entrenamiento
     for entrenamiento in entrenamientos:
-        delete_entrenamiento_data(cursor, entrenamiento['id_entrenamiento'])
+        eliminar_datos_entrenamiento(cursor, entrenamiento['id_entrenamiento'])
     
     # Eliminar vinculaciones donde el alumno es origen o destino
     cursor.execute("DELETE FROM vinculaciones WHERE id_usuario_origen = ? OR id_usuario_destino = ?", 
@@ -370,7 +370,7 @@ def self_delete_alumno(cursor, usuario):
     # Eliminar registro de alumno
     cursor.execute("DELETE FROM alumno WHERE id_alumno = ?", (usuario['id_alumno'],))
 
-def self_delete_entrenador(cursor, usuario):
+def eliminar_entrenador(cursor, usuario):
     if not usuario['id_entrenador']:
         return
     
@@ -400,7 +400,7 @@ def self_delete_entrenador(cursor, usuario):
     
     # Eliminar datos relacionados con cada entrenamiento
     for entrenamiento in entrenamientos:
-        delete_entrenamiento_data(cursor, entrenamiento['id_entrenamiento'])
+        eliminar_datos_entrenamiento(cursor, entrenamiento['id_entrenamiento'])
     
     # Eliminar vinculaciones donde el entrenador es origen o destino
     cursor.execute("DELETE FROM vinculaciones WHERE id_usuario_origen = ? OR id_usuario_destino = ?", 
@@ -412,7 +412,7 @@ def self_delete_entrenador(cursor, usuario):
     # Eliminar registro de entrenador
     cursor.execute("DELETE FROM entrenador WHERE id_entrenador = ?", (usuario['id_entrenador'],))
 
-def delete_entrenamiento_data(cursor, id_entrenamiento):
+def eliminar_datos_entrenamiento(cursor, id_entrenamiento):
     # Obtener todas las semanas del entrenamiento
     cursor.execute("SELECT id_semana FROM semanas WHERE id_entrenamiento = ?", (id_entrenamiento,))
     semanas = cursor.fetchall()
@@ -446,7 +446,7 @@ def delete_entrenamiento_data(cursor, id_entrenamiento):
     # Finalmente eliminar el entrenamiento
     cursor.execute("DELETE FROM entrenamiento WHERE id_entrenamiento = ?", (id_entrenamiento,))
 
-def delete_common_user_data(cursor, id_usuario):
+def eliminar_datos_relacionados(cursor, id_usuario):
     # Eliminar notificaciones del usuario
     cursor.execute("DELETE FROM notificaciones WHERE id_usuario = ?", (id_usuario,))
     
@@ -471,7 +471,7 @@ def actualizar_redes():
         conn = conexion_basedatos()
         cursor = conn.cursor()
         id_usuario = session.get('id_usuario')
-        rol_usuario = session.get('rol')  # Asegúrate de tener el rol en la sesión
+        rol_usuario = session.get('rol')
 
         if rol_usuario == 1:  # Alumno
             cursor.execute("""
@@ -487,10 +487,13 @@ def actualizar_redes():
             """, (instagram, facebook, telefono, id_usuario))
 
         conn.commit()
+
         flash('Redes actualizadas correctamente.', 'success')
+        
         return jsonify({'success': True})
     except Exception as e:
         conn.rollback()
+        
         return jsonify({'success': False, 'message': f'Error al actualizar redes sociales: {str(e)}'})
     finally:
         cursor.close()

@@ -34,12 +34,11 @@ def rutina(id_entrenamiento):
         """, (user_id,)).fetchone()
         
         if not id_alumno:
-            # Lanzar un flash
             flash("Solos los alumnos pueden registrar su progreso", "error")
+
             return redirect(url_for('rutina.rutina', id_entrenamiento=id_entrenamiento))
         
         id_alumno = id_alumno[0]
-        print(f"ID del Alumno: {id_alumno}") # Debugging
 
     
     elif rol_usuario == 2:  # Es un entrenador
@@ -59,6 +58,7 @@ def rutina(id_entrenamiento):
     else:
         return "Error: Rol de usuario no válido", 400
 
+    # Obtener datos del entrenamiento
     entrenamiento = DB.execute("""
         SELECT entrenamiento.id_entrenamiento, entrenamiento.nombre_entrenamiento, 
             entrenamiento.duracion_semanas,
@@ -93,7 +93,8 @@ def rutina(id_entrenamiento):
         
         if progreso_semanal:
             semana['progreso'] = dict(progreso_semanal)
-            # Convertir string a objeto date si es necesario
+
+            # Convertir string a objeto date
             if isinstance(semana['progreso']['fecha'], str):
                 try:
                     semana['progreso']['fecha'] = datetime.strptime(
@@ -165,6 +166,7 @@ def rutina(id_entrenamiento):
                            semana_actual=1)
 
 
+# Ruta de Guardar Progreso Semanal
 @rutina_bp.route('/guardar_progreso_semanal', methods=['POST'])
 @login_required
 def guardar_progreso_semanal():

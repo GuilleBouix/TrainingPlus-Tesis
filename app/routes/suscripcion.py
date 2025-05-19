@@ -13,7 +13,7 @@ def confirmar_suscripcion():
         id_usuario = session.get('id_usuario')
         rol = session.get('rol')
         
-        # Verificar que el usuario es un entrenador (rol == 2)
+        # Verificar que el usuario es un entrenador
         if rol != 2:
             flash('Solo los entrenadores pueden suscribirse', 'error')
             return redirect(url_for('suscripcion.suscripcion'))

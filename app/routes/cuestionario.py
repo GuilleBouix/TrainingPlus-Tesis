@@ -7,6 +7,7 @@ from datetime import date
 cuestionario_bp = Blueprint('cuestionario', __name__)
 
 
+# Ruta del cuestionario
 @cuestionario_bp.route('/cuestionario', methods=['GET', 'POST'])
 @login_required
 def cuestionario():
@@ -16,12 +17,12 @@ def cuestionario():
     # Obtener id_usuario de la sesión
     id_usuario = session.get('id_usuario')
 
-    # Verificar si el usuario es alumno (rol = 1)
+    # Verificar si el usuario es alumno
     cursor.execute("SELECT rol FROM usuario WHERE id_usuario = ?", (id_usuario,))
     usuario = cursor.fetchone()
     
     if not usuario or usuario[0] != 1:  # Si no es alumno
-        flash("Acceso restringido a alumnos", "error")
+        flash("Acceso solo para alumnos.", "error")
         return redirect(url_for('entrenamiento.entrenamiento'))
 
     # Buscar id_alumno correspondiente

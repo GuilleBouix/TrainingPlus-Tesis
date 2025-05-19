@@ -1,7 +1,7 @@
-from flask import session, redirect, url_for, flash, request, g
+from flask import session, redirect, url_for, flash
 from app.utils.conexion import conexion_basedatos
-from datetime import datetime, timedelta, date
 from functools import wraps
+from datetime import date
 import sqlite3
 
 
@@ -18,6 +18,29 @@ def login_required(f):
     return funcion_decorador
 
 
+def cuestionario_completo_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'id_usuario' not in session:
+            return redirect(url_for('auth.login'))
+        
+        # Permitir acceso directo a entrenadores
+        if session.get('rol') == 2:
+            return f(*args, **kwargs)
+        
+        # Verificación para alumnos
+        conn = conexion_basedatos()
+        tiene_cuestionario = conn.execute("""
+            SELECT 1 FROM cuestionario c
+            JOIN alumno a ON c.id_alumno = a.id_alumno
+            WHERE a.id_usuario = ?
+            LIMIT 1
+        """, (session['id_usuario'],)).fetchone() is not None
+        conn.close()
+        
+        return f(*args, **kwargs) if tiene_cuestionario else redirect(url_for('cuestionario.cuestionario'))
+    return decorated_function
+
 # Decorador para verificar si el usuario es un entrenador
 def entrenador_required(f):
     @wraps(f)
@@ -32,7 +55,6 @@ def entrenador_required(f):
 def verificar_formulario_completo(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
-        # Verifica si el usuario está logueado y es un entrenador (rol = 2)
         if 'id_usuario' in session and session.get('rol') == 2:
             db = conexion_basedatos()
             cursor = db.cursor()
@@ -52,11 +74,10 @@ def verificar_formulario_completo(func):
     return wrapper
 
 
-# Verificar si el entrenador tiene una suscripcion activa (estado_suscripcion = 1)
+# Verificar si el entrenador tiene una suscripcion activa
 def verificar_suscripcion(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        # Conectamos a la base de datos
         conn = conexion_basedatos()
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
@@ -72,7 +93,7 @@ def verificar_suscripcion(f):
         conn.close()
 
         if usuario:
-            # Solo se aplica a entrenadores (rol = 2)
+            # Solo se aplica a entrenadores
             if usuario['rol'] == 2:
                 fecha_fin = usuario['fecha_fin_suscripcion']
                 estado = usuario['estado_suscripcion']
@@ -81,7 +102,7 @@ def verificar_suscripcion(f):
                     fecha_fin = date.fromisoformat(fecha_fin)
                     dias_vencido = (date.today() - fecha_fin).days
                 else:
-                    dias_vencido = 999  # si no tiene fecha, consideramos que está vencido
+                    dias_vencido = 999  # si no tiene fecha, está vencido
 
                 if estado != 1 or dias_vencido > 30:
                     return redirect(url_for('suscripcion.suscripcion'))
@@ -89,6 +110,7 @@ def verificar_suscripcion(f):
         return f(*args, **kwargs)
 
     return decorated_function
+
 
 # Decorador para verificar si el usuario es un alumno y tiene una rutina asignada
 def verificar_vinculo_y_rutina(f):
@@ -145,44 +167,3 @@ def verificar_vinculo_y_rutina(f):
 def allowed_file(filename):
     allowed_extensions = {'png', 'jpg', 'jpeg', 'gif'}
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in allowed_extensions
-
-
-# Función para insertar un usuario en la base de datos
-def insertar_usuario(email, nombre_usuario, contrasena, rol):
-    try:
-        conn = conexion_basedatos()
-        cursor = conn.cursor()
-
-        # Insertar en la tabla usuario
-        cursor.execute(
-            "INSERT INTO usuario (email, nombre_usuario, contrasena, rol) VALUES (?, ?, ?, ?)",
-            (email, nombre_usuario, contrasena, rol)
-        )
-        id_usuario = cursor.lastrowid  # Obtener el ID del usuario recién creado
-
-        # Insertar en la tabla alumno o entrenador según el rol
-        if rol == 1:  # Alumno
-            cursor.execute(
-                """
-                INSERT INTO alumno (id_usuario, apellido, nombre, edad, id_pais, sexo, fecha_nacimiento, biografia)
-                VALUES (?, 'NULL', 'NULL', NULL, NULL, 'NULL', NULL, 'NULL')
-                """,
-                (id_usuario,)
-            )
-        elif rol == 2:  # Entrenador
-            cursor.execute(
-                """
-                INSERT INTO entrenador (id_usuario, apellido, nombre, edad, id_pais, sexo, fecha_nacimiento, biografia)
-                VALUES (?, 'NULL', 'NULL', NULL, NULL, 'NULL', NULL, 'NULL')
-                """,
-                (id_usuario,)
-            )
-
-        conn.commit()  # Confirmar los cambios
-
-    except Exception as e:
-        conn.rollback()  # Revertir cambios si algo falla
-        raise Exception(f"Error al insertar usuario: {str(e)}.")  # Propagar el error
-
-    finally:
-        conn.close()

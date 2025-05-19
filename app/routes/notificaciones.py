@@ -19,23 +19,19 @@ def enviar_solicitud(id_usuario_destino):
         conexion = conexion_basedatos()
         cursor = conexion.cursor()
         
-        # print(f"Intentando enviar solicitud de {id_usuario_origen} a {id_usuario_destino}")
-
         cursor.execute("""
             SELECT rol FROM usuario WHERE id_usuario = ?
         """, (id_usuario_origen,))
         rol_origen = cursor.fetchone()
 
-        if rol_origen[0] != 2:  # Si el origen no es un entrenador
-            # print("El usuario no es entrenador.")
+        if rol_origen[0] != 2:
             flash("Solo los entrenadores pueden enviar solicitudes.", "error")
             return redirect(url_for('usuario.usuario', id_usuario=id_usuario_origen))
 
         # Generar un token único
         token = secrets.token_urlsafe(16)
-        # print(f"Token generado: {token}")
 
-        # Generar la fecha sin segundos ni microsegundos
+        # Generar la fecha y hora
         fecha_actual = datetime.now().strftime("%Y-%m-%d %H:%M")
 
         # Insertar en la tabla vinculaciones
@@ -183,72 +179,6 @@ def listar_solicitudes():
     )
 
 
-# Ruta para aceptar una solicitud
-@notificaciones_bp.route('/aceptar_vinculo/<token>', methods=['GET', 'POST'])
-@login_required
-def aceptar_vinculo(token):
-    id_usuario = session['id_usuario']
-    try:
-        conexion = conexion_basedatos()
-        cursor = conexion.cursor()
-
-        # Buscar la invitación usando el token
-        cursor.execute("""
-            SELECT id_usuario_origen, id_usuario_destino, estado
-            FROM vinculaciones
-            WHERE token = ? AND id_usuario_destino = ?
-        """, (token, id_usuario))
-
-        vinculo = cursor.fetchone()
-
-        if vinculo and vinculo[2] == 'pendiente':  # Solo aceptar si el estado es pendiente
-            if request.method == 'POST':
-                # Si el alumno acepta la invitación
-                if 'aceptar' in request.form:
-                    # Actualizamos el estado del vínculo
-                    cursor.execute("""
-                        UPDATE vinculaciones
-                        SET estado = 'aceptado'
-                        WHERE token = ?
-                    """, (token,))
-                    
-                    # Crear el entrenamiento en la tabla entrenamiento
-                    id_entrenador = vinculo[0]
-                    id_alumno = vinculo[1]
-                    duracion_semanas = 12  # Ejemplo: duración por defecto de 12 semanas
-                    fecha_inicio = datetime.datetime.now()  # La fecha actual
-
-                    cursor.execute("""
-                        INSERT INTO entrenamiento (id_entrenador, id_alumno, duracion_semanas, fecha_inicio)
-                        VALUES (?, ?, ?, ?)
-                    """, (id_entrenador, id_alumno, duracion_semanas, fecha_inicio))
-                    
-                    conexion.commit()
-
-                # Si el alumno rechaza la invitación
-                elif 'rechazar' in request.form:
-                    cursor.execute("""
-                        UPDATE vinculaciones
-                        SET estado = 'rechazado'
-                        WHERE token = ?
-                    """, (token,))
-
-                conexion.commit()
-
-                flash("Vinculación y entrenamiento actualizados correctamente.", "success")
-                return redirect(url_for('usuario.usuario', id_usuario=id_usuario))
-
-        else:
-            flash("Este vínculo no es válido o ya ha sido procesado.", "error")
-            return redirect(url_for('usuario.usuario', id_usuario=id_usuario))
-
-        conexion.close()
-    except Exception as e:
-        print(f"Error al aceptar o rechazar el vínculo: {e}")
-        flash("Error al procesar la invitación.", "error")
-        return redirect(url_for('usuario.usuario', id_usuario=id_usuario))
-    
-
 # Ruta para responder a una solicitud
 @notificaciones_bp.route('/responder_solicitud/<int:id_vinculacion>', methods=['POST'])
 @login_required
@@ -366,7 +296,7 @@ def eliminar_notificaciones():
 @login_required
 def cantidad_notificaciones():
     id_usuario = session['id_usuario']
-    rol_usuario = session.get('rol')  # 1 = alumno, 2 = entrenador
+    rol_usuario = session.get('rol')
 
     conexion = conexion_basedatos()
     cursor = conexion.cursor()
@@ -380,7 +310,7 @@ def cantidad_notificaciones():
         """, (id_usuario,))
         total_vinculaciones = cursor.fetchone()[0]
 
-    # Contar TODAS las notificaciones del usuario (sin filtro de leído)
+    # Contar TODAS las notificaciones del usuario (sin filtro de 'leído')
     cursor.execute("""
         SELECT COUNT(*) FROM notificaciones 
         WHERE id_usuario = ?
@@ -392,7 +322,5 @@ def cantidad_notificaciones():
     # Lógica para mostrar el contador
     total = total_vinculaciones + total_notificaciones
     total_mostrar = min(total, 9) if total > 0 else None
-
-    print(f"[DEBUG] Usuario {id_usuario} (Rol:{rol_usuario}) - Vinc:{total_vinculaciones} Notif:{total_notificaciones}")
     
     return {"cantidad": total_mostrar}

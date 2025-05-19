@@ -1,5 +1,5 @@
+from app.utils.helpers import login_required, verificar_formulario_completo, verificar_suscripcion, cuestionario_completo_required
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
-from app.utils.helpers import login_required, verificar_formulario_completo, verificar_suscripcion
 from app.utils.conexion import conexion_basedatos
 from datetime import date, datetime
 
@@ -12,6 +12,7 @@ entrenamiento_bp = Blueprint('entrenamiento', __name__)
 @login_required
 @verificar_suscripcion
 @verificar_formulario_completo
+@cuestionario_completo_required
 def entrenamiento():
     user_id = session.get('id_usuario')
     db = conexion_basedatos()
@@ -91,7 +92,7 @@ def entrenamiento():
                            rol_usuario=rol_usuario)
 
 
-# Ruta para Crear Entrenamiento (Todo en uno)
+# Ruta para Crear Entrenamiento
 @entrenamiento_bp.route('/crear_entrenamiento', methods=['GET', 'POST'])
 @login_required
 @verificar_suscripcion
@@ -229,7 +230,6 @@ def enviar_notificacion(db, id_usuario, mensaje, id_entrenamiento=0):
         INSERT INTO notificaciones (id_usuario, mensaje, fecha, id_entrenamiento)
         VALUES (?, ?, ?, ?)
     """, (id_usuario, mensaje, fecha_formateada, id_entrenamiento))
-
 
 
 # Ruta para Editar Entrenamiento

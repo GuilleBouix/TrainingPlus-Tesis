@@ -42,9 +42,17 @@
         <div class="user-info" data-aos="fade-right" data-aos-delay="200">
             <h1 class="name">
                 {% if rol_usuario == 2 %}
-                    {{ (usuario_data['entrenador_nombre'] | default('No disponible')) | upper }} {{ (usuario_data['entrenador_apellido'] | default('No disponible')) | upper }}
+                    {% if usuario_data['entrenador_nombre'] or usuario_data['entrenador_apellido'] %}
+                        {{ (usuario_data['entrenador_nombre'] | default('')) | upper }} {{ (usuario_data['entrenador_apellido'] | default('')) | upper }}
+                    {% else %}
+                        SIN NOMBRE
+                    {% endif %}
                 {% else %}
-                    {{ (usuario_data['alumno_nombre'] | default('No disponible')) | upper }} {{ (usuario_data['alumno_apellido'] | default('No disponible')) | upper }}
+                    {% if usuario_data['alumno_nombre'] or usuario_data['alumno_apellido'] %}
+                        {{ (usuario_data['alumno_nombre'] | default('')) | upper }} {{ (usuario_data['alumno_apellido'] | default('')) | upper }}
+                    {% else %}
+                        SIN NOMBRE
+                    {% endif %}
                 {% endif %}
             </h1>
             <p class="username">@{{ usuario_data['nombre_usuario'] | default('Usuario') }}</p>

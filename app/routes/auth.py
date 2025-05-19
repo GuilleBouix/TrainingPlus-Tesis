@@ -5,7 +5,6 @@ from app.utils.conexion import conexion_basedatos
 
 auth_bp = Blueprint('auth', __name__)
 
-
 # Ruta de Login
 @auth_bp.route('/auth/login', methods=['GET', 'POST'])
 def login():
