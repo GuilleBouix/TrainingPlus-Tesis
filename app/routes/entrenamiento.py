@@ -99,9 +99,22 @@ def entrenamiento():
 @verificar_formulario_completo
 def crear_entrenamiento():
     # Obtener el rol del usuario de la sesion
+    id_entrenador = session['id_usuario']
     rol = session.get('rol')
 
-    id_entrenador = session['id_usuario']
+    # Verificar límite de entrenamientos (6 máximo)
+    conexion = conexion_basedatos()
+    cursor = conexion.cursor()
+    cursor.execute("""
+        SELECT COUNT(*) as total 
+        FROM entrenamiento 
+        WHERE id_entrenador = ?
+    """, (id_entrenador,))
+    total_entrenamientos = cursor.fetchone()['total']
+    
+    if total_entrenamientos >= 6:
+        flash('Has alcanzado el límite máximo de 6 entrenamientos creados.', 'error')
+        return redirect(url_for('entrenamiento.entrenamiento'))
 
     # Obtener alumnos con vinculación aceptada
     conexion = conexion_basedatos()
@@ -127,7 +140,13 @@ def crear_entrenamiento():
             duracion_semanas = int(request.form.get('duracion_semanas'))
             fecha_inicio = date.today().strftime('%Y-%m-%d')
 
-            # Antes de insertar un nuevo entrenamiento...
+            # Verificar el límite antes de crear 
+            cursor.execute("SELECT COUNT(*) as total FROM entrenamiento WHERE id_entrenador = ?", (id_entrenador,))
+            if cursor.fetchone()['total'] >= 6:
+                flash('Has alcanzado el límite máximo de 6 entrenamientos creados.', 'error')
+                return redirect(url_for('entrenamiento.entrenamiento'))
+
+            # Verificar si ya existe un entrenamiento con este alumno
             cursor.execute("""
                 SELECT 1 FROM entrenamiento
                 WHERE id_entrenador = ? AND id_alumno = ?
@@ -204,15 +223,16 @@ def crear_entrenamiento():
             # Confirmar cambios en la base de datos
             conexion.commit()
 
-            flash("¡Entrenamiento creado exitosamente!", "success")
-            return redirect(url_for('entrenamiento.entrenamiento'))
+            flash("Entrenamiento creado exitosamente.", "success")
 
+            return redirect(url_for('entrenamiento.entrenamiento'))
         except Exception as e:
             # Revertir cambios en caso de error
             conexion.rollback()
 
+            flash(f"Error al crear el entrenamiento: {str(e)}.", "error")
+            
             return redirect(url_for('entrenamiento.crear_entrenamiento'))
-
         finally:
             # Cerrar la conexión a la base de datos
             conexion.close()
