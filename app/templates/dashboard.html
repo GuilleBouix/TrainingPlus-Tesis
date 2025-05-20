@@ -8,24 +8,11 @@
 
   <div class="title" data-aos="fade-right">
       <h1>Dashboard de Entrenador</h1>
-      <p>Gestiona y visualiza el progreso de tus alumnos</p>
+      <p>Gestiona y visualiza el progreso de tus alumnos.</p>
   </div>
 
   <!-- Resumen en general -->
   <section class="resumen-general">
-      <div class="card" data-aos="fade-in" data-aos-delay="100">
-          <div class="card-title">
-              <h2>Total de Alumnos</h2>
-              <i class='bx bxs-group'></i>
-          </div>
-
-          <div class="card-data">
-              <h3>{{ total_alumnos }}/6</h3>
-
-              <p>{{ total_alumnos }} {% if total_alumnos == 1 %}alumno{% else %}alumnos{% endif %} de 6.</p>
-          </div>
-      </div>
-
       <div class="card" data-aos="fade-in" data-aos-delay="150">
           <div class="card-title">
               <h2>Cumplimiento Promedio</h2>
@@ -46,25 +33,20 @@
           </div>
       </div>
 
-      <div class="card" data-aos="fade-in" data-aos-delay="200">
+      <div class="card" data-aos="fade-in" data-aos-delay="100">
           <div class="card-title">
-              <h2>Promedio de Duración</h2>
-              <i class='bx bxs-time-five'></i>
+              <h2>Total de Alumnos</h2>
+              <i class='bx bxs-group'></i>
           </div>
 
           <div class="card-data">
-              <h3>{{ promedio_semanas }}</h3>
+              <h3>{{ total_alumnos }}/6</h3>
 
-              <div class="bar day-progress">
-                  <div class="bar-progress-day"
-                      id="barra-semanas"
-                      data-progreso="{{ (promedio_semanas / 12 * 100) if promedio_semanas else 0 }}">
-                  </div>
-              </div>
-
-              <p>Semanas promedio de tus rutinas de entrenamiento.</p>
+              <p>{{ total_alumnos }} {% if total_alumnos == 1 %}alumno{% else %}alumnos{% endif %} de 6.</p>
           </div>
       </div>
+
+
   </section>
 
   <!-- Vinculaciones -->

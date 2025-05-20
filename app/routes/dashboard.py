@@ -76,28 +76,6 @@ def obtener_cumplimiento_promedio(id_entrenador):
     return promedio_redondeado
 
 
-# Función paa obtener el promedio de semanas de las rutinas.
-def obtener_promedio_semanas(id_entrenador):
-    conn = conexion_basedatos()
-    cur = conn.cursor()
-    
-    # Consulta para obtener el promedio de duración de las rutinas
-    query = """
-        SELECT AVG(duracion_semanas) as promedio_semanas
-        FROM entrenamiento
-        WHERE id_entrenador = ?
-    """
-    
-    cur.execute(query, (id_entrenador,))
-    resultado = cur.fetchone()
-    
-    conn.close()
-    
-    if resultado and resultado['promedio_semanas'] is not None:
-        return round(resultado['promedio_semanas'], 1)
-    return 0
-
-
 # Función para obtener alumnos vinculados y sus rutinas de entrenamiento
 def obtener_alumnos_vinculados(id_entrenador):
     conn = conexion_basedatos()
@@ -350,9 +328,6 @@ def dashboard():
     # Obtener el promedio de cumplimiento
     cumplimiento_promedio = obtener_cumplimiento_promedio(id_entrenador)
 
-    # Obtener el promedio de semanas
-    promedio_semanas = obtener_promedio_semanas(id_entrenador)
-
     # Obtener alumnos vinculados
     alumnos_vinculados = obtener_alumnos_vinculados(id_entrenador)
 
@@ -365,7 +340,6 @@ def dashboard():
     return render_template('dashboard.html',
                            total_alumnos=total_alumnos,
                            cumplimiento_promedio=cumplimiento_promedio,
-                           promedio_semanas=promedio_semanas,
                            alumnos_vinculados=alumnos_vinculados,
                            datos_fuerza=datos_fuerza,
                            ranking_cumplimiento=ranking_cumplimiento)
