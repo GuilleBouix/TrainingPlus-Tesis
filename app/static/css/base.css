@@ -208,8 +208,6 @@ a span {
 }
 
 
-
-
 .nav .icono-busqueda {
     color: var(--color-text-primary);
     font-size: 20px;
@@ -571,57 +569,138 @@ main {
     font-size: 1.3rem;
 }
 
-/*  Botón de notificaciones */
+
+/* Botón de notificaciones */
 .btn-notification {
-    position: fixed; /* Fijo en la ventana, no depende del flujo del documento */
-    bottom: 20px; /* Separación del borde inferior */
-    right: 20px; /* Separación del borde derecho */
-    background-color: var(--color-primary); /* Color de fondo */
-    color: var(--color-background); /* Color del icono */
-    border: none; /* Sin borde */
-    border-radius: 50%; /* Forma circular */
-    width: 60px; /* Tamaño del botón */
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--color-primary);
+    color: var(--color-background);
+    border: none;
+    border-radius: 50%;
+    width: 60px;
     height: 60px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* Sombra */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    z-index: 9999; /* Asegura que esté encima de otros elementos */
-    transition: all 0.3s ease; /* Efecto de hover */
+    z-index: 9999;
+    transition: all 0.3s ease;
     font-size: 1.5rem;
 }
 
-/* Estilo para el span */
+/* Botón de traducción - POSICIÓN MODIFICADA */
+#translate-button {
+    position: fixed;
+    bottom: 90px; /* Colocado encima del botón de notificaciones */
+    right: 20px; /* Misma posición horizontal */
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border);
+    border-radius: 50%; /* Esto lo hace completamente redondo */
+    width: 60px; /* Mismo tamaño que notificaciones */
+    height: 60px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 9998;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease; /* Misma transición que notificaciones */
+}
+
+/* Resto del CSS permanece igual */
 .btn-notification span {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--color-primary); /* Color azul */
-    color: var(--color-background); /* Texto blanco */
+    background-color: var(--color-primary);
+    color: var(--color-background);
     font-size: 14px;
     font-weight: bold;
-    border-radius: 50%; /* Hace el span circular */
-    width: 25px; /* Tamaño fijo */
-    height: 25px; /* Tamaño fijo */
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
     position: absolute;
-    top: -8px; /* Ajusta según la posición del icono */
-    right: -5px; /* Ajusta según la posición del icono */
+    top: -8px;
+    right: -5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.9);
     text-align: center;
-    line-height: 1; /* Asegura que el texto esté centrado verticalmente */
+    line-height: 1;
     padding: 0;
 }
 
 .btn-notification:hover {
-    transform: scale(1.05); /* Aumenta ligeramente el tamaño */
+    transform: scale(1.05);
 }
 .btn-notification:active {
-    background-color: var(--color-button-active); /* Cambio de color en hover */
+    background-color: var(--color-button-active);
     transform: scale(1.0);
 } 
 
+#translate-button:hover {
+    background-color: var(--color-border)
+}
 
+.translate-icon {
+    width: 30px;
+    height: auto;
+}
+
+#google_translate_element {
+    position: fixed;
+    bottom: 140px;
+    right: 50px;
+    z-index: 1000;
+}
+
+#\:2\.container {
+    display: none;
+}
+
+.goog-te-banner-frame {
+    display: none !important;
+    height: 0 !important;
+    visibility: hidden !important;
+}
+
+/* Estilos para el botón en el navbar (móvil) */
+.translate-nav-btn {
+    background: none;
+    border: none;
+    color: var(--color-text-primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.translate-icon-nav {
+    width: 20px;
+    height: 20px;
+}
+
+.menu-traduccion .translate-nav-btn:hover {
+    color: var(--color-primary);
+    background: var(--color-background);
+    transition: all .2s linear;
+}
+
+#google_translate_element_nav {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%; /* Coloca el selector debajo del botón */
+    z-index: 1000; /* Asegura que esté por encima de otros elementos */
+    background: white;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
 
 
 /* RESPONSIVE */
@@ -678,8 +757,18 @@ main {
         right: 50px; /* Separación del borde derecho */
     }
 
+    #translate-button {
+        right: 50px; /* Separación del borde derecho */
+    }
+
     .footer {
         padding: 1rem 20px;
+    }
+}
+
+@media screen and (min-width: 769px) {
+    .menu-traduccion {
+        display: none !important;
     }
 }
 
@@ -735,6 +824,14 @@ main {
 
     .btn-notification {
         display: none;
+    }
+
+    #translate-button {
+        display: none;
+    }
+    
+    .menu-traduccion {
+        display: block !important;
     }
 
     .nav .navOpenBtn {

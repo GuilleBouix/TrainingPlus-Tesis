@@ -8,9 +8,7 @@ def create_app():
     
 
     # Configurar la clave secreta para las sesiones
-    app.config['TESTING'] = True
     app.config['SECRET_KEY'] = 'trainingpluskey'
-    app.config['DATABASE'] = 'sqlite:///:memory:'  # Si querés usar una DB temporal
 
 
     # Configuración de la carpeta para guardar las imágenes subidas

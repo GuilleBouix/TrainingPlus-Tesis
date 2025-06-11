@@ -66,6 +66,14 @@
             <li class="menu-opciones"><a href="{{  url_for('opciones.opciones') }}">OPCIONES</a></li>
             <li class="menu-notificacion"><a href="{{ url_for('notificaciones.listar_solicitudes') }}">NOTIFICACIONES</a>
             </li>
+
+            <li class="menu-traduccion">
+                <button id="translate-button-nav" class="translate-nav-btn">
+                    <span class="translate-text">TRADUCIR</span>
+                </button>
+                <div id="google_translate_element_nav" style="display: none;"></div>
+            </li>
+
             <li><a href="{{ url_for('auth.logout') }}">LOGOUT</a></li>
         </ul>
         
@@ -87,8 +95,15 @@
 
         {% endblock %}
     </main>
- 
-    <!-- Botón de notificaciones -->
+
+    <!-- Botón de Traducción -->
+    <button id="translate-button">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/d/d7/Google_Translate_logo.svg" alt="Google Translate" class="translate-icon">
+    </button>
+    <div id="google_translate_element" style="display: none;"></div>
+
+
+    <!-- Botón de Notificaciones -->
     <a href="{{ url_for('notificaciones.listar_solicitudes') }}" class="btn-notification open-modal-notification" title="Notificaciones" data-aos="fade-up">
         <span class="notification-count" id="notificationCount" style="display: none;"></span>
         <i class='bx bxs-bell'></i>
@@ -131,5 +146,56 @@
                 .catch(error => console.error("Error al obtener notificaciones:", error));
         });
     </script>
+
+    <!-- Traductor -->
+    <script type="text/javascript">
+        // Controlador para ambos botones
+        function setupTranslateButton(buttonId, elementId) {
+            const button = document.getElementById(buttonId);
+            if (!button) return;
+            
+            button.addEventListener('click', function() {
+                if (!window.google || !google.translate) {
+                    const script = document.createElement('script');
+                    script.src = '//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+                    document.body.appendChild(script);
+                } else {
+                    document.getElementById(elementId).style.display = 'block';
+                }
+            });
+        }
+
+        // Inicializar ambos botones
+        document.addEventListener('DOMContentLoaded', function() {
+            setupTranslateButton('translate-button', 'google_translate_element');
+            setupTranslateButton('translate-button-nav', 'google_translate_element_nav');
+        });
+
+        // Función de inicialización
+        function googleTranslateElementInit() {
+            // Configuración para el botón flotante
+            new google.translate.TranslateElement({
+                pageLanguage: 'es',
+                includedLanguages: 'en,es',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+            
+            // Configuración para el botón del navbar
+            new google.translate.TranslateElement({
+                pageLanguage: 'es',
+                includedLanguages: 'en,es',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element_nav');
+            
+            // Ocultar la barra de Google
+            document.querySelector('.goog-te-banner-frame').style.display = 'none';
+            document.body.style.top = '0';
+        }
+    </script>
+
+
+
 </body>
 </html>
