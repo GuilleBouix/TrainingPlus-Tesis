@@ -299,7 +299,7 @@ details[open] div {
     width: 100%;
 }
 
-.ejercicios-container select,
+.ejercicios-container,
 .inputs-container .inputs input {
     outline: none;
     padding: 0.5rem;
@@ -309,6 +309,26 @@ details[open] div {
     resize: none;
     background-color: var(--color-background);
 }
+/* Aplica el estilo tipo input al contenedor visible de Select2 */
+.select-ejercicio + .select2 .select2-selection--single {
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  background-color: var(--color-background);
+  font-size: 1rem;
+  height: 40px;
+  box-sizing: border-box;
+  padding: 0; /* No usar padding acá */
+  display: flex;
+  align-items: center;
+}
+
+/* Para que el texto no quede cortado */
+.select-ejercicio + .select2 .select2-selection__rendered {
+  padding: 0 0.5rem;
+  line-height: 1.5;
+  color: inherit;
+}
+
 
 .btn-agregar-ejercicio {
     display: flex;

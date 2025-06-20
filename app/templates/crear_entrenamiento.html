@@ -156,12 +156,14 @@
         contenedor.innerHTML = '';
 
         for (let i = 1; i <= numEjercicios; i++) {
+            const selectId = `select-ejercicio-${semana}-${dia}-${i}`;
+            
             contenedor.innerHTML += `
                 <details class="details-ejercicio">
                     <summary>Ejercicio ${i}</summary>
                     <div class="ejercicios-container">
                         <label>Ejercicio <span class="required-asterisk">*</span></label>
-                        <select name="semanas[${semana}][dias][${dia}][ejercicios][${i}][id_ejercicio]" required>
+                        <select id="${selectId}" name="semanas[${semana}][dias][${dia}][ejercicios][${i}][id_ejercicio]" required class="select-ejercicio">
                             <option value="">Seleccionar Ejercicio</option>
                             {% for ejercicio in ejercicios %}
                             <option value="{{ ejercicio.id_ejercicio }}">{{ ejercicio.nombre_ejercicio }}</option>
@@ -194,6 +196,15 @@
                     </div>
                 </details>
             `;
+
+            // Esperar un momento y luego aplicar select2
+            setTimeout(() => {
+                $(`#${selectId}`).select2({
+                    placeholder: "Seleccionar Ejercicio",
+                    allowClear: true,
+                    width: '100%'
+                });
+            }, 0);
         }
     }
 
