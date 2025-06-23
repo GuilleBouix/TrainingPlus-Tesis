@@ -19,31 +19,95 @@
             <input type="text" name="nombre_entrenamiento" class="text-input" 
                    value="{{ entrenamiento.nombre_entrenamiento }}" placeholder="Ingresa un nuevo nombre para el entrenamiento (máx. 50 caracteres)" maxlength="50" required>
         </div>
-        
-        <!-- Días y ejercicios -->
+
+        <!-- Navegación por semanas -->
+        <div class="edit-week-navigator">
+            <button type="button" class="previous-week" title="Anterior"><i class='bx bx-chevrons-left'></i></button>
+            <h2>Semana <span id="week-number">1</span></h2>
+            <button type="button" class="next-week" title="Siguiente"><i class='bx bx-chevrons-right'></i></button>
+        </div>
+
+        <!-- Días y ejercicios por semana -->
+        {% set current_week = None %}
         {% for dia in dias %}
-        <div class="week-container" data-aos="fade-in" data-aos-delay="100">
-            <div class="week-header">
-                <h3 class="week-title">
-                    Semana {{ dia.numero_semana }} - Día {{ dia.numero_dia }}
-                </h3>
-                <input type="text" name="nombre_dia_{{ dia.id_dia }}" class="text-input day-name-input" 
-                       value="{{ dia.nombre_rutina }}" placeholder="Ingresa un nuevo nombre para la rutina del día {{ dia.numero_dia }} de la semana {{ dia.numero_semana }}" required>
-            </div>
-            
-            <div class="exercises-container">
-                <h4 class="section-title">Ejercicios Actuales</h4>
+            {% if current_week != dia.numero_semana %}
+                {% if not loop.first %}</div>{% endif %}
+                <div class="week-edit-container" data-week="{{ dia.numero_semana }}" {% if loop.first %}style="display:block;"{% else %}style="display:none;"{% endif %}>
+                {% set current_week = dia.numero_semana %}
+            {% endif %}
+
+            <div class="week-container" data-aos="fade-in" data-aos-delay="100">
+                <div class="week-header">
+                    <h3 class="week-title">
+                        Día {{ dia.numero_dia }}
+                    </h3>
+                    <input type="text" name="nombre_dia_{{ dia.id_dia }}" class="text-input day-name-input" 
+                           value="{{ dia.nombre_rutina }}" placeholder="Ingresa un nuevo nombre para la rutina del día {{ dia.numero_dia }} de la semana {{ dia.numero_semana }}" required>
+                </div>
                 
-                {% for ejercicio in ejercicios_por_dia[dia.id_dia] %}
-                <div class="exercise-item">
-                    <div class="exercise-field exercise-select-container">
+                <div class="exercises-container">
+                    <h4 class="section-title">Ejercicios Actuales</h4>
+                    
+                    {% for ejercicio in ejercicios_por_dia[dia.id_dia] %}
+                    <div class="exercise-item">
+                        <div class="exercise-field exercise-select-container">
+                            <label class="input-label">Ejercicio</label>
+                            <select name="ejercicio_{{ ejercicio.id_dia_ejercicio }}" class="select-input select-buscador" required>
+                                {% for ej in ejercicios %}
+                                <option value="{{ ej.id_ejercicio }}" 
+                                    {% if ej.id_ejercicio == ejercicio.id_ejercicio %}selected{% endif %}>
+                                    {{ ej.nombre_ejercicio }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="exercise-fields">
+                            <div class="exercise-field">
+                                <label class="input-label">Series</label>
+                                <input type="number" name="series_{{ ejercicio.id_dia_ejercicio }}" 
+                                       class="number-input" value="{{ ejercicio.series }}" min="1" required>
+                            </div>
+                            
+                            <div class="exercise-field">
+                                <label class="input-label">Repeticiones</label>
+                                <input type="number" name="repeticiones_{{ ejercicio.id_dia_ejercicio }}" 
+                                       class="number-input" value="{{ ejercicio.repeticiones }}" min="1" required>
+                            </div>
+                            
+                            <div class="exercise-field">
+                                <label class="input-label">Peso (kg)</label>
+                                <input type="number" step="0.1" name="peso_{{ ejercicio.id_dia_ejercicio }}" 
+                                       class="number-input" value="{{ ejercicio.peso }}" min="0" required>
+                            </div>
+                            
+                            <div class="exercise-field">
+                                <label class="input-label">Descanso (s)</label>
+                                <input type="number" name="descanso_{{ ejercicio.id_dia_ejercicio }}" 
+                                       class="number-input" value="{{ ejercicio.tiempo_descanso }}" min="0" required>
+                            </div>
+                        </div>
+                        
+                        <div class="exercise-actions">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="eliminar_ejercicio" value="{{ ejercicio.id_dia_ejercicio }}"> 
+                                Eliminar Ejercicio
+                            </label>
+                            <span class="checkbox-note">(No se eliminará si ya tiene progreso registrado).</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="add-exercise-container">
+                    <h4 class="section-title new-excercise"><i class='bx bx-plus'></i> Agregar Nuevo Ejercicio</h4>
+
+                    <div class="exercise-field excercise-add-select-container">
                         <label class="input-label">Ejercicio</label>
-                        <select name="ejercicio_{{ ejercicio.id_dia_ejercicio }}" class="select-input" required>
+                        <select name="nuevo_ejercicio_{{ dia.id_dia }}" class="select-input select-buscador">
+                            <option value="">Seleccionar Ejercicio</option>
                             {% for ej in ejercicios %}
-                            <option value="{{ ej.id_ejercicio }}" 
-                                {% if ej.id_ejercicio == ejercicio.id_ejercicio %}selected{% endif %}>
-                                {{ ej.nombre_ejercicio }}
-                            </option>
+                            <option value="{{ ej.id_ejercicio }}">{{ ej.nombre_ejercicio }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -51,76 +115,28 @@
                     <div class="exercise-fields">
                         <div class="exercise-field">
                             <label class="input-label">Series</label>
-                            <input type="number" name="series_{{ ejercicio.id_dia_ejercicio }}" 
-                                   class="number-input" value="{{ ejercicio.series }}" min="1" required>
+                            <input type="number" name="nuevo_series_{{ dia.id_dia }}" class="number-input" min="1">
                         </div>
                         
                         <div class="exercise-field">
                             <label class="input-label">Repeticiones</label>
-                            <input type="number" name="repeticiones_{{ ejercicio.id_dia_ejercicio }}" 
-                                   class="number-input" value="{{ ejercicio.repeticiones }}" min="1" required>
+                            <input type="number" name="nuevo_repeticiones_{{ dia.id_dia }}" class="number-input" min="1">
                         </div>
                         
                         <div class="exercise-field">
                             <label class="input-label">Peso (kg)</label>
-                            <input type="number" step="0.1" name="peso_{{ ejercicio.id_dia_ejercicio }}" 
-                                   class="number-input" value="{{ ejercicio.peso }}" min="0" required>
+                            <input type="number" step="0.1" name="nuevo_peso_{{ dia.id_dia }}" class="number-input" min="0">
                         </div>
                         
                         <div class="exercise-field">
                             <label class="input-label">Descanso (s)</label>
-                            <input type="number" name="descanso_{{ ejercicio.id_dia_ejercicio }}" 
-                                   class="number-input" value="{{ ejercicio.tiempo_descanso }}" min="0" required>
+                            <input type="number" name="nuevo_descanso_{{ dia.id_dia }}" class="number-input" min="0">
                         </div>
                     </div>
-                    
-                    <div class="exercise-actions">
-                        <label class="checkbox-label">
-                            <input type="checkbox" name="eliminar_ejercicio" value="{{ ejercicio.id_dia_ejercicio }}"> 
-                            Eliminar Ejercicio
-                        </label>
-                        <span class="checkbox-note">(No se eliminará si ya tiene progreso registrado).</span>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-            
-            <div class="add-exercise-container">
-                <h4 class="section-title new-excercise"><i class='bx bx-plus'></i> Agregar Nuevo Ejercicio</h4>
-
-                <div class="exercise-field excercise-add-select-container">
-                    <label class="input-label">Ejercicio</label>
-                    <select name="nuevo_ejercicio_{{ dia.id_dia }}" class="select-input">
-                        <option value="">Seleccionar Ejercicio</option>
-                        {% for ej in ejercicios %}
-                        <option value="{{ ej.id_ejercicio }}">{{ ej.nombre_ejercicio }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="exercise-fields">
-                    <div class="exercise-field">
-                        <label class="input-label">Series</label>
-                        <input type="number" name="nuevo_series_{{ dia.id_dia }}" class="number-input" min="1">
-                    </div>
-                    
-                    <div class="exercise-field">
-                        <label class="input-label">Repeticiones</label>
-                        <input type="number" name="nuevo_repeticiones_{{ dia.id_dia }}" class="number-input" min="1">
-                    </div>
-                    
-                    <div class="exercise-field">
-                        <label class="input-label">Peso (kg)</label>
-                        <input type="number" step="0.1" name="nuevo_peso_{{ dia.id_dia }}" class="number-input" min="0">
-                    </div>
-                    
-                    <div class="exercise-field">
-                        <label class="input-label">Descanso (s)</label>
-                        <input type="number" name="nuevo_descanso_{{ dia.id_dia }}" class="number-input" min="0">
-                    </div>
                 </div>
             </div>
-        </div>
+
+            {% if loop.last %}</div>{% endif %}
         {% endfor %}
         
         <div class="form-actions">
@@ -129,10 +145,85 @@
     </form>
 </div>
 
+<!-- Script para cambiar de semana -->
 <script>
-    // Obtener datos de los divs ocultos
-    const entrenamientoData = JSON.parse(document.getElementById('data-entrenamiento').dataset);
-    const ejerciciosDisponibles = JSON.parse(document.getElementById('data-ejercicios').dataset.ejercicios);
+    document.addEventListener("DOMContentLoaded", function () {
+        // Obtener todas las semanas disponibles
+        const weekContainers = Array.from(document.querySelectorAll(".week-edit-container"));
+        if (weekContainers.length === 0) return; // Si no hay semanas, salir
+        
+        // Ordenar las semanas por su atributo data-week (por si acaso no están en orden)
+        weekContainers.sort((a, b) => {
+            return parseInt(a.dataset.week) - parseInt(b.dataset.week);
+        });
+        
+        // Obtener números de semana reales
+        const availableWeeks = weekContainers.map(w => parseInt(w.dataset.week));
+        const minWeek = Math.min(...availableWeeks);
+        const maxWeek = Math.max(...availableWeeks);
+        
+        let currentWeek = minWeek; // Comenzar desde la primera semana disponible
+        
+        // Función para mostrar/ocultar semanas
+        function renderWeek(weekNumber) {
+            // Validar que la semana exista
+            if (!availableWeeks.includes(weekNumber)) return false;
+            
+            // Ocultar todas las semanas
+            weekContainers.forEach(container => {
+                container.style.display = "none";
+            });
+            
+            // Mostrar solo la semana actual
+            const currentContainer = weekContainers.find(w => parseInt(w.dataset.week) === weekNumber);
+            if (currentContainer) {
+                currentContainer.style.display = "block";
+                document.getElementById("week-number").textContent = weekNumber;
+                return true;
+            }
+            return false;
+        }
+        
+        // Navegación entre semanas
+        function navigateWeeks(direction) {
+            let newWeek = currentWeek + direction;
+            
+            // Asegurarse de que estamos dentro de los límites
+            newWeek = Math.max(minWeek, Math.min(maxWeek, newWeek));
+            
+            if (renderWeek(newWeek)) {
+                currentWeek = newWeek;
+                updateButtonStates();
+            }
+        }
+        
+        // Actualizar estado de los botones
+        function updateButtonStates() {
+            const prevBtn = document.querySelector(".previous-week");
+            const nextBtn = document.querySelector(".next-week");
+            
+            if (prevBtn) prevBtn.disabled = currentWeek <= minWeek;
+            if (nextBtn) nextBtn.disabled = currentWeek >= maxWeek;
+        }
+        
+        // Event listeners
+        document.querySelector(".next-week")?.addEventListener("click", () => navigateWeeks(1));
+        document.querySelector(".previous-week")?.addEventListener("click", () => navigateWeeks(-1));
+        
+        // Inicializar
+        renderWeek(currentWeek);
+        updateButtonStates();
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        $('.select-buscador').select2({
+            placeholder: "Seleccionar Ejercicio",
+            allowClear: true,
+            width: '100%'
+        });
+    });
 </script>
 
 {% endblock %}

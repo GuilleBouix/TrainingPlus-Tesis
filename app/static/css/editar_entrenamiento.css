@@ -16,6 +16,80 @@
     gap: 30px;
 }
 
+.edit-week-navigator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    background: linear-gradient(325deg, rgba(239,68,68,1) 0%, rgba(220,38,38,1) 100%);
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.edit-week-navigator h2 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--color-background);
+}
+
+.edit-week-navigator button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--color-background);
+    transition: all 0.3s ease;
+}
+
+.edit-week-navigator button:hover:not(:disabled) {
+    transform: scale(1.2);
+    color: var(--color-text-secondary);
+}
+
+.edit-week-navigator button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    transform: none;
+}
+.edit-week-navigator .previous-week,
+.edit-week-navigator .next-week {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    outline: none;
+    background: none;
+    border: none;
+    font-size: 1.7rem;
+    cursor: pointer;
+    transition: all .1s ease-in-out;
+    color: var(--color-background) !important;
+}
+.edit-week-navigator .previous-week:hover,
+.edit-week-navigator .next-week:hover {
+    transform: scale(1.01);
+    color: var(--color-background);
+}
+.edit-week-navigator .previous-week:active,
+.edit-week-navigator .next-week:active {
+    transform: scale(1);
+}
+
+/* Borde verde por defecto */
+.select2-container--default .select2-selection--single {
+    border: 1px solid var(--color-border) !important;
+    border-radius: 5px !important;
+    height: 40px !important;
+    transition: .2s linear !important;
+}
+
+/* Borde rojo al pasar el mouse */
+.select2-container--default .select2-selection--single:hover {
+    border-color: var(--color-primary) !important;
+}
+
+
+
+
 /* Contenedores de semana */
 .week-container {
     border: 1px solid var(--color-border);
