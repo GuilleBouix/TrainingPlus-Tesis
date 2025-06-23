@@ -53,6 +53,11 @@
     border: 1px solid var(--color-primary);
 }
 
+.filtro input[type="date"] {
+    cursor: pointer;
+    width: 100%;
+}
+
 .filtros .filtro label {
     font-size: 1rem;
     color: var(--color-text-primary);
@@ -127,11 +132,19 @@
 .observaciones-table tr {
   border-bottom: 1px solid var(--color-border);
 }
+.observaciones-table tr .bx-calendar {
+    font-size: 1rem;
+    color: var(--color-text-secondary);
+    margin-right: .3rem;
+}
 
 .observaciones-table td {
   padding: 1rem 0;
   text-align: left;
 }
+
+
+
 
 @media screen and (max-width: 768px) {
     .filtros-container .filtros {
@@ -164,6 +177,10 @@
     display: block;
     margin-bottom: 2rem;
   }
+  table tr .bx-calendar {
+    display: none;
+  }
+  
 
   table th,
   table td {

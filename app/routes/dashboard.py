@@ -898,17 +898,19 @@ def reporte_observaciones(alumno_id):
     conexion.close()
 
     # Formatear para pasar al HTML
-    lista_observaciones = [
-        {
-            'fecha': obs[0],
+    lista_observaciones = []
+    for obs in observaciones:
+        fecha_formateada = datetime.strptime(obs[0], '%Y-%m-%d').strftime('%d/%m/%Y') if obs[0] else ''
+        lista_observaciones.append({
+            'fecha': fecha_formateada,
             'semana': obs[1],
             'dia': obs[2],
             'ejercicio': obs[3],
             'movimiento': obs[4],
             'observacion': obs[5]
-        }
-        for obs in observaciones
-    ]
+        })
+
+
 
     return render_template('reporte_observaciones.html',
                            alumno_id=alumno_id,
