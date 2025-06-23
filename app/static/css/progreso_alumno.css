@@ -126,6 +126,9 @@
 .ficha {
     border-top: 1px solid var(--color-border);
     padding: .75rem 0;
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
 }
 
 .ficha button {
@@ -138,13 +141,34 @@
     transition: all 0.1s ease-in-out;
     font-size: 1rem;
     color: var(--color-background);
-    margin: 1rem 0;
+    margin-top: 1rem;
     outline: none;
 }
 .ficha button:hover {
     background: var(--color-button-hover);
 }
 .ficha button:active {
+    background: var(--color-button-active);
+}
+
+.ficha .btn-ver-observaciones {
+    width: 100%;
+    padding: 10px 10px;
+    border-radius: 5px;
+    border: none;
+    background: var(--color-button-primary);
+    cursor: pointer;
+    transition: all 0.1s ease-in-out;
+    font-size: 1rem;
+    color: var(--color-background);
+    margin-top: 1rem;
+    outline: none;
+    text-align: center;
+}
+.ficha .btn-ver-observaciones:hover {
+    background: var(--color-button-hover);
+}
+.ficha .btn-ver-observaciones:active {
     background: var(--color-button-active);
 }
 

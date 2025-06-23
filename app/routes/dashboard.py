@@ -805,6 +805,9 @@ def descargar_ficha_pdf(alumno_id):
 # Ruta de Progreso Alumno
 @dashboard_bp.route('/dashboard/progreso-alumno/<alumno_id>', methods=['GET', 'POST'])
 @login_required
+@entrenador_required
+@verificar_suscripcion
+@verificar_formulario_completo
 def progreso_alumno(alumno_id):
     id_entrenador = session.get('id_usuario')
 
@@ -819,7 +822,7 @@ def progreso_alumno(alumno_id):
     # Obtener datos del cuestionario del alumno
     datos_cuestionario = obtener_datos_cuestionario(alumno_id)
 
-    # --------------- Gráfios ---------------
+    # --------------- Gráficos ---------------
     rendimiento_semanal = obtener_rendimiento_semanal(alumno_id, id_entrenamiento)
     
     progreso_fuerza = obtener_progreso_fuerza(alumno_id, id_entrenamiento)
@@ -828,7 +831,7 @@ def progreso_alumno(alumno_id):
     mejores_marcas = obtener_mejores_marcas(entrenamiento['id_entrenamiento'], alumno_id)
 
     observaciones_semanales = obtener_progreso_semanal(alumno_id, id_entrenamiento)
-    print(f"Observaciones semanales: {observaciones_semanales}")  # Para verificar
+    print(f"Observaciones semanales: {observaciones_semanales}")
 
 
     return render_template('progreso_alumno.html',
@@ -840,3 +843,74 @@ def progreso_alumno(alumno_id):
                            progreso_fuerza=progreso_fuerza,
                            mejores_marcas=mejores_marcas,
                            observaciones_semanales=observaciones_semanales)
+
+
+# Ruta para ver observaciones del alumno
+@dashboard_bp.route('/dashboard/progreso-alumno/<alumno_id>/observaciones', methods=['GET'])
+@login_required
+@entrenador_required
+@verificar_suscripcion
+@verificar_formulario_completo
+def reporte_observaciones(alumno_id):
+    id_entrenador = session.get('id_usuario')
+
+    conexion = conexion_basedatos()
+    cursor = conexion.cursor()
+
+    # Obtener nombre y apellido del alumno
+    cursor.execute("""
+        SELECT nombre, apellido 
+        FROM alumno 
+        WHERE id_alumno = ?
+    """, (alumno_id,))
+    datos_alumno = cursor.fetchone()
+
+    if not datos_alumno:
+        conexion.close()
+        flash("Alumno no encontrado", "error")
+        return redirect(url_for('dashboard.dashboard'))
+
+    alumno = {
+        'nombre': datos_alumno[0],
+        'apellido': datos_alumno[1]
+    }
+
+    # Obtener observaciones con datos relacionados
+    cursor.execute("""
+        SELECT 
+            pa.fecha,
+            s.numero_semana,
+            d.numero_dia,
+            e.nombre_ejercicio,
+            e.tipo_fuerza,
+            pa.observaciones
+        FROM progreso_alumno pa
+        JOIN dia_ejercicio de ON pa.id_dia_ejercicio = de.id_dia_ejercicio
+        JOIN dias d ON de.id_dia = d.id_dia
+        JOIN semanas s ON d.id_semana = s.id_semana
+        JOIN ejercicios e ON de.id_ejercicio = e.id_ejercicio
+        WHERE pa.id_alumno = ?
+        AND pa.observaciones IS NOT NULL
+        AND TRIM(pa.observaciones) != ''
+        ORDER BY pa.fecha DESC
+    """, (alumno_id,))
+    observaciones = cursor.fetchall()
+    conexion.close()
+
+    # Formatear para pasar al HTML
+    lista_observaciones = [
+        {
+            'fecha': obs[0],
+            'semana': obs[1],
+            'dia': obs[2],
+            'ejercicio': obs[3],
+            'movimiento': obs[4],
+            'observacion': obs[5]
+        }
+        for obs in observaciones
+    ]
+
+    return render_template('reporte_observaciones.html',
+                           alumno_id=alumno_id,
+                           alumno=alumno,
+                           observaciones=lista_observaciones)

@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Observaciones - Training+
+{% endblock %}
+
+{% block content %}
+
+    <div class="title" data-aos="fade-right">
+        <h1>Observaciones de {{ alumno.nombre }} {{ alumno.apellido }}</h1>
+        <p>Revisa todas las observaciones realizadas por el alumno durante sus entrenamientos.</p>
+    </div>
+
+    <section class="filtros-container">
+        <div class="title">
+            <i class='bx bx-filter-alt'></i>
+            <h2>Filtros</h2>
+        </div>
+
+        <div class="filtros">
+            <div class="filtro">
+                <label for="">Tipo de Movimiento</label>
+                <select name="" id="">
+                    <option value="">Todos</option>
+                    <option value="1">Empuje</option>
+                    <option value="2">Jale</option>
+                    <option value="3">Resistencia</option>
+                </select>
+            </div>
+
+            <div class="filtro">
+                <label for="">Fecha Inicio</label>
+                <input type="date" name="" id="">
+            </div>
+
+            <div class="filtro">
+                <label for="">Fecha Fin</label>
+                <input type="date" name="" id="">
+            </div>
+
+        </div>
+    </section>
+
+    <section class="observaciones-container">
+        <div class="title">
+            <h2>Observaciones</h2>
+
+            <button class="btn-generar-reporte-observaciones">
+                <i class='bx bxs-file'></i>
+                Generar Reporte
+            </button>
+        </div>
+
+        <div class="table-container" data-aos="fade-up" data-aos-delay="100">
+            <table class="observaciones-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Semana/Día</th>
+                        <th scope="col">Ejercicio</th>
+                        <th scope="col">Movimiento</th>
+                        <th scope="col">Observación</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if observaciones %}
+                        {% for item in observaciones %}
+                            <tr>
+                                <td data-label="Fecha">{{ item.fecha }}</td>
+                                <td data-label="Semana/Día">S{{ item.semana }} - D{{ item.dia }}</td>
+                                <td data-label="Ejercicio">{{ item.ejercicio }}</td>
+                                <td data-label="Movimiento">{{ item.movimiento }}</td>
+                                <td data-label="Observación">{{ item.observacion }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5">No hay observaciones registradas.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+{% endblock %}
