@@ -6,49 +6,49 @@
 
 {% block content %}
 
-  <div class="title" data-aos="fade-right">
-      <h1>Dashboard de Entrenador</h1>
-      <p>Gestiona y visualiza el progreso de tus alumnos.</p>
-  </div>
+    <div class="title" data-aos="fade-right">
+        <h1>Dashboard de Entrenador</h1>
+        <p>Gestiona y visualiza el progreso de tus alumnos.</p>
+    </div>
 
-  <!-- Resumen en general -->
-  <section class="resumen-general">
-      <div class="card" data-aos="fade-in" data-aos-delay="150">
-          <div class="card-title">
-              <h2>Cumplimiento Promedio</h2>
-              <i class='bx bxs-award'></i>
-          </div>
+    <!-- Resumen en general -->
+    <section class="resumen-general">
+        <div class="card" data-aos="fade-in" data-aos-delay="150">
+            <div class="card-title">
+                <h2>Cumplimiento Promedio</h2>
+                <i class='bx bxs-award'></i>
+            </div>
 
-          <div class="card-data">
-              <h3>{{ cumplimiento_promedio }}%</h3>
-              
-              <div class="bar day-progress">
-                  <div class="bar-progress-day"
-                      id="barra-dias"
-                      data-progreso="{{ cumplimiento_promedio }}">
-                  </div>
-              </div>
-              
-              <p>Promedio de cumplimiento tus alumnos.</p>
-          </div>
-      </div>
+            <div class="card-data">
+                <h3>{{ cumplimiento_promedio }}%</h3>
+                
+                <div class="bar day-progress">
+                    <div class="bar-progress-day"
+                        id="barra-dias"
+                        data-progreso="{{ cumplimiento_promedio }}">
+                    </div>
+                </div>
+                
+                <p>Promedio de cumplimiento de tus alumnos.</p>
+            </div>
+        </div>
 
-      <div class="card" data-aos="fade-in" data-aos-delay="100">
-          <div class="card-title">
-              <h2>Total de Alumnos</h2>
-              <i class='bx bxs-group'></i>
-          </div>
+        <div class="card" data-aos="fade-in" data-aos-delay="100">
+            <div class="card-title">
+                <h2>Total de Alumnos</h2>
+                <i class='bx bxs-group'></i>
+            </div>
 
-          <div class="card-data">
-              <h3>{{ total_alumnos }}/6</h3>
+            <div class="card-data">
+                <h3>{{ total_alumnos }}/6</h3>
 
-              <p>{{ total_alumnos }} {% if total_alumnos == 1 %}alumno{% else %}alumnos{% endif %} de 6.</p>
-          </div>
-      </div>
-  </section>
+                <p>{{ total_alumnos }} {% if total_alumnos == 1 %}alumno{% else %}alumnos{% endif %} de 6.</p>
+            </div>
+        </div>
+    </section>
 
-  <!-- Vinculaciones -->
-  <section class="vinculaciones-container" data-aos="fade-in" data-aos-delay="200">
+    <!-- Vinculaciones -->
+    <section class="vinculaciones-container" data-aos="fade-in" data-aos-delay="200">
     <h2 class="section-h2">Alumnos Vinculados</h2>
 
     <div class="table-container">
@@ -79,7 +79,7 @@
                     <td class="dashboard-table-fecha" data-label="fecha">{{ alumno.fecha }}</td>
                     <td class="dashboard-table-detalles" data-label="detalles">
                         <a href="{{ url_for('dashboard.progreso_alumno', alumno_id=alumno.id_alumno) }}" 
-                          class="{{ 'disabled-link' if not alumno.tiene_rutina else '' }}">
+                            class="{{ 'disabled-link' if not alumno.tiene_rutina else '' }}">
                             Ver <i class='bx bx-chevron-right'></i>
                         </a>
                     </td>
@@ -88,10 +88,10 @@
             </tbody>
         </table>
     </div>
-  </section>
+    </section>
 
-  <!-- Evolución fuerza (Empuje/Jale/Resistencia) -->
-  <section class="rendimiento-container" data-aos="fade-in" data-aos-delay="250">
+    <!-- Evolución fuerza (Empuje/Jale/Resistencia) -->
+    <section class="rendimiento-container" data-aos="fade-in" data-aos-delay="250">
         <h2 class="section-h2">Evolución de Fuerza y Resistencia</h2>
         <p class="section-p">Porcentaje de mejora en fuerza y resistencia entre todos los alumnos.</p>
 
@@ -230,141 +230,26 @@
                 }
             });
         </script>
-  </section>
+    </section>
 
-  <!-- Ranking de cumplimiento -->
-  <section class="cumplimiento-container" data-aos="fade-in" data-aos-delay="300">
-    <h2 class="section-h2">Ranking de Cumplimiento</h2>
-    <p class="section-p">Ranking de cumplimiento entre todos tus alumnos.</p>
-
-    <div style="max-width: 100%; height: 400px; margin-top: 1rem;">
-      <canvas id="graficoCumplimiento"></canvas>
-    </div>
-  
-    <div style="max-width: 100%; height: 400px; margin-top: 1rem;">
-        <canvas id="graficoCumplimiento"></canvas>
-    </div>
-    
-    <div id="datosCumplimiento"
-        data-nombres='{{ ranking_cumplimiento.nombres | tojson }}'
-        data-porcentajes='{{ ranking_cumplimiento.porcentajes | tojson }}'
-        data-detalle='{{ ranking_cumplimiento.detalle | tojson }}'>
-    </div>
-  
+    <!-- Barra de progreso -->
     <script>
-          function crearGraficoCumplimiento() {
-              const esPantallaChica = window.innerWidth <= 768;
-              const ctx = document.getElementById('graficoCumplimiento').getContext('2d');
-  
-              // Acceder a los datos desde el DOM
-              const datos = document.getElementById('datosCumplimiento');
-              const nombres = JSON.parse(datos.dataset.nombres);
-              const porcentajes = JSON.parse(datos.dataset.porcentajes);
-              const detalle = JSON.parse(datos.dataset.detalle);
-  
-              // Verificar si hay datos válidos
-              if (nombres.length === 0 || nombres[0] === "No hay datos") {
-                  nombres = ["No hay datos disponibles"];
-                  porcentajes = [0];
-                  detalle = [{
-                      nombre: "No hay datos disponibles",
-                      completados: 0,
-                      totales: 1,
-                      porcentaje: 0
-                  }];
-              }
-  
-              // Destruir el gráfico anterior si existe
-              if (window.rankingCumplimientoChart) {
-                  window.rankingCumplimientoChart.destroy();
-              }
-  
-              window.rankingCumplimientoChart = new Chart(ctx, {
-                  type: 'bar',
-                  data: {
-                      labels: nombres,
-                      datasets: [{
-                          label: 'Cumplimiento',
-                          data: porcentajes,
-                          backgroundColor: '#DC2626',
-                          borderRadius: 5,
-                          barThickness: 40
-                      }]
-                  },
-                  options: {
-                      responsive: true,
-                      maintainAspectRatio: false,
-                      indexAxis: esPantallaChica ? 'x' : 'y',
-                      scales: {
-                          [esPantallaChica ? 'y' : 'x']: {
-                              beginAtZero: true,
-                              max: 100,
-                              ticks: {
-                                  stepSize: 20,
-                                  callback: value => value + '%'
-                              },
-                              grid: {
-                                  drawBorder: false
-                              }
-                          },
-                          [esPantallaChica ? 'x' : 'y']: {
-                              grid: {
-                                  drawBorder: false
-                              },
-                              ticks: {
-                                  color: '#000'
-                              }
-                          }
-                      },
-                      plugins: {
-                          legend: {
-                              display: false
-                          },
-                          tooltip: {
-                              backgroundColor: '#5B5B5B',
-                              titleColor: '#fff',
-                              bodyColor: '#fff',
-                              callbacks: {
-                                  label: context => {
-                                      const alumno = detalle.find(a => a.nombre === context.label);
-                                      if (!alumno) return `${context.label}: ${context.raw}%`;
-                                      
-                                      return [
-                                          `${context.label}: ${context.raw}%`,
-                                          `Días completados: ${alumno.completados}/${alumno.totales}`
-                                      ];
-                                  }
-                              }
-                          }
-                      }
-                  }
-              });
-          }
-  
-          // Inicializar el gráfico cuando el DOM esté listo
-          document.addEventListener('DOMContentLoaded', crearGraficoCumplimiento);
-          window.addEventListener('resize', crearGraficoCumplimiento);
+        // Barra de progreso rutina
+        document.addEventListener("DOMContentLoaded", function() {
+            const barra = document.getElementById("barra-dias");
+            const progreso = barra.dataset.progreso;
+            
+            if (barra && progreso) {
+                barra.style.width = progreso + "%";
+            }
+
+            const barraSemanas = document.getElementById("barra-semanas");
+            const progresoSemanas = barraSemanas.dataset.progreso;
+            
+            if (barraSemanas && progresoSemanas) {
+                barraSemanas.style.width = progresoSemanas + "%";
+            }
+        });
     </script>
-  </section>
-
-  <!-- Barra de progreso -->
-  <script>
-      // Barra de progreso rutina
-      document.addEventListener("DOMContentLoaded", function() {
-          const barra = document.getElementById("barra-dias");
-          const progreso = barra.dataset.progreso;
-          
-          if (barra && progreso) {
-              barra.style.width = progreso + "%";
-          }
-
-          const barraSemanas = document.getElementById("barra-semanas");
-          const progresoSemanas = barraSemanas.dataset.progreso;
-          
-          if (barraSemanas && progresoSemanas) {
-              barraSemanas.style.width = progresoSemanas + "%";
-          }
-      });
-  </script>
   
 {% endblock %}

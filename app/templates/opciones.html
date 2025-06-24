@@ -233,24 +233,139 @@
         
         <!-- Seccion de "Soporte" -->
         <div class="support">
-            <h1>Soporte</h1>
-        
-            <p>Si tienes alguna duda o necesitas asistencia, no dudes en ponerte en contacto con el equipo de soporte. Estamos para ayudarte.</p>
-        
-            <form action="{{ url_for('opciones.opciones') }}" method="POST">
-                <input type="hidden" name="id_usuario" value="{{ session.id_usuario }}">
-        
-                <label for="nombre">Nombre y Apellido <span>*</span></label>
-                <input type="text" id="nombre" name="nombre" value="{{ datos_soporte.nombre_completo if datos_soporte else '' }}" disabled>
-        
-                <label for="email">Email <span>*</span></label>
-                <input type="email" id="email" name="email" value="{{ datos_soporte.email if datos_soporte else '' }}" disabled>
-        
-                <label for="mensaje">Mensaje <span>*</span></label>
-                <textarea id="mensaje" name="mensaje" placeholder="Escribe tu mensaje" required></textarea>
-        
-                <button type="submit">Enviar Mensaje</button>
-            </form>
+            <h1>Preguntas Frecuentes (FAQ)</h1>
+            <div class="faq-container">
+                <h2 class="category">Primeros Pasos</h2>
+                
+                <details>
+                    <summary>¿Cómo me registro en la aplicación?</summary>
+                    <div class="answer">
+                        Para registrarte, dirígete a la página de registro donde podrás crear tu cuenta ingresando tu email, contraseña y seleccionando tu rol (usuario o entrenador). Una vez completado el registro, podrás acceder a todas las funcionalidades según tu tipo de usuario.
+                    </div>
+                </details>
+                
+                <details>
+                    <summary>¿Cuál es la diferencia entre un alumno y un entrenador?</summary>
+                    <div class="answer">
+                        Los alumnos tienen acceso a sus rutinas de entrenamiento, pueden seguir su progreso y completar cuestionarios de salud. Los entrenadores, además de estas funciones, pueden crear y editar entrenamientos para sus alumnos, acceder al dashboard con estadísticas de rendimiento y gestionar suscripciones mensuales.
+                    </div>
+                </details>
+                
+                <details>
+                    <summary>No puedo iniciar sesión, ¿qué hago?</summary>
+                    <div class="answer">
+                        Verifica que estés ingresando correctamente tu email y contraseña. Si el problema persiste, puedes contactar a soporte técnico a través de la sección "Opciones" en el menú principal de la aplicación.
+                    </div>
+                </details>
+                
+                <h2 class="category">Perfil y Configuración</h2>
+                
+                <details>
+                    <summary>¿Cómo actualizo mi foto de perfil?</summary>
+                    <div class="answer">
+                        Ve a la sección "Perfil" donde podrás subir una nueva imagen. El sistema automáticamente comprimirá y convertirá tu imagen al formato .webp para optimizar el rendimiento de la aplicación.
+                    </div>
+                </details>
+                
+                <details>
+                    <summary>¿Puedo cambiar mis datos personales después del registro?</summary>
+                    <div class="answer">
+                        Sí, puedes actualizar tu información personal en cualquier momento desde tu perfil. Los entrenadores también pueden completar información adicional como títulos profesionales y experiencia.
+                    </div>
+                </details>
+                
+                <h2 class="category">Entrenamientos y Rutinas</h2>
+                
+                <details>
+                    <summary>¿Cómo creo un entrenamiento como entrenador?</summary>
+                    <div class="answer">
+                        Dirígete a la sección "Entrenamiento" y selecciona "Crear nuevo entrenamiento". Podrás configurar el nombre, duración en semanas, días de entrenamiento y ejercicios específicos para cada día. El sistema te guiará paso a paso a través del proceso.
+                    </div>
+                </details>
+                
+                <details>
+                    <summary>¿Puedo editar un entrenamiento que ya creé?</summary>
+                    <div class="answer">
+                        Absolutamente. Desde la lista de entrenamientos puedes seleccionar cualquier entrenamiento existente y editarlo, modificando días, ejercicios, series y repeticiones según sea necesario.
+                    </div>
+                </details>
+                
+                <details>
+                    <summary>¿Cómo registro mi progreso en las rutinas?</summary>
+                    <div class="answer">
+                        Como alumno, puedes acceder a tu rutina asignada y registrar el progreso de cada ejercicio, incluyendo peso utilizado, repeticiones completadas y observaciones personales sobre tu rendimiento.
+                    </div>
+                </details>
+                
+                <h2 class="category">Seguimiento y Progreso</h2>
+                
+                <details>
+                    <summary>¿Cómo veo mi progreso general?</summary>
+                    <div class="answer">
+                        En la sección "Progreso" encontrarás gráficos detallados que muestran tu rendimiento semanal, días completados, peso total levantado y otras métricas importantes para evaluar tu evolución.
+                    </div>
+                </details>
+                
+                <details>
+                    <summary>¿Mi entrenador puede ver mi progreso?</summary>
+                    <div class="answer">
+                        Sí, los entrenadores tienen acceso a un dashboard donde pueden monitorear el progreso de todos sus alumnos, incluyendo porcentajes de cumplimiento y estadísticas de rendimiento.
+                    </div>
+                </details>
+                
+                <h2 class="category">Problemas Técnicos</h2>
+                
+                <details>
+                    <summary>La aplicación va lenta, ¿qué puedo hacer?</summary>
+                    <div class="answer">
+                        Asegúrate de tener una conexión estable a internet. El sistema optimiza automáticamente las imágenes y utiliza tecnologías web modernas para mejorar el rendimiento.
+                    </div>
+                </details>
+                
+                <details>
+                    <summary>¿Cómo reporto un error en la aplicación?</summary>
+                    <div class="answer">
+                        Ve a "Opciones" y selecciona la sección "Soporte" donde puedes enviar un reporte detallado del problema que estás experimentando. Incluye la mayor cantidad de detalles posible para ayudarnos a resolverlo rápidamente.
+                    </div>
+                </details>
+                
+                <details>
+                    <summary>¿Mis datos están seguros?</summary>
+                    <div class="answer">
+                        Sí, utilizamos sistemas de autenticación seguros y todas las imágenes se procesan y almacenan de forma optimizada. Nunca compartimos tu información personal con terceros.
+                    </div>
+                </details>
+                
+                <h2 class="category">Suscripciones (Para Entrenadores)</h2>
+                
+                <details>
+                    <summary>¿Cómo funciona la suscripción mensual?</summary>
+                    <div class="answer">
+                        Los entrenadores pueden suscribirse al servicio para acceder a funcionalidades premium. La suscripción se gestiona desde la sección correspondiente donde se actualizan automáticamente las fechas de inicio y fin.
+                    </div>
+                </details>
+            </div>
+
+            <div class="formulario-soporte">
+                <h1>Soporte</h1>
+            
+                <p>¿No encontraste la respuesta que buscabas? Puedes contactarnos directamente a través del siguiente formulario de contacto donde podrás enviar tu consulta específica y nuestro equipo te responderá lo antes posible.</p>
+            
+                <form action="{{ url_for('opciones.opciones') }}" method="POST">
+                    <input type="hidden" name="id_usuario" value="{{ session.id_usuario }}">
+            
+                    <label for="nombre">Nombre y Apellido <span>*</span></label>
+                    <input type="text" id="nombre" name="nombre" value="{{ datos_soporte.nombre_completo if datos_soporte else '' }}" disabled>
+            
+                    <label for="email">Email <span>*</span></label>
+                    <input type="email" id="email" name="email" value="{{ datos_soporte.email if datos_soporte else '' }}" disabled>
+            
+                    <label for="mensaje">Mensaje <span>*</span></label>
+                    <textarea id="mensaje" name="mensaje" placeholder="Escribe tu mensaje" required></textarea>
+            
+                    <button type="submit">Enviar Mensaje</button>
+                </form>
+            </div>
         </div>
     </div>
 

@@ -204,99 +204,6 @@ def obtener_datos_tipos_fuerza(id_entrenador):
     }
 
 
-# Función para el ranking de cumplimiento de los alumnos
-def obtener_ranking_cumplimiento(id_entrenador):
-    conn = None
-    try:
-        conn = conexion_basedatos()
-        cur = conn.cursor()
-        
-        # Consulta para obtener el cumplimiento por día
-        query = """
-            SELECT 
-                a.nombre || ' ' || COALESCE(a.apellido, '') as nombre_completo,
-                COUNT(DISTINCT CASE WHEN d.completado = 1 OR pa.id_progreso IS NOT NULL THEN d.id_dia END) as dias_completados,
-                COUNT(DISTINCT d.id_dia) as dias_totales,
-                (COUNT(DISTINCT CASE WHEN d.completado = 1 OR pa.id_progreso IS NOT NULL THEN d.id_dia END) * 100.0 / 
-                 COUNT(DISTINCT d.id_dia)) as porcentaje_cumplimiento
-            FROM alumno a
-            JOIN entrenamiento en ON a.id_alumno = en.id_alumno
-            JOIN semanas s ON en.id_entrenamiento = s.id_entrenamiento
-            JOIN dias d ON s.id_semana = d.id_semana
-            LEFT JOIN dia_ejercicio de ON d.id_dia = de.id_dia
-            LEFT JOIN progreso_alumno pa ON de.id_dia_ejercicio = pa.id_dia_ejercicio AND a.id_alumno = pa.id_alumno
-            WHERE en.id_entrenador = ?
-            GROUP BY a.id_alumno, a.nombre, a.apellido
-            HAVING dias_totales > 0
-            ORDER BY porcentaje_cumplimiento DESC
-            LIMIT 6
-        """
-        
-        print(f"Ejecutando consulta para el entrenador: {id_entrenador}")
-        cur.execute(query, (id_entrenador,))
-        cumplimiento_data = cur.fetchall()
-        
-        # Depuración
-        print(f"Datos crudos obtenidos: {cumplimiento_data}")
-        
-        # Procesar los datos para el gráfico
-        nombres = []
-        porcentajes = []
-        
-        for registro in cumplimiento_data:
-            nombre = registro[0] if registro[0] else "Alumno sin nombre"
-            completados = registro[1] if registro[1] else 0
-            totales = registro[2] if registro[2] else 1  # Evitar división por cero
-            porcentaje = (completados * 100.0 / totales) if totales > 0 else 0
-            
-            nombres.append(nombre)
-            porcentajes.append(round(porcentaje))
-        
-        # Si no hay datos, devolver valores por defecto
-        if not cumplimiento_data:
-            print("No se encontraron datos de cumplimiento diario")
-            return {
-                'nombres': ["No hay datos"],
-                'porcentajes': [0],
-                'detalle': [{
-                    'nombre': "No hay datos",
-                    'completados': 0,
-                    'totales': 1,
-                    'porcentaje': 0
-                }]
-            }
-                
-        return {
-            'nombres': nombres,
-            'porcentajes': porcentajes,
-            'detalle': [
-                {
-                    'nombre': registro[0] if registro[0] else "Alumno sin nombre",
-                    'completados': registro[1] if registro[1] else 0,
-                    'totales': registro[2] if registro[2] else 1,
-                    'porcentaje': round((registro[1] * 100.0 / registro[2]) if registro[2] > 0 else 0)
-                } for registro in cumplimiento_data
-            ]
-        }
-        
-    except Exception as e:
-        print(f"Error en obtener_ranking_cumplimiento: {str(e)}")
-        # Devuelve una estructura vacía pero válida
-        return {
-            'nombres': ["Error en datos"],
-            'porcentajes': [0],
-            'detalle': [{
-                'nombre': "Error al obtener datos",
-                'completados': 0,
-                'totales': 1,
-                'porcentaje': 0
-            }]
-        }
-    finally:
-        if conn:
-            conn.close()
-
-
 # Ruta de Dashboard
 @dashboard_bp.route('/dashboard', methods=['GET', 'POST'])
 @login_required
@@ -334,14 +241,12 @@ def dashboard():
     datos_fuerza = obtener_datos_tipos_fuerza(id_entrenador)
 
     # Obtener ranking de cumplimiento
-    ranking_cumplimiento = obtener_ranking_cumplimiento(id_entrenador)
 
     return render_template('dashboard.html',
                            total_alumnos=total_alumnos,
                            cumplimiento_promedio=cumplimiento_promedio,
                            alumnos_vinculados=alumnos_vinculados,
-                           datos_fuerza=datos_fuerza,
-                           ranking_cumplimiento=ranking_cumplimiento)
+                           datos_fuerza=datos_fuerza)
 
 
 # Obtener nombre, apellido y foto de perfil del alumno
