@@ -171,6 +171,54 @@ td a:hover {
   color: var(--color-text-secondary);
 }
 
+.grafico-container {
+  display: flex; 
+  justify-content: center;
+  margin-top: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  background-color: #fafafa;
+}
+
+#graficoRadarFuerza {
+  max-width: 500px;
+  max-height: 500px;
+}
+
+.tabla-fuerza-container {
+  margin: 1rem 0;
+  width: 100%;
+}
+
+/* Estilos para desktop (tablet/escritorio) */
+.tabla-fuerza {
+  width: 100%;
+  border-collapse: collapse;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.95rem;
+}
+
+.tabla-fuerza thead th {
+  font-weight: 600;
+  text-align: left;
+  padding: 0.75rem;
+  color: var(--color-text-secondary);
+  border-bottom: 2px solid var(--color-border);
+  background-color: var(--color-background-light);
+}
+
+.tabla-fuerza tbody td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.tabla-fuerza tbody tr:hover {
+  background-color: var(--color-background-hover);
+  transition: 0.2s ease;
+}
+
+
+
 
 /* Ranking de cumplimiento */
 .cumplimiento-container {
@@ -270,6 +318,53 @@ td a:hover {
 
   table td:last-child {
     border-bottom: 0;
+  }
+
+  #graficoRadarFuerza {
+      max-width: 100%;
+      height: auto;
+  }
+
+  .tabla-fuerza {
+    display: block;
+    min-width: auto;
+  }
+  
+  .tabla-fuerza thead {
+    display: none;
+  }
+  
+  .tabla-fuerza tbody {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+  }
+  
+  .tabla-fuerza tbody tr {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-background-light);
+    border-radius: 5px;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .tabla-fuerza tbody td {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: none;
+  }
+  
+  .tabla-fuerza tbody td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    margin-right: 1rem;
+  }
+  
+  .tabla-fuerza tbody tr:hover {
+    background-color: var(--color-background-light);
   }
 }
 @media screen and (max-width: 480px) {

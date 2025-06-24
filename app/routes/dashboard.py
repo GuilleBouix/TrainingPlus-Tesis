@@ -130,15 +130,15 @@ def obtener_datos_tipos_fuerza(id_entrenador):
     conn = conexion_basedatos()
     cur = conn.cursor()
     
-    # Consulta para obtener el progreso de fuerza por tipo para todos los alumnos del entrenador
+    # Consulta modificada para mantener compatibilidad
     query = """
         SELECT 
             e.tipo_fuerza,
             COUNT(DISTINCT de.id_dia_ejercicio) as total_ejercicios,
             AVG(COALESCE(p.peso_utilizado, 0)) as avg_peso,
-            AVG(COALESCE(p.repeticiones_realizadas, 0)) as avg_repeticiones,
+            AVG(COALESCE(p.repeticiones_realizadas, 0)) as avg_rep,
             MAX(COALESCE(p.peso_utilizado, 0)) as max_peso,
-            MAX(COALESCE(p.repeticiones_realizadas, 0)) as max_repeticiones,
+            MAX(COALESCE(p.repeticiones_realizadas, 0)) as max_rep,
             COUNT(DISTINCT en.id_alumno) as total_alumnos
         FROM dia_ejercicio de
         JOIN ejercicios e ON de.id_ejercicio = e.id_ejercicio
@@ -153,7 +153,7 @@ def obtener_datos_tipos_fuerza(id_entrenador):
     cur.execute(query, (id_entrenador,))
     fuerza_data = cur.fetchall()
     
-    # Procesar los datos para el gráfico
+    # Procesamiento de datos
     tipos_fuerza = ['Empuje', 'Jale', 'Resistencia']
     datos_grafico = {tipo: 0 for tipo in tipos_fuerza}
     total_alumnos = 0
@@ -162,19 +162,17 @@ def obtener_datos_tipos_fuerza(id_entrenador):
         tipo, total, avg_peso, avg_rep, max_peso, max_rep, alumnos = registro
         
         if tipo in datos_grafico:
-            # Calcular un índice de fuerza combinando peso y repeticiones
             if tipo == 'Resistencia':
                 indice = (avg_peso * 0.3 + avg_rep * 0.7) * 2
             else:
                 indice = (avg_peso * 0.7 + avg_rep * 0.3) * 2
                 
-            # Multiplicar por el número de alumnos para ponderar
             datos_grafico[tipo] = round(indice * alumnos)
             
             if alumnos > total_alumnos:
                 total_alumnos = alumnos
     
-    # Normalizar los valores para que el máximo sea 100
+    # Normalización
     if total_alumnos > 0:
         max_valor = max(datos_grafico.values()) if datos_grafico.values() else 1
         if max_valor > 0:
@@ -186,16 +184,19 @@ def obtener_datos_tipos_fuerza(id_entrenador):
     return {
         'tipos_fuerza': tipos_fuerza,
         'valores': [datos_grafico[tipo] for tipo in tipos_fuerza],
-        'detalle': {
+        'detalle': {  # Mantener nombre consistente
             'Empuje': {
                 'avg_peso': next((r[2] for r in fuerza_data if r[0] == 'Empuje'), 0),
+                'avg_rep': next((r[3] for r in fuerza_data if r[0] == 'Empuje'), 0),
                 'alumnos': next((r[6] for r in fuerza_data if r[0] == 'Empuje'), 0)
             },
             'Jale': {
                 'avg_peso': next((r[2] for r in fuerza_data if r[0] == 'Jale'), 0),
+                'avg_rep': next((r[3] for r in fuerza_data if r[0] == 'Jale'), 0),
                 'alumnos': next((r[6] for r in fuerza_data if r[0] == 'Jale'), 0)
             },
             'Resistencia': {
+                'avg_peso': next((r[2] for r in fuerza_data if r[0] == 'Resistencia'), 0),
                 'avg_rep': next((r[3] for r in fuerza_data if r[0] == 'Resistencia'), 0),
                 'alumnos': next((r[6] for r in fuerza_data if r[0] == 'Resistencia'), 0)
             }
@@ -264,9 +265,7 @@ def obtener_ranking_cumplimiento(id_entrenador):
                     'porcentaje': 0
                 }]
             }
-        
-        print(f"Datos procesados - Nombres: {nombres}, Porcentajes: {porcentajes}")
-        
+                
         return {
             'nombres': nombres,
             'porcentajes': porcentajes,

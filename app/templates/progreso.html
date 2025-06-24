@@ -295,28 +295,41 @@
                     type: 'bar',
                     data: {
                         labels: fuerzaData.tipos_fuerza,
-                        datasets: [{
-                            label: 'Índice de Fuerza',
-                            data: fuerzaData.valores,
-                            backgroundColor: [
-                                'rgba(220, 38, 38, 0.7)',  // Empuje - rojo
-                                'rgba(59, 130, 246, 0.7)',  // Jale - azul
-                                'rgba(34, 197, 94, 0.7)'     // Resistencia - verde
-                            ],
-                            borderColor: [
-                                'rgba(220, 38, 38, 1)',
-                                'rgba(59, 130, 246, 1)',
-                                'rgba(34, 197, 94, 1)'
-                            ],
-                            borderWidth: 1
-                        }]
+                        datasets: [
+                            {
+                                label: 'Empuje',
+                                data: [fuerzaData.valores[0], null, null],
+                                backgroundColor: 'rgba(220, 38, 38, 0.7)',
+                                borderColor: 'rgba(220, 38, 38, 1)',
+                                borderWidth: 1,
+                            },
+                            {
+                                label: 'Jale',
+                                data: [null, fuerzaData.valores[1], null],
+                                backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                                borderColor: 'rgba(59, 130, 246, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Resistencia',
+                                data: [null, null, fuerzaData.valores[2]],
+                                backgroundColor: 'rgba(34, 197, 94, 0.7)',
+                                borderColor: 'rgba(34, 197, 94, 1)',
+                                borderWidth: 1
+                            }
+                        ]
                     },
                     options: {
                         responsive: true,
                         indexAxis: 'y',
                         plugins: {
                             legend: {
-                                display: false
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    color: '#374151',
+                                    boxWidth: 20
+                                }
                             },
                             tooltip: {
                                 backgroundColor: '#1f2937',
@@ -325,10 +338,10 @@
                                 cornerRadius: 5,
                                 callbacks: {
                                     label: function(context) {
-                                        const label = context.label;
+                                        const label = context.dataset.label;
                                         const value = context.raw;
                                         const detalle = fuerzaData.detalle[label];
-                                        
+
                                         if (label === 'Resistencia') {
                                             return [
                                                 `Índice: ${value}`,
@@ -355,7 +368,7 @@
                                 },
                                 ticks: {
                                     color: '#6b7280',
-                                    stepSize: 20, // Cambia este valor para definir el intervalo
+                                    stepSize: 20,
                                     callback: function(value) {
                                         return value + '%';
                                     }
@@ -380,7 +393,7 @@
                         }
                     }
                 });
-            });
+                });
         </script>
     </section>
 

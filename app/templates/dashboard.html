@@ -92,68 +92,144 @@
 
   <!-- Evolución fuerza (Empuje/Jale/Resistencia) -->
   <section class="rendimiento-container" data-aos="fade-in" data-aos-delay="250">
-      <h2 class="section-h2">Evolución de Fuerza y Resistencia</h2>
-      <p class="section-p">Porcentaje de mejora en fuerza y resistencia entre todos los alumnos.</p>
+        <h2 class="section-h2">Evolución de Fuerza y Resistencia</h2>
+        <p class="section-p">Porcentaje de mejora en fuerza y resistencia entre todos los alumnos.</p>
 
-      <div style="max-width: 400px; margin: 3rem auto;">
-        <canvas id="graficoDonaFuerza"></canvas>
-      </div>
+        <div class="grafico-container">
+            <canvas id="graficoRadarFuerza" width="500" height="500"></canvas>
+        </div>
 
-      <div id="datosFuerza"
-          data-labels='{{ datos_fuerza.tipos_fuerza | tojson }}'
-          data-valores='{{ datos_fuerza.valores | tojson }}'
-          data-detalles='{{ datos_fuerza.detalle | tojson }}'>
-      </div>
+        <div class="tabla-fuerza-container">
+            <table class="tabla-fuerza">
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>% Distribución</th>
+                        <th>Peso Avg (kg)</th>
+                        <th>Reps Avg</th>
+                        <th>Alumnos</th>
+                        <th>Desequilibrio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tipo in datos_fuerza.tipos_fuerza %}
+                    <tr data-tipo="{{ tipo }}">
+                        <td data-label="Tipo">{{ tipo }}</td>
+                        <td data-label="% Distribución">{{ datos_fuerza.valores[loop.index0] }}%</td>
+                        <td data-label="Peso Avg">{{ datos_fuerza.detalle[tipo].avg_peso | round(1) if tipo != 'Resistencia' else '-' }}</td>
+                        <td data-label="Reps Avg">{{ datos_fuerza.detalle[tipo].avg_rep | round(1) if tipo == 'Resistencia' else '-' }}</td>
+                        <td data-label="Alumnos">{{ datos_fuerza.detalle[tipo].alumnos }}</td>
+                        <td data-label="Desequilibrio">
+                            {% if tipo == 'Empuje' %}
+                                {{ (datos_fuerza.valores[loop.index0] - 35) | abs }}% 
+                                {{ '↓' if datos_fuerza.valores[loop.index0] < 35 else '↑' }}
+                            {% elif tipo == 'Jale' %}
+                                {{ (datos_fuerza.valores[loop.index0] - 35) | abs }}% 
+                                {{ '↓' if datos_fuerza.valores[loop.index0] < 35 else '↑' }}
+                            {% else %}
+                                {{ (datos_fuerza.valores[loop.index0] - 30) | abs }}% 
+                                {{ '↓' if datos_fuerza.valores[loop.index0] < 30 else '↑' }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
-      <script>
-        const datosFuerza = document.getElementById('datosFuerza');
-    
-        const labels = JSON.parse(datosFuerza.dataset.labels);
-        const valores = JSON.parse(datosFuerza.dataset.valores);
-        const detalles = JSON.parse(datosFuerza.dataset.detalles);
-    
-        const ctxDonaFuerza = document.getElementById('graficoDonaFuerza').getContext('2d');
-    
-        new Chart(ctxDonaFuerza, {
-            type: 'doughnut',
-            data: {
-                labels: labels,
-                datasets: [{
-                    data: valores,
-                    backgroundColor: ['#FF7F9A', '#6ACECE', '#FFD778'],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                cutout: '65%',
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'bottom',
-                        labels: {
-                            color: '#000'
+
+        <div id="datosFuerza"
+            data-labels='{{ datos_fuerza.tipos_fuerza | tojson }}'
+            data-valores='{{ datos_fuerza.valores | tojson }}'
+            data-detalle='{{ datos_fuerza.detalle | tojson }}'>
+        </div>
+
+        <script>
+            const datosFuerza = document.getElementById('datosFuerza');
+            const labels = JSON.parse(datosFuerza.dataset.labels);
+            const valores = JSON.parse(datosFuerza.dataset.valores);
+            const detalle = JSON.parse(datosFuerza.dataset.detalle);
+            
+            // Valores ideales de referencia
+            const valoresIdeales = labels.map(tipo => tipo === 'Resistencia' ? 30 : 35);
+            
+            // Gráfico radar
+            const ctxRadarFuerza = document.getElementById('graficoRadarFuerza').getContext('2d');
+            
+            new Chart(ctxRadarFuerza, {
+                type: 'radar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Desempeño Real',
+                            data: valores,
+                            backgroundColor: 'rgba(0, 132, 255, 0.1)',
+                            borderColor: '#008cff',
+                            borderWidth: 2,
+                            pointBackgroundColor: '#008cff',
+                            pointBorderColor: '#fff',
+                            pointHoverRadius: 5
+                        },
+                        {
+                            label: 'Balance Ideal',
+                            data: valoresIdeales,
+                            backgroundColor: 'rgba(0, 255, 21, 0.15)',
+                            borderColor: '#1ce44e',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            pointBackgroundColor: '#1ce44e',
+                            pointBorderColor: '#fff',
+                            pointHoverRadius: 5
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                display: true
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                            ticks: {
+                                stepSize: 20
+                            }
                         }
                     },
-                    tooltip: {
-                        callbacks: {
-                            label: context => {
-                                const tipo = context.label;
-                                const valor = context.raw;
-                                const info = detalles[tipo];
-    
-                                if (tipo === 'Resistencia') {
-                                    return `${tipo}: ${valor}%\nAvg rep: ${Math.round(info.avg_rep)} (${info.alumnos} alumnos)`;
-                                } else {
-                                    return `${tipo}: ${valor}%\nAvg peso: ${Math.round(info.avg_peso)}kg (${info.alumnos} alumnos)`;
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.dataset.label || '';
+                                    const value = context.raw;
+                                    const tipo = context.label;
+                                    const info = detalle[tipo];
+                                    
+                                    if (label === 'Desempeño Real') {
+                                        return [
+                                            `${label}: ${value}%`,
+                                            `Peso: ${info.avg_peso.toFixed(1)}kg`,
+                                            `Reps: ${info.avg_rep.toFixed(1)}`
+                                        ];
+                                    }
+                                    return `${label}: ${value}%`;
                                 }
                             }
+                        },
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    elements: {
+                        line: {
+                            tension: 0.1
                         }
                     }
                 }
-            }
-        });
-    </script>
+            });
+        </script>
   </section>
 
   <!-- Ranking de cumplimiento -->
