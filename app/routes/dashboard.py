@@ -31,6 +31,47 @@ def obtener_total_alumnos(id_entrenador):
     return total
 
 
+# Función para obtener la adherencia promedio
+def obtener_adherencia_promedio(id_entrenador):
+    conn = conexion_basedatos()
+    cur = conn.cursor()
+
+    # Obtener todos los entrenamientos asignados por el entrenador
+    query = """
+        SELECT 
+            e.id_alumno,
+            COUNT(DISTINCT d.id_dia) AS total_dias,
+            COUNT(DISTINCT CASE WHEN d.completado = 1 THEN d.id_dia END) AS dias_completados
+        FROM entrenamiento e
+        JOIN semanas s ON e.id_entrenamiento = s.id_entrenamiento
+        JOIN dias d ON s.id_semana = d.id_semana
+        WHERE e.id_entrenador = ?
+        GROUP BY e.id_alumno
+    """
+
+    cur.execute(query, (id_entrenador,))
+    resultados = cur.fetchall()
+
+    conn.close()
+
+    if not resultados:
+        return 0.0
+
+    # Calcular la adherencia de cada alumno y hacer promedio
+    adherencias = []
+    for fila in resultados:
+        total = fila['total_dias']
+        completados = fila['dias_completados']
+
+        if total > 0:
+            porcentaje = (completados / total) * 100
+            adherencias.append(porcentaje)
+
+    adherencia_promedio = round(sum(adherencias) / len(adherencias), 1) if adherencias else 0.0
+
+    return adherencia_promedio
+
+
 # Función obtener cumplimiento promedio de todos los alumnos en sus rutinas
 def obtener_cumplimiento_promedio(id_entrenador):
     conn = conexion_basedatos()
@@ -204,6 +245,51 @@ def obtener_datos_tipos_fuerza(id_entrenador):
     }
 
 
+# Función para obtener la evolución del peso mensual de un alumno
+def obtener_evolucion_peso_mensual(id_entrenador):
+    conn = conexion_basedatos()
+    cur = conn.cursor()
+
+    query = """
+        SELECT 
+            pa.fecha,
+            pa.peso_utilizado,
+            pa.series_realizadas,
+            pa.repeticiones_realizadas
+        FROM progreso_alumno pa
+        JOIN entrenamiento en ON pa.id_alumno = en.id_alumno
+        WHERE en.id_entrenador = ? AND pa.fecha IS NOT NULL
+    """
+
+    cur.execute(query, (id_entrenador,))
+    resultados = cur.fetchall()
+
+    # Agrupar peso total por mes
+    peso_por_mes = {}
+
+    for fila in resultados:
+        fecha_str, peso, series, reps = fila
+
+        if not fecha_str or not peso or not series or not reps:
+            continue
+
+        fecha = datetime.strptime(fecha_str, "%Y-%m-%d")
+        mes_key = fecha.strftime("%Y-%m")
+
+        peso_total = peso * series * reps
+        peso_por_mes[mes_key] = peso_por_mes.get(mes_key, 0) + peso_total
+
+    # Ordenar los datos por fecha
+    peso_ordenado = dict(sorted(peso_por_mes.items()))
+
+    conn.close()
+
+    return {
+        "meses": list(peso_ordenado.keys()),
+        "totales": [round(val, 1) for val in peso_ordenado.values()]
+    }
+
+
 # Ruta de Dashboard
 @dashboard_bp.route('/dashboard', methods=['GET', 'POST'])
 @login_required
@@ -231,6 +317,9 @@ def dashboard():
     # Obtener el total de alumnos con planes activos
     total_alumnos = obtener_total_alumnos(id_entrenador)
 
+    # Obtener el promedio de adherencia
+    adherencia_promedio = obtener_adherencia_promedio(id_entrenador)
+
     # Obtener el promedio de cumplimiento
     cumplimiento_promedio = obtener_cumplimiento_promedio(id_entrenador)
 
@@ -240,13 +329,17 @@ def dashboard():
     # Obtener datos de tipos de fuerza para todos los alumnos
     datos_fuerza = obtener_datos_tipos_fuerza(id_entrenador)
 
-    # Obtener ranking de cumplimiento
+    # Obtener evolución del peso mensual de los alumnos
+    evolucion_peso = obtener_evolucion_peso_mensual(id_entrenador)
+
 
     return render_template('dashboard.html',
                            total_alumnos=total_alumnos,
+                           adherencia_promedio=adherencia_promedio,
                            cumplimiento_promedio=cumplimiento_promedio,
                            alumnos_vinculados=alumnos_vinculados,
-                           datos_fuerza=datos_fuerza)
+                           datos_fuerza=datos_fuerza,
+                           evolucion_peso=evolucion_peso)
 
 
 # Obtener nombre, apellido y foto de perfil del alumno

@@ -35,6 +35,19 @@
 
         <div class="card" data-aos="fade-in" data-aos-delay="100">
             <div class="card-title">
+                <h2>Adherencia Promedio</h2>
+                <i class='bx bx-target-lock'></i>
+            </div>
+
+            <div class="card-data">
+                <h3>{{ adherencia_promedio }}%</h3>
+
+                <p>Adherencia promedio de todos tus alumnos.</p>
+            </div>
+        </div>
+
+        <div class="card" data-aos="fade-in" data-aos-delay="100">
+            <div class="card-title">
                 <h2>Total de Alumnos</h2>
                 <i class='bx bxs-group'></i>
             </div>
@@ -49,50 +62,50 @@
 
     <!-- Vinculaciones -->
     <section class="vinculaciones-container" data-aos="fade-in" data-aos-delay="200">
-    <h2 class="section-h2">Alumnos Vinculados</h2>
+        <h2 class="section-h2"><i class='bx bxs-user'></i> Alumnos Vinculados</h2>
 
-    <div class="table-container">
-        <table class="dashboard-table">
-            <thead>
-                <tr>
-                    <th scope="col">Alumno</th>
-                    <th scope="col">Rutina</th>
-                    <th scope="col">Fecha</th>
-                    <th scope="col">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for alumno in alumnos_vinculados %}
-                <tr data-aos="fade-right" data-aos-delay="250">
-                    <td data-label="alumno" id="alumno">
-                        <div class="foto-nombre">
-                            <img src="{{ url_for('static', filename='uploads/users/' ~ alumno.foto_perfil) }}" alt="{{ alumno.nombre_completo }}">
-                            <span class="nombre-alumno">{{ alumno.nombre_completo }}</span>
-                        </div>
-                    </td>
-                    <td class="dashboard-table-rutina" data-label="entrenamiento">
-                        {{ alumno.rutina }}
-                        {% if not alumno.tiene_rutina %}
-                            <span class="no-rutina-badge"></span>
-                        {% endif %}
-                    </td>
-                    <td class="dashboard-table-fecha" data-label="fecha">{{ alumno.fecha }}</td>
-                    <td class="dashboard-table-detalles" data-label="detalles">
-                        <a href="{{ url_for('dashboard.progreso_alumno', alumno_id=alumno.id_alumno) }}" 
-                            class="{{ 'disabled-link' if not alumno.tiene_rutina else '' }}">
-                            Ver <i class='bx bx-chevron-right'></i>
-                        </a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+        <div class="table-container">
+            <table class="dashboard-table">
+                <thead>
+                    <tr>
+                        <th scope="col">Alumno</th>
+                        <th scope="col">Rutina</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for alumno in alumnos_vinculados %}
+                    <tr data-aos="fade-right" data-aos-delay="250">
+                        <td data-label="alumno" id="alumno">
+                            <div class="foto-nombre">
+                                <img src="{{ url_for('static', filename='uploads/users/' ~ alumno.foto_perfil) }}" alt="{{ alumno.nombre_completo }}">
+                                <span class="nombre-alumno">{{ alumno.nombre_completo }}</span>
+                            </div>
+                        </td>
+                        <td class="dashboard-table-rutina" data-label="entrenamiento">
+                            {{ alumno.rutina }}
+                            {% if not alumno.tiene_rutina %}
+                                <span class="no-rutina-badge"></span>
+                            {% endif %}
+                        </td>
+                        <td class="dashboard-table-fecha" data-label="fecha">{{ alumno.fecha }}</td>
+                        <td class="dashboard-table-detalles" data-label="detalles">
+                            <a href="{{ url_for('dashboard.progreso_alumno', alumno_id=alumno.id_alumno) }}" 
+                                class="{{ 'disabled-link' if not alumno.tiene_rutina else '' }}">
+                                Ver <i class='bx bx-chevron-right'></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </section>
 
     <!-- Evolución fuerza (Empuje/Jale/Resistencia) -->
     <section class="rendimiento-container" data-aos="fade-in" data-aos-delay="250">
-        <h2 class="section-h2">Evolución de Fuerza y Resistencia</h2>
+        <h2 class="section-h2"><i class='bx bx-radar' ></i> Evolución de Fuerza y Resistencia</h2>
         <p class="section-p">Porcentaje de mejora en fuerza y resistencia entre todos los alumnos.</p>
 
         <div class="grafico-container">
@@ -231,6 +244,75 @@
             });
         </script>
     </section>
+
+    <section class="peso-mensual-container" data-aos="fade-in" data-aos-delay="300">
+        <h2 class="section-h2"><i class='bx bx-line-chart'></i> Evolución del Peso Levantado</h2>
+        <p class="section-p">Peso total levantado por todos los alumnos cada mes.</p>
+
+        <canvas id="graficoPesoMensual" height="130"></canvas>
+
+        <div id="datosPesoMensual"
+            data-meses='{{ evolucion_peso.meses | tojson }}'
+            data-totales='{{ evolucion_peso.totales | tojson }}'>
+        </div>
+
+        <script>
+            const dataPeso = document.getElementById("datosPesoMensual");
+            const totales = JSON.parse(dataPeso.dataset.totales);
+            const mesesOriginales = JSON.parse(dataPeso.dataset.meses);
+            const meses = mesesOriginales.map(m => {
+                const [a, m2] = m.split("-");
+                return `${m2}/${a}`;
+            });
+
+
+            new Chart(document.getElementById("graficoPesoMensual").getContext("2d"), {
+            type: "line",
+            data: {
+                labels: meses,
+                datasets: [{
+                label: "Peso Total Levantado (kg)",
+                data: totales,
+                fill: true,
+                backgroundColor: "rgba(168, 85, 247, 0.2)",
+                borderColor: "rgba(147, 51, 234, 1)",
+                tension: 0.3,
+                pointBackgroundColor: "#9333EA",
+                pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                y: {
+                    title: {
+                    display: true,
+                    text: "Peso (kg)"
+                    },
+                    beginAtZero: true
+                },
+                x: {
+                    title: {
+                    display: true,
+                    text: "Mes"
+                    }
+                }
+                },
+                plugins: {
+                tooltip: {
+                    callbacks: {
+                    label: ctx => `${ctx.raw} kg totales`
+                    }
+                },
+                legend: {
+                    position: 'top'
+                }
+                }
+            }
+            });
+        </script>
+    </section>
+
 
     <!-- Barra de progreso -->
     <script>

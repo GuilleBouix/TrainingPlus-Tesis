@@ -220,21 +220,28 @@ td a:hover {
 
 
 
-/* Ranking de cumplimiento */
-.cumplimiento-container {
+/* Peso Mensual */
+.peso-mensual-container {
   padding: 1rem;
   border: 1px solid var(--color-border);
   border-radius: 10px;
   margin: 1rem 0;
   position: relative;
 }
-.cumplimiento-container h2 {
+.peso-mensual-container h2 {
   font-weight: 600;
   font-size: 1.3rem;
   color: var(--color-text-primary);
 }
-.cumplimiento-container p {
+.peso-mensual-container p {
   color: var(--color-text-secondary);
+}
+
+#graficoPesoMensual {
+  margin-top: 1rem;
+  background-color: #fafafa;
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
 }
 
 .section-h2 {
@@ -242,6 +249,11 @@ td a:hover {
 }
 .section-p {
   font-size: 1rem;
+}
+
+h2 i {
+  color: var(--color-primary);
+  font-size: 1.2rem;
 }
 
 
