@@ -435,13 +435,23 @@
                 <div class="datos">
                     <div class="dias">
                         <p>
-                            Días completados: <span>{{ semana.dias_completados }}</span>
+                            Días completados: 
+                            <span class="{% if semana.dias_completados.split('/')[0] == semana.dias_completados.split('/')[1] %}completo{% endif %}">
+                                {{ semana.dias_completados }}
+                                {% if semana.dias_completados.split('/')[0] == semana.dias_completados.split('/')[1] %}
+                                {% endif %}
+                            </span>
                         </p>
                     </div>
 
                     <div class="ejercicios">
                         <p>
-                            Ejercicios completados: <span>{{ semana.ejercicios_completados }}</span>
+                            Ejercicios completados: 
+                            <span class="{% if semana.ejercicios_completados.split('/')[0] == semana.ejercicios_completados.split('/')[1] %}completo{% endif %}">
+                                {{ semana.ejercicios_completados }}
+                                {% if semana.ejercicios_completados.split('/')[0] == semana.ejercicios_completados.split('/')[1] %}
+                                {% endif %}
+                            </span>
                         </p>
                     </div>
                 </div>
@@ -466,7 +476,6 @@
 
     <!-- Barra de progreso -->
     <script>
-        // Barra de progreso rutina
         const barra = document.getElementById("barra-progreso");
         const progreso = barra.dataset.progreso;
 

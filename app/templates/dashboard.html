@@ -129,8 +129,25 @@
                     <tr data-tipo="{{ tipo }}">
                         <td data-label="Tipo">{{ tipo }}</td>
                         <td data-label="% Distribución">{{ datos_fuerza.valores[loop.index0] }}%</td>
-                        <td data-label="Peso Avg">{{ datos_fuerza.detalle[tipo].avg_peso | round(1) if tipo != 'Resistencia' else '-' }}</td>
-                        <td data-label="Reps Avg">{{ datos_fuerza.detalle[tipo].avg_rep | round(1) if tipo == 'Resistencia' else '-' }}</td>
+                        
+                        <!-- CORREGIDO: Mostrar peso siempre que exista -->
+                        <td data-label="Peso Avg">
+                            {% if datos_fuerza.detalle[tipo].avg_peso > 0 %}
+                                {{ datos_fuerza.detalle[tipo].avg_peso | round(1) }} kg
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        
+                        <!-- CORREGIDO: Mostrar repeticiones siempre que existan -->
+                        <td data-label="Reps Avg">
+                            {% if datos_fuerza.detalle[tipo].avg_rep > 0 %}
+                                {{ datos_fuerza.detalle[tipo].avg_rep | round(1) }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        
                         <td data-label="Alumnos">{{ datos_fuerza.detalle[tipo].alumnos }}</td>
                         <td data-label="Desequilibrio">
                             {% if tipo == 'Empuje' %}
@@ -149,7 +166,6 @@
                 </tbody>
             </table>
         </div>
-
 
         <div id="datosFuerza"
             data-labels='{{ datos_fuerza.tipos_fuerza | tojson }}'
@@ -221,11 +237,18 @@
                                     const info = detalle[tipo];
                                     
                                     if (label === 'Desempeño Real') {
-                                        return [
-                                            `${label}: ${value}%`,
-                                            `Peso: ${info.avg_peso.toFixed(1)}kg`,
-                                            `Reps: ${info.avg_rep.toFixed(1)}`
-                                        ];
+                                        // CORREGIDO: Mostrar datos solo si existen
+                                        let tooltipLines = [`${label}: ${value}%`];
+                                        
+                                        if (info.avg_peso && info.avg_peso > 0) {
+                                            tooltipLines.push(`Peso: ${info.avg_peso.toFixed(1)}kg`);
+                                        }
+                                        
+                                        if (info.avg_rep && info.avg_rep > 0) {
+                                            tooltipLines.push(`Reps: ${info.avg_rep.toFixed(1)}`);
+                                        }
+                                        
+                                        return tooltipLines;
                                     }
                                     return `${label}: ${value}%`;
                                 }

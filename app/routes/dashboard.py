@@ -171,23 +171,26 @@ def obtener_datos_tipos_fuerza(id_entrenador):
     conn = conexion_basedatos()
     cur = conn.cursor()
     
-    # Consulta modificada para mantener compatibilidad
+    # Consulta corregida que solo considera ejercicios CON progreso registrado
     query = """
         SELECT 
             e.tipo_fuerza,
             COUNT(DISTINCT de.id_dia_ejercicio) as total_ejercicios,
-            AVG(COALESCE(p.peso_utilizado, 0)) as avg_peso,
-            AVG(COALESCE(p.repeticiones_realizadas, 0)) as avg_rep,
-            MAX(COALESCE(p.peso_utilizado, 0)) as max_peso,
-            MAX(COALESCE(p.repeticiones_realizadas, 0)) as max_rep,
+            AVG(p.peso_utilizado) as avg_peso,
+            AVG(p.repeticiones_realizadas) as avg_rep,
+            MAX(p.peso_utilizado) as max_peso,
+            MAX(p.repeticiones_realizadas) as max_rep,
             COUNT(DISTINCT en.id_alumno) as total_alumnos
         FROM dia_ejercicio de
         JOIN ejercicios e ON de.id_ejercicio = e.id_ejercicio
         JOIN dias d ON de.id_dia = d.id_dia
         JOIN semanas s ON d.id_semana = s.id_semana
         JOIN entrenamiento en ON s.id_entrenamiento = en.id_entrenamiento
-        LEFT JOIN progreso_alumno p ON de.id_dia_ejercicio = p.id_dia_ejercicio
-        WHERE en.id_entrenador = ? AND e.tipo_fuerza IS NOT NULL
+        INNER JOIN progreso_alumno p ON de.id_dia_ejercicio = p.id_dia_ejercicio  -- CAMBIÉ A INNER JOIN
+        WHERE en.id_entrenador = ? 
+          AND e.tipo_fuerza IS NOT NULL
+          AND p.peso_utilizado IS NOT NULL 
+          AND p.repeticiones_realizadas IS NOT NULL
         GROUP BY e.tipo_fuerza
     """
     
@@ -203,6 +206,10 @@ def obtener_datos_tipos_fuerza(id_entrenador):
         tipo, total, avg_peso, avg_rep, max_peso, max_rep, alumnos = registro
         
         if tipo in datos_grafico:
+            # Asegurar que no hay valores None
+            avg_peso = avg_peso or 0
+            avg_rep = avg_rep or 0
+            
             if tipo == 'Resistencia':
                 indice = (avg_peso * 0.3 + avg_rep * 0.7) * 2
             else:
@@ -225,25 +232,24 @@ def obtener_datos_tipos_fuerza(id_entrenador):
     return {
         'tipos_fuerza': tipos_fuerza,
         'valores': [datos_grafico[tipo] for tipo in tipos_fuerza],
-        'detalle': {  # Mantener nombre consistente
+        'detalle': {
             'Empuje': {
-                'avg_peso': next((r[2] for r in fuerza_data if r[0] == 'Empuje'), 0),
-                'avg_rep': next((r[3] for r in fuerza_data if r[0] == 'Empuje'), 0),
+                'avg_peso': next((round(r[2], 1) if r[2] else 0 for r in fuerza_data if r[0] == 'Empuje'), 0),
+                'avg_rep': next((round(r[3], 1) if r[3] else 0 for r in fuerza_data if r[0] == 'Empuje'), 0),
                 'alumnos': next((r[6] for r in fuerza_data if r[0] == 'Empuje'), 0)
             },
             'Jale': {
-                'avg_peso': next((r[2] for r in fuerza_data if r[0] == 'Jale'), 0),
-                'avg_rep': next((r[3] for r in fuerza_data if r[0] == 'Jale'), 0),
+                'avg_peso': next((round(r[2], 1) if r[2] else 0 for r in fuerza_data if r[0] == 'Jale'), 0),
+                'avg_rep': next((round(r[3], 1) if r[3] else 0 for r in fuerza_data if r[0] == 'Jale'), 0),
                 'alumnos': next((r[6] for r in fuerza_data if r[0] == 'Jale'), 0)
             },
             'Resistencia': {
-                'avg_peso': next((r[2] for r in fuerza_data if r[0] == 'Resistencia'), 0),
-                'avg_rep': next((r[3] for r in fuerza_data if r[0] == 'Resistencia'), 0),
+                'avg_peso': next((round(r[2], 1) if r[2] else 0 for r in fuerza_data if r[0] == 'Resistencia'), 0),
+                'avg_rep': next((round(r[3], 1) if r[3] else 0 for r in fuerza_data if r[0] == 'Resistencia'), 0),
                 'alumnos': next((r[6] for r in fuerza_data if r[0] == 'Resistencia'), 0)
             }
         }
     }
-
 
 # Función para obtener la evolución del peso mensual de un alumno
 def obtener_evolucion_peso_mensual(id_entrenador):

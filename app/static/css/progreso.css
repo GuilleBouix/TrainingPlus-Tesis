@@ -273,6 +273,16 @@
     margin-left: .2rem;
 }
 
+.progreso-semanal-container .datos span.completo {
+    color: #16a34a;
+    font-weight: bold;
+}
+
+.progreso-semanal-container .datos span.completo i.bx-check {
+    margin-left: 5px;
+    vertical-align: middle;
+}
+
 
 
 /* Media Querys */

@@ -182,7 +182,7 @@
 
         <div class="progreso-container">
             <section class="rendimiento" data-aos="fade-in">
-                <h2>Rendimiento</h2>
+                <h2><i class='bx bx-stats'></i> Rendimiento</h2>
 
                 <canvas id="lineChart"></canvas>
 
@@ -254,7 +254,7 @@
             </section>
 
             <section class="evolucion-fuerza" data-aos="fade-in" data-aos-delay="100">
-                <h2>Evolución de Fuerza</h2>
+                <h2><i class='bx bxs-bar-chart-alt-2'></i> Evolución de Fuerza</h2>
 
                 <div style="width: 100%; height: 400px;">
                     <canvas id="graficoEvolucion"></canvas>
@@ -362,13 +362,13 @@
             </section>
 
             <section class="mejores-marcas-alumno" data-aos="fade-in" data-aos-delay="200">
-                <h2>Mejores Marcas</h2>
+                <h2><i class='bx bxs-trophy'></i> Mejores Marcas</h2>
 
                 <div class="marcadores-container">
                     {% for marca in mejores_marcas %}
                         <div class="marcador">
                             <strong>
-                                <i class='bx bxs-trophy {% if loop.index == 1 %}gold{% elif loop.index == 2 %}silver{% elif loop.index == 3 %}bronze{% endif %}'></i> {{ marca.nombre }}
+                                <i class='bx bx-trophy {% if loop.index == 1 %}gold{% elif loop.index == 2 %}silver{% elif loop.index == 3 %}bronze{% endif %}'></i> {{ marca.nombre }}
                             </strong>
                             <span>{{ marca.display }}</span>
                         </div>
@@ -378,7 +378,7 @@
             </section>
 
             <section class="observaciones-semanales" data-aos="fade-in" data-aos-delay="300">
-                <h2>Observaciones Semanales</h2>
+                <h2><i class='bx bx-calendar-check'></i> Observaciones Semanales</h2>
             
                 {% if observaciones_semanales %}
                     {% for obs in observaciones_semanales %}
