@@ -56,6 +56,55 @@ def login():
     return render_template('login.html')
 
 
+# Ruta de Recuperación de Contraseña
+@auth_bp.route('/auth/recovery_password', methods=['POST'])
+def recovery_password():
+    email = request.form.get('email')
+    password = request.form.get('password')
+    repeat_password = request.form.getlist('password')[1]
+
+    if password != repeat_password:
+        flash("Las contraseñas no coinciden.", "error")
+        return redirect(url_for('auth.login'))
+
+    # Validación de seguridad de contraseña
+    if len(password) < 8:
+        flash('La contraseña debe tener mínimo 8 caracteres.', 'error')
+        return redirect(url_for('auth.login'))
+
+    if not any(c.isupper() for c in password):
+        flash('La contraseña debe contener al menos una mayúscula.', 'error')
+        return redirect(url_for('auth.login'))
+
+    try:
+        conn = conexion_basedatos()
+        cursor = conn.cursor()
+
+        # Verificar si existe el usuario
+        cursor.execute("SELECT id_usuario FROM usuario WHERE email = ?", (email,))
+        user = cursor.fetchone()
+
+        if not user:
+            flash("El correo ingresado no está registrado.", "error")
+            return redirect(url_for('auth.login'))
+
+        # Actualizar contraseña hasheada
+        hashed_password = generate_password_hash(password)
+        cursor.execute("UPDATE usuario SET contrasena = ? WHERE email = ?", (hashed_password, email))
+        conn.commit()
+
+        flash("Contraseña actualizada con éxito.", "success")
+        
+        return redirect(url_for('auth.login'))
+    except Exception as e:
+        flash(f"Error al actualizar la contraseña: {str(e)}", "error")
+        
+        return redirect(url_for('auth.login'))
+    finally:
+        if conn:
+            conn.close()
+
+
 # Ruta de Signup
 @auth_bp.route('/auth/signup', methods=['GET', 'POST'])
 def signup():
@@ -86,9 +135,9 @@ def signup():
             conn.close()
 
         if existing_user:
-            if existing_user[1] == email:  # email ya existe
+            if existing_user[1] == email:
                 flash('Correo ya registrado.', 'error')
-            else:  # nombre de usuario ya existe
+            else:
                 flash('Nombre de usuario ya registrado.', 'error')
             return redirect(url_for('auth.signup'))
 

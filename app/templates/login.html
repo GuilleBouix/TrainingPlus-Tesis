@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,6 +15,38 @@
     <div id="loading-screen">
         <div class="spinner"></div>
     </div>
+
+    <!-- Modal de recuperar contraseña -->
+    <dialog class="password-recovery-dialog" id="password-recovery-modal">
+        <div class="modal-content">
+            <form action="{{ url_for('auth.recovery_password') }}" method="POST">
+                <div class="modal-header">
+                    <h1>Cambiar Contraseña</h1>
+                    <i class='bx bx-x close-modal'></i>
+                </div>
+
+                <div>
+                    <label for="email">Email</label>
+                    <input type="email" name="email" id="email" placeholder="Ingresa tu Email" required>
+                </div>
+
+                <div>
+                    <label for="password">Nueva Contraseña</label>
+                    <input type="password" name="password" id="password" placeholder="Ingresa tu nueva contraseña" required>
+                </div>
+
+                <div>
+                    <label for="password">Repite tu Contraseña</label>
+                    <input type="password" name="password" id="password" placeholder="Ingresa nuevamente la contraseña" required>
+                </div>
+
+                <div>
+                    <button type="submit" class="btn-recovery">Cambiar Contraseña</button>
+                </div>
+            </form>
+        </div>
+    </dialog>
+
 
     <div class="login-container">
         <div class="image" data-aos="fade-right" data-aos-duration="1000">
@@ -57,7 +89,7 @@
                 </div>
     
                 <div class="forgot-password" data-aos="fade-left" data-aos-delay="300">
-                    <a href="#">¿Olvidaste tu contraseña?</a>
+                    <a id="open-password-recovery" class="btn-link" href="#">¿Olvidaste tu contraseña?</a>
                 </div>
     
                 <button type="submit" class="btn" data-aos="fade-left" data-aos-delay="400">Ingresar</button>
@@ -83,6 +115,41 @@
             startEvent: 'DOMContentLoaded'
         });
     </script>
+
+    <!-- Modal de recuperar contraseña -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const modal = document.getElementById("password-recovery-modal");
+            const closeBtn = modal.querySelector(".close-modal");
+            const openBtn = document.getElementById("open-password-recovery");
+            const form = modal.querySelector("form");
+
+            // Abrir modal
+            if (openBtn) {
+                openBtn.addEventListener("click", () => {
+                    modal.showModal();
+                });
+            }
+
+            // Cerrar con ícono
+            closeBtn.addEventListener("click", () => {
+                modal.close();
+            });
+
+            // Cerrar con la tecla Esc
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Escape" && modal.open) {
+                    modal.close();
+                }
+            });
+
+            // Cerrar después de enviar el formulario
+            form.addEventListener("submit", () => {
+                modal.close();
+            });
+        });
+    </script>
+
 
 </body>
 </html>
