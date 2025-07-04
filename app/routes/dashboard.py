@@ -251,30 +251,34 @@ def obtener_datos_tipos_fuerza(id_entrenador):
         }
     }
 
-# Función para obtener la evolución del peso mensual de un alumno
+# Función para obtener la evolución del peso mensual de los alumnos
 def obtener_evolucion_peso_mensual(id_entrenador):
     conn = conexion_basedatos()
     cur = conn.cursor()
 
     query = """
         SELECT 
+            a.id_alumno,
+            a.nombre || ' ' || a.apellido as nombre_alumno,
             pa.fecha,
             pa.peso_utilizado,
             pa.series_realizadas,
             pa.repeticiones_realizadas
         FROM progreso_alumno pa
-        JOIN entrenamiento en ON pa.id_alumno = en.id_alumno
+        JOIN alumno a ON pa.id_alumno = a.id_alumno
+        JOIN entrenamiento en ON a.id_alumno = en.id_alumno
         WHERE en.id_entrenador = ? AND pa.fecha IS NOT NULL
+        ORDER BY a.id_alumno, pa.fecha
     """
 
     cur.execute(query, (id_entrenador,))
     resultados = cur.fetchall()
 
-    # Agrupar peso total por mes
-    peso_por_mes = {}
+    # Diccionario para almacenar los datos por alumno
+    alumnos_data = {}
 
     for fila in resultados:
-        fecha_str, peso, series, reps = fila
+        id_alumno, nombre_alumno, fecha_str, peso, series, reps = fila
 
         if not fecha_str or not peso or not series or not reps:
             continue
@@ -282,18 +286,50 @@ def obtener_evolucion_peso_mensual(id_entrenador):
         fecha = datetime.strptime(fecha_str, "%Y-%m-%d")
         mes_key = fecha.strftime("%Y-%m")
 
-        peso_total = peso * series * reps
-        peso_por_mes[mes_key] = peso_por_mes.get(mes_key, 0) + peso_total
+        if id_alumno not in alumnos_data:
+            alumnos_data[id_alumno] = {
+                'nombre': nombre_alumno,
+                'data': {}
+            }
 
-    # Ordenar los datos por fecha
-    peso_ordenado = dict(sorted(peso_por_mes.items()))
+        peso_total = peso * series * reps
+        alumnos_data[id_alumno]['data'][mes_key] = alumnos_data[id_alumno]['data'].get(mes_key, 0) + peso_total
+
+    # Procesar los datos para tener todos los meses consistentes
+    todos_los_meses = set()
+    for alumno in alumnos_data.values():
+        todos_los_meses.update(alumno['data'].keys())
+    
+    meses_ordenados = sorted(todos_los_meses)
+
+    # Preparar los datos finales
+    datos_grafico = {
+        'meses': meses_ordenados,
+        'alumnos': []
+    }
+
+    # Generar colores únicos para cada alumno
+    colores = [
+        '#9333EA', '#3B82F6', '#10B981', '#F59E0B', 
+        '#EF4444', '#8B5CF6', '#EC4899', '#14B8A6'
+    ]
+
+    for i, (id_alumno, alumno_data) in enumerate(alumnos_data.items()):
+        datos_alumno = {
+            'id': id_alumno,
+            'nombre': alumno_data['nombre'],
+            'color': colores[i % len(colores)],
+            'totales': []
+        }
+
+        for mes in meses_ordenados:
+            datos_alumno['totales'].append(round(alumno_data['data'].get(mes, 0), 1))
+
+        datos_grafico['alumnos'].append(datos_alumno)
 
     conn.close()
 
-    return {
-        "meses": list(peso_ordenado.keys()),
-        "totales": [round(val, 1) for val in peso_ordenado.values()]
-    }
+    return datos_grafico
 
 
 # Ruta de Dashboard

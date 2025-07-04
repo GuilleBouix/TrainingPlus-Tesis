@@ -268,70 +268,78 @@
         </script>
     </section>
 
+    <!-- Evolución del peso levantado -->
     <section class="peso-mensual-container" data-aos="fade-in" data-aos-delay="300">
         <h2 class="section-h2"><i class='bx bx-line-chart'></i> Evolución del Peso Levantado</h2>
-        <p class="section-p">Peso total levantado por todos los alumnos cada mes.</p>
+        <p class="section-p">Evolución del peso total levantado por cada alumno.</p>
 
         <canvas id="graficoPesoMensual" height="130"></canvas>
 
         <div id="datosPesoMensual"
             data-meses='{{ evolucion_peso.meses | tojson }}'
-            data-totales='{{ evolucion_peso.totales | tojson }}'>
+            data-alumnos='{{ evolucion_peso.alumnos | tojson }}'>
         </div>
 
         <script>
             const dataPeso = document.getElementById("datosPesoMensual");
-            const totales = JSON.parse(dataPeso.dataset.totales);
+            const alumnos = JSON.parse(dataPeso.dataset.alumnos);
             const mesesOriginales = JSON.parse(dataPeso.dataset.meses);
+            
+            // Formatear meses para mostrar MM/YYYY
             const meses = mesesOriginales.map(m => {
                 const [a, m2] = m.split("-");
                 return `${m2}/${a}`;
             });
 
+            // Preparar datasets para Chart.js
+            const datasets = alumnos.map(alumno => ({
+                label: alumno.nombre,
+                data: alumno.totales,
+                fill: false,
+                borderColor: alumno.color,
+                backgroundColor: alumno.color,
+                tension: 0.3,
+                pointRadius: 4
+            }));
 
             new Chart(document.getElementById("graficoPesoMensual").getContext("2d"), {
-            type: "line",
-            data: {
-                labels: meses,
-                datasets: [{
-                label: "Peso Total Levantado (kg)",
-                data: totales,
-                fill: true,
-                backgroundColor: "rgba(168, 85, 247, 0.2)",
-                borderColor: "rgba(147, 51, 234, 1)",
-                tension: 0.3,
-                pointBackgroundColor: "#9333EA",
-                pointRadius: 4
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                y: {
-                    title: {
-                    display: true,
-                    text: "Peso (kg)"
+                type: "line",
+                data: {
+                    labels: meses,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            title: {
+                                display: true,
+                                text: "Peso (kg)"
+                            },
+                            beginAtZero: true
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: "Mes"
+                            }
+                        }
                     },
-                    beginAtZero: true
-                },
-                x: {
-                    title: {
-                    display: true,
-                    text: "Mes"
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => `${ctx.dataset.label}: ${ctx.raw} kg`
+                            }
+                        },
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                boxWidth: 12,
+                                padding: 20
+                            }
+                        }
                     }
                 }
-                },
-                plugins: {
-                tooltip: {
-                    callbacks: {
-                    label: ctx => `${ctx.raw} kg totales`
-                    }
-                },
-                legend: {
-                    position: 'top'
-                }
-                }
-            }
             });
         </script>
     </section>
