@@ -282,6 +282,9 @@ def editar_entrenamiento(id_entrenamiento):
                 ORDER BY s.numero_semana, d.numero_dia
             """, (id_entrenamiento,)).fetchall()
 
+            # Obtener semanas únicas para la navegación
+            semanas_unicas = sorted(list({dia['numero_semana'] for dia in dias}))
+
             ejercicios_por_dia = {}
             for dia in dias:
                 ejercicios_dia = db.execute("""
@@ -297,11 +300,12 @@ def editar_entrenamiento(id_entrenamiento):
             ejercicios_por_dia = {dia_id: [dict(ejercicio) for ejercicio in ejercicios] for dia_id, ejercicios in ejercicios_por_dia.items()}
 
             return render_template('editar_entrenamiento.html',
-                                   entrenamiento=dict(entrenamiento),
-                                   dias=dias,
-                                   ejercicios_por_dia=ejercicios_por_dia,
-                                   ejercicios=[dict(ejercicio) for ejercicio in ejercicios])
-
+                                entrenamiento=dict(entrenamiento),
+                                dias=dias,
+                                semanas_unicas=semanas_unicas,
+                                ejercicios_por_dia=ejercicios_por_dia,
+                                ejercicios=[dict(ejercicio) for ejercicio in ejercicios])
+        
         elif request.method == 'POST':
             cambios = []
             nuevo_nombre = request.form.get('nombre_entrenamiento')

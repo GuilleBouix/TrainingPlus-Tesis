@@ -74,7 +74,6 @@
     transform: scale(1);
 }
 
-/* Borde verde por defecto */
 .select2-container--default .select2-selection--single {
     border: 1px solid var(--color-border) !important;
     border-radius: 5px !important;
@@ -95,6 +94,7 @@
     border: 1px solid var(--color-border);
     border-radius: 10px;
     overflow: hidden;
+    margin-bottom: 1rem;
 }
 
 .week-header {

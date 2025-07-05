@@ -251,6 +251,7 @@ def obtener_datos_tipos_fuerza(id_entrenador):
         }
     }
 
+
 # Función para obtener la evolución del peso mensual de los alumnos
 def obtener_evolucion_peso_mensual(id_entrenador):
     conn = conexion_basedatos()
