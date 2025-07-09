@@ -19,7 +19,7 @@ def buscador():
     connection = conexion_basedatos()
     cursor = connection.cursor()
 
-    # Consulta SQL para realizar la búsqueda general y aplicar filtros
+    # Consulta para realizar la búsqueda general y aplicar filtros
     base_query = """
         SELECT u.id_usuario, u.nombre_usuario, u.rol, 
                a.nombre, a.apellido, a.foto_perfil, p_a.nombre as pais_alumno, p_a.codigo_iso as iso_alumno, a.sexo as sexo_alumno,
@@ -151,7 +151,8 @@ def obtener_datos_usuario(id_usuario):
                 'telefono': entrenador[7]
             }
             connection.close()
-            return jsonify(datos_usuario)
 
+            return jsonify(datos_usuario)
+        
     connection.close()
     return jsonify({'error': 'Datos no encontrados'}), 404

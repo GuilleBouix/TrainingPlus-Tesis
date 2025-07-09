@@ -28,151 +28,255 @@
             {% endwith %}
 
 
-
             <div class="about-title">
                 <h1>Sobre la Aplicación</h1>
-                <a href=""><i class='bx bxs-file-pdf'></i> Manual de Usuario</a>
+                <a href="{{ url_for('static', filename='manual/manual_usuario_trainingplus.pdf') }}" download><i class='bx bx-download'></i> Descargar Manual</a>
             </div>
         
-            <p><strong>Training+</strong> es una herramienta diseñada especialmente para <strong>entrenadores</strong> que buscan optimizar la gestión de los entrenamientos de sus alumnos. Nuestra plataforma te permite organizar, planificar y hacer un seguimiento detallado del progreso físico de cada persona a tu cargo.</p>
-            
-            <p>Con una interfaz intuitiva y funcional, Training+ te ofrece todo lo que necesitás para centralizar tu trabajo como entrenador desde un solo lugar.</p>
-        
-            <p>Entre las funciones principales se incluyen:</p>
-        
-            <ul>
-                <li>• Registro y gestión de rutinas de entrenamiento personalizadas</li>
-                <li>• Seguimiento del progreso de cada alumno mediante estadísticas claras</li>
-                <li>• Establecimiento de metas específicas para cada caso</li>
-                <li>• Sistema de notificaciones por correo para mantener el contacto con tus alumnos</li>
-            </ul>
-        
-            <br>
-            <p>Training+ está pensado para que dediques menos tiempo a tareas repetitivas y más tiempo a lo que realmente importa: entrenar.</p>
+            <h2 class="about-subtitle">Visión General del Sistema</h2>
+            <p class="about-paragraph">
+                Training+ es una aplicación web integral diseñada para optimizar la relación entre profesionales del fitness y sus clientes, mediante una mejor comunicación, seguimiento estructurado del progreso y una gestión eficiente de los programas de entrenamiento. La plataforma aborda una deficiencia crítica en la industria del fitness, donde los métodos tradicionales suelen carecer de supervisión continua y retroalimentación personalizada, factores que disminuyen la motivación del cliente y los resultados obtenidos.
+            </p>
+
+            <h2 class="about-subtitle">Propósito y Objetivos</h2>
+            <p class="about-paragraph">
+                El objetivo principal de Training+ es brindar a los profesionales del fitness un ecosistema digital centralizado para la gestión integral de sus clientes, mientras que permite a los usuarios acceder en tiempo real a sus programas personalizados. El sistema facilita el monitoreo constante del progreso, permitiendo a los entrenadores realizar ajustes basados en datos y mantener la conexión con sus clientes sin importar su ubicación.
+            </p>
+            <p class="about-paragraph">
+                Estudios indican que aproximadamente el 50% de las personas abandonan sus programas de entrenamiento en los primeros seis meses, principalmente por falta de supervisión y motivación. Training+ responde directamente a este problema creando un entorno estructurado donde los entrenadores brindan orientación continua y los usuarios mantienen la constancia mediante el registro de avances.
+            </p>
+
+            <h2 class="about-subtitle">Funcionalidades Principales</h2>
+
+            <h3 class="about-subsection">Para Profesionales del Fitness</h3>
+            <p class="about-paragraph">
+                Training+ ofrece herramientas avanzadas para la gestión de clientes y la creación de rutinas. Permite desarrollar programas organizados por semanas y sesiones diarias, con especificaciones detalladas como series, repeticiones, pesos y tiempos de descanso. Los entrenadores pueden monitorear el avance mediante tableros con tasas de cumplimiento, métricas de rendimiento y estadísticas de adherencia.
+            </p>
+            <p class="about-paragraph">
+                El sistema admite hasta seis programas activos por entrenador, lo que garantiza atención enfocada sin comprometer la eficiencia. También incluye verificación profesional mediante el envío obligatorio de credenciales académicas y certificados.
+            </p>
+
+            <h3 class="about-subsection">Para Usuarios</h3>
+            <p class="about-paragraph">
+                Los usuarios acceden a sus rutinas mediante una interfaz clara, donde pueden ver la planificación semanal y registrar el progreso en tiempo real. Esto incluye ejercicios completados, pesos utilizados y observaciones personales. Este enfoque permite detectar patrones, celebrar logros y corregir errores de forma efectiva.
+            </p>
+            <p class="about-paragraph">
+                Además, los usuarios completan cuestionarios sobre objetivos, condición física, historial médico y preferencias, lo que permite generar programas más seguros y personalizados.
+            </p>
+
+            <h2 class="about-subtitle">Arquitectura Técnica</h2>
+            <p class="about-paragraph">
+                Training+ está desarrollado con tecnologías modernas: Python con Flask en el backend, HTML, CSS y JavaScript para el frontend, y SQLite para la base de datos. Cuenta con autenticación de usuarios, control de accesos por roles y medidas de seguridad para proteger los datos.
+            </p>
+            <p class="about-paragraph">
+                Funciona bajo un modelo de suscripción para entrenadores, mientras que el acceso para los usuarios es gratuito, asegurando accesibilidad sin comprometer la sustentabilidad.
+            </p>
+
+            <h2 class="about-subtitle">Modelo de Negocio y Accesibilidad</h2>
+            <p class="about-paragraph">
+                La aplicación se basa en un modelo freemium. Los entrenadores pagan una suscripción mensual que habilita funciones completas como creación de rutinas, monitoreo del progreso y comunicación con clientes. Los usuarios acceden gratuitamente a sus planes, historial y contacto con su entrenador.
+            </p>
+
+            <h2 class="about-subtitle">Impacto y Beneficios</h2>
+            <p class="about-paragraph">
+                Training+ resuelve problemas comunes en el entrenamiento físico mediante una comunicación estructurada, seguimiento sistemático y orientación profesional continua. Está diseñado para aumentar la retención de clientes en un 30% y reducir el abandono en un 50%.
+            </p>
+            <p class="about-paragraph">
+                Al centralizar la gestión de entrenamientos, documentación del progreso y comunicación, la plataforma permite que los entrenadores se concentren en el entrenamiento real y que los usuarios se mantengan motivados mediante retroalimentación constante.
+            </p>
+
+            <h2 class="about-subtitle">Seguridad y Privacidad</h2>
+            <p class="about-paragraph">
+                La plataforma implementa medidas de seguridad como autenticación segura, cifrado de datos y manejo responsable de la información. Todos los datos personales y de salud están protegidos bajo estándares de privacidad, y sólo pueden ser accedidos por las partes autorizadas.
+            </p>
+
+            <h2 class="about-subtitle">Conclusión</h2>
+            <p class="about-paragraph">
+                Training+ representa una evolución en la tecnología fitness, integrando lo mejor del entrenamiento tradicional con herramientas digitales modernas. Ofrece funciones completas para la creación de programas, registro del progreso y contacto constante, elevando la calidad del servicio profesional y potenciando los resultados del usuario.
+            </p>
         </div>
-        
+
         <!-- Contenido de la sección "Términos y Condiciones" -->
         <div class="terms-conditions">
-            <h1>Términos y Condiciones de Uso - Training+</h1>
-          
-            <p>
-              <strong>1. Introducción</strong><br>
-              El presente documento establece los Términos y Condiciones de Uso que regulan el acceso y utilización de la plataforma web y aplicación móvil Training+ (en adelante, "la Plataforma"), desarrollada y operada por un único desarrollador independiente con sede en Argentina.<br>
-              Al registrarse, acceder o utilizar la Plataforma, usted acepta estos Términos y Condiciones en su totalidad. Si no está de acuerdo con alguna parte de este documento, le solicitamos abstenerse de utilizar nuestros servicios.
+            <h1>Términos y Condiciones</h1>
+            <p class="version-info">
+                <strong>Fecha de vigencia: Agosto de 2025</strong> 
+                <strong>Última actualización: Julio de 2025</strong>
             </p>
-          
-            <p>
-              <strong>2. Descripción del Servicio</strong><br>
-              Training+ es una plataforma diseñada para facilitar la conexión entre entrenadores y usuarios interesados en llevar un registro de su entrenamiento físico. La Plataforma ofrece:<br><br>
-              <u>Para usuarios/alumnos:</u> Acceso gratuito a funcionalidades básicas como visualizar rutinas, seguir su progreso, completar formularios de salud y aceptar o rechazar solicitudes de vinculación con entrenadores.<br>
-              <u>Para entrenadores:</u> Acceso a herramientas avanzadas para crear y editar rutinas, gestionar conexiones con alumnos, y completar su perfil profesional con datos académicos. Requiere suscripción mensual.
-            </p>
-          
-            <p>
-              <strong>3. Registro y Cuentas de Usuario</strong><br>
-              Para utilizar la Plataforma, es necesario completar el proceso de registro proporcionando información personal veraz y actualizada. Existen dos tipos de cuentas:<br><br>
-              <u>Cuenta de Usuario/Alumno:</u> Para personas que utilizan la Plataforma exclusivamente con fines de visualización y seguimiento de su entrenamiento personal.<br>
-              <u>Cuenta de Entrenador:</u> Para profesionales que desean ofrecer servicios de entrenamiento dentro de la Plataforma.<br><br>
-              Cada usuario es responsable de mantener la confidencialidad de su contraseña y de todas las actividades realizadas con su cuenta.
-            </p>
-          
-            <p>
-              <strong>4. Modelo de Suscripción</strong><br>
-              <u>Usuarios/alumnos:</u> Acceso gratuito a las funcionalidades básicas.<br>
-              <u>Entrenadores:</u> Suscripción mensual de USD $9.99.<br><br>
-              La suscripción se renueva automáticamente cada mes hasta que el entrenador decida cancelarla.
-            </p>
-          
-            <p>
-              <strong>5. Derechos y Responsabilidades del Usuario/Alumno</strong><br>
-              <u>5.1 Derechos:</u><br>
-              - Acceder a funcionalidades básicas como ver rutinas y progreso personal.<br>
-              - Aceptar o rechazar solicitudes de vinculación con entrenadores.<br>
-              - Completar el formulario de salud para ayudar a su seguimiento.<br>
-              - Cancelar su cuenta cuando lo desee.<br><br>
 
-              <u>5.2 Responsabilidades:</u><br>
-              - Proporcionar información veraz y actualizada.<br>
-              - No compartir su cuenta con terceros.<br>
-              - Utilizar la Plataforma solo con fines personales y legítimos.<br>
-              - No intentar modificar, hackear o acceder a secciones restringidas.<br>
-              - Respetar los términos del vínculo con su entrenador.
-            </p>
-          
-            <p>
-              <strong>6. Derechos y Responsabilidades del Entrenador</strong><br>
-              <u>6.1 Derechos:</u><br>
-              - Crear, editar y asignar rutinas a los alumnos vinculados.<br>
-              - Ver el progreso y formularios de salud de los alumnos.<br>
-              - Conectarse o desconectarse de alumnos.<br>
-              - Acceder a todas las funcionalidades mientras su suscripción esté activa.<br><br>
+            <h2>1. INFORMACIÓN GENERAL</h2>
+            <h3>1.1 Definición del Servicio</h3>
+            <p>Training+ es una aplicación web desarrollada para mejorar la comunicación y seguimiento en el entrenamiento personal, facilitando la interacción entre entrenadores certificados y usuarios que buscan orientación en su preparación física. La plataforma permite a los entrenadores crear, gestionar y supervisar planes de entrenamiento personalizados, mientras que los usuarios pueden acceder a sus rutinas y registrar su progreso de manera continua.</p>
 
-              <u>6.2 Responsabilidades:</u><br>
-              - Proporcionar información profesional precisa y actualizada en su formulario académico.<br>
-              - Manejar los datos de los alumnos con responsabilidad y confidencialidad.<br>
-              - Usar la Plataforma únicamente con fines relacionados al entrenamiento.<br>
-              - Cumplir con normativas vigentes aplicables a su rol profesional.
-            </p>
-          
-            <p>
-              <strong>7. Propiedad Intelectual</strong><br>
-              Todos los derechos de propiedad intelectual relacionados con la Plataforma, incluyendo pero no limitado a software, diseño, logotipos, y contenido, son propiedad exclusiva del desarrollador. Los usuarios no adquieren ningún derecho sobre estos elementos por el mero uso de la Plataforma.
-            </p>
-          
-            <p>
-              <strong>8. Limitación de Responsabilidad</strong><br>
-              La Plataforma se ofrece "tal cual está" y el desarrollador no garantiza que funcione sin interrupciones o errores. El desarrollador no será responsable por daños directos, indirectos, incidentales o consecuentes derivados del uso de la Plataforma.<br>
-              El usuario reconoce que la Plataforma está en desarrollo y pueden producirse cambios o actualizaciones periódicas.
-            </p>
-          
-            <p>
-              <strong>9. Modificaciones a los Términos y Condiciones</strong><br>
-              El desarrollador se reserva el derecho de modificar estos Términos y Condiciones en cualquier momento. Las modificaciones entrarán en vigor inmediatamente después de su publicación en la Plataforma. El uso continuado de la Plataforma después de cualquier modificación constituye la aceptación de los nuevos términos.
-            </p>
-          
-            <p>
-              <strong>10. Cancelación y Terminación</strong><br>
-              El usuario puede cancelar su cuenta en cualquier momento. El desarrollador se reserva el derecho de suspender o terminar el acceso de cualquier usuario que incumpla estos Términos y Condiciones o muestre comportamientos inadecuados.
-            </p>
-          
-            <p>
-              <strong>11. Ley Aplicable</strong><br>
-              Estos Términos y Condiciones se rigen por las leyes de la República Argentina. Cualquier disputa derivada de estos términos será sometida a la jurisdicción de los tribunales competentes de Argentina.
-            </p>
-          
-            <p>
-              <strong>12. Contacto</strong><br>
-              Actualmente no existe un canal oficial de contacto establecido. Esta información será actualizada tan pronto como se implemente un sistema de soporte.
-            </p>
+            <h3>1.2 Operador del Servicio</h3>
+            <p>El servicio Training+ es operado por Guillermo Bouix, con domicilio en Ricardo Balbin 48, Oberá, en cumplimiento de las normativas vigentes en materia de servicios digitales y protección de datos personales.</p>
+
+            <h3>1.3 Aceptación de los Términos</h3>
+            <p>El acceso y uso de Training+ implica la aceptación plena y sin reservas de estos términos y condiciones. Los usuarios que no estén de acuerdo con cualquier disposición contenida en este documento deberán abstenerse de utilizar la plataforma.</p>
+
+            <h2>2. DEFINICIONES</h2>
+            <p>Para efectos de estos términos y condiciones, se establecen las siguientes definiciones:</p>
+            <p><strong>Usuario:</strong> Persona física mayor de edad que utiliza la plataforma Training+, pudiendo ser clasificado como Alumno o Entrenador según el rol seleccionado durante el registro.</p>
+            <p><strong>Entrenador:</strong> Usuario profesional certificado que ha completado el proceso de verificación académica y cuenta con suscripción activa para acceder a las funcionalidades de gestión de entrenamientos.</p>
+            <p><strong>Alumno:</strong> Usuario que utiliza la plataforma de forma gratuita para acceder a rutinas de entrenamiento y registrar progreso</p>
+            <p><strong>Suscripción:</strong> Plan de pago mensual requerido para usuarios que deseen acceder a funcionalidades de entrenador.</p>
+            <p><strong>Vinculación:</strong> Proceso mediante el cual un entrenador establece una relación profesional con un alumno, previo consentimiento mutuo.</p>
+            <p><strong>Contenido:</strong> Toda información, datos, textos, imágenes, videos, rutinas, ejercicios y demás material disponible en la plataforma.</p>
+
+            <h2>3. REGISTRO Y CUENTAS DE USUARIO</h2>
+            <h3>3.1 Requisitos de Registro</h3>
+            <p>Los usuarios deberán proporcionar información veraz, completa y actualizada durante el proceso de registro, incluyendo dirección de correo electrónico válida, contraseña segura y selección del rol apropiado. La falsificación de datos constituye una violación grave de estos términos y puede resultar en la suspensión inmediata de la cuenta.</p>
+
+            <h3>3.2 Verificación de Entrenadores</h3>
+            <p>Los usuarios que se registren como entrenadores deberán completar un proceso de verificación académica que incluye la presentación de documentos que acrediten su formación profesional, títulos, certificaciones y experiencia relevante en el campo del entrenamiento físico. La verificación es requisito indispensable para acceder a las funcionalidades de gestión de entrenamientos.</p>
+
+            <h3>3.3 Responsabilidad de la Cuenta</h3>
+            <p>Cada usuario es responsable de mantener la confidencialidad de sus credenciales de acceso y de todas las actividades realizadas bajo su cuenta. Los usuarios deberán notificar inmediatamente cualquier uso no autorizado de su cuenta o cualquier otra violación de seguridad.</p>
+
+            <h3>3.4 Cuestionario Inicial</h3>
+            <p>Tanto entrenadores como alumnos deberán completar un cuestionario inicial con información precisa sobre su estado físico, objetivos, limitaciones médicas y otros datos relevantes para el uso seguro y efectivo de la plataforma.</p>
+
+            <h2>4. SUSCRIPCIONES Y PAGOS</h2>
+            <h3>4.1 Plan de Suscripción para Entrenadores</h3>
+            <p>Los entrenadores deberán adquirir y mantener activa una suscripción mensual para acceder a las funcionalidades de gestión de entrenamientos. La suscripción incluye la capacidad de crear hasta seis planes de entrenamiento simultáneos, gestionar vinculaciones con alumnos y acceder a herramientas de seguimiento y comunicación.</p>
+
+            <h3>4.2 Procesamiento de Pagos</h3>
+            <p>Los pagos se procesarán a través del sistema de pago PayPal. Los usuarios son responsables de mantener actualizada su información de facturación y autorizar los cargos correspondientes.</p>
+
+            <h3>4.3 Renovación y Cancelación</h3>
+            <p>Las suscripciones se renuevan automáticamente al final de cada período de facturación, a menos que el usuario cancele su suscripción antes del próximo ciclo de facturación. La cancelación no genera derecho a reembolso por períodos ya facturados.</p>
+
+            <h3>4.4 Suspensión por Falta de Pago</h3>
+            <p>El incumplimiento en el pago de la suscripción resultará en la suspensión inmediata del acceso a funcionalidades de entrenador, aunque se mantendrá el acceso básico a la cuenta hasta la regularización del pago</p>
+
+            <h2>5. USO DE LA PLATAFORMA</h2>
+            <h3>5.1 Uso Autorizado</h3>
+            <p>Los usuarios deberán utilizar Training+ exclusivamente para los fines previstos en estos términos y condiciones, manteniendo en todo momento un comportamiento profesional y respetuoso hacia otros usuarios de la plataforma.</p>
+
+            <h3>5.2 Prohibiciones</h3>
+            <p>Queda terminantemente prohibido utilizar la plataforma para actividades ilegales, difundir contenido ofensivo, realizar spam, intentar acceder a cuentas ajenas, interferir con el funcionamiento normal del sistema o cualquier otra actividad que pueda dañar la integridad de la plataforma o afectar la experiencia de otros usuarios.</p>
+
+            <h3>5.3 Vinculación entre Usuarios</h3>
+            <p>Los entrenadores pueden solicitar vinculación con alumnos mediante un sistema de notificaciones internas. Los alumnos tienen plena libertad para aceptar o rechazar dichas solicitudes. Una vez establecida la vinculación, ambas partes pueden acceder a información compartida según los niveles de privacidad configurados.</p>
+
+            <h3>5.4 Limitaciones Técnicas</h3>
+            <p>El sistema tiene establecidas limitaciones técnicas que incluyen un máximo de seis planes de entrenamiento por entrenador y soporte únicamente en idiomas español e inglés</p>
+
+            <h2>6. CONTENIDO Y PROPIEDAD INTELECTUAL</h2>
+            <h3>6.1 Contenido del Usuario</h3>
+            <p>Los usuarios conservan la propiedad de todo el contenido que suban a la plataforma, incluyendo fotografías, comentarios, datos de progreso y otra información personal. Al utilizar Training+, los usuarios otorgan una licencia limitada para procesar, almacenar y mostrar dicho contenido según sea necesario para el funcionamiento del servicio.</p>
+
+            <h3>6.2 Contenido de la Plataforma</h3>
+            <p>Todo el contenido proporcionado por Training+, incluyendo ejercicios, rutinas predefinidas, interfaces de usuario, logotipos, textos y diseños, está protegido por derechos de propiedad intelectual y no puede ser reproducido, distribuido o modificado sin autorización expresa.</p>
+
+            <h3>6.3 Responsabilidad del Contenido</h3>
+            <p>Los usuarios son exclusivamente responsables del contenido que publican en la plataforma y deben asegurar que no infrinja derechos de terceros, no sea ofensivo o ilegal, y sea apropiado para el contexto de entrenamiento físico.</p>
+
+            <h2>7. PRIVACIDAD Y PROTECCIÓN DE DATOS</h2>
+            <h3>7.1 Recopilación de Datos</h3>
+            <p>Training+ recopila información personal necesaria para el funcionamiento del servicio, incluyendo datos de registro, información de perfil, datos de progreso físico y comunicaciones entre usuarios. Toda recopilación se realiza con el consentimiento explícito del usuario.</p>
+
+            <h3>7.2 Uso de Datos</h3>
+            <p>Los datos personales se utilizan exclusivamente para proporcionar el servicio, mejorar la experiencia del usuario, facilitar la comunicación entre entrenadores y alumnos, y generar estadísticas agregadas que no identifiquen individualmente a los usuarios.</p>
+
+            <h3>7.3 Seguridad de Datos</h3>
+            <p>La plataforma implementa medidas de seguridad técnicas y organizativas apropiadas para proteger los datos personales contra acceso no autorizado, alteración, divulgación o destrucción. Esto incluye encriptación de contraseñas, conexiones seguras y sistemas de autenticación robustos.</p>
+
+            <h3>7.4 Compartición de Datos</h3>
+            <p>Los datos personales no se comparten con terceros, excepto cuando sea necesario para el funcionamiento del servicio (como procesadores de pago), cuando sea requerido por ley, o cuando el usuario haya dado su consentimiento explícito.</p>
+
+            <h3>7.5 Derechos del Usuario</h3>
+            <p>Los usuarios tienen derecho a acceder, rectificar, cancelar y oponerse al tratamiento de sus datos personales, así como a solicitar la portabilidad de sus datos según las normativas aplicables de protección de datos.</p>
+
+            <h2>8. RESPONSABILIDADES Y LIMITACIONES</h2>
+            <h3>8.1 Responsabilidades del Usuario</h3>
+            <p>Los usuarios son responsables de utilizar la plataforma de manera apropiada, mantener la confidencialidad de sus credenciales, proporcionar información veraz y actualizada, y respetar los derechos de otros usuarios.</p>
+
+            <h3>8.2 Limitaciones de Responsabilidad</h3>
+            <p>Training+ actúa como plataforma tecnológica facilitadora de la comunicación entre entrenadores y alumnos. No somos responsables de la calidad, seguridad o efectividad de los consejos de entrenamiento proporcionados por los entrenadores, ni de los resultados obtenidos por los usuarios.</p>
+
+            <h3>8.3 Descargo de Responsabilidad Médica</h3>
+            <p>Training+ no proporciona servicios médicos ni consejos de salud. Los usuarios deben consultar con profesionales médicos antes de iniciar cualquier programa de ejercicio, especialmente si tienen condiciones médicas preexistentes.</p>
+
+            <h3>8.4 Disponibilidad del Servicio</h3>
+            <p>Si bien nos esforzamos por mantener la plataforma disponible continuamente, no garantizamos que el servicio esté libre de interrupciones, errores o fallas técnicas. Nos reservamos el derecho a realizar mantenimiento programado y actualizaciones del sistema.</p>
+
+            <h2>9. TERMINACIÓN Y SUSPENSIÓN</h2>
+            <h3>9.1 Terminación por el Usuario</h3>
+            <p>Los usuarios pueden terminar su cuenta en cualquier momento eliminando su perfil desde la configuración de cuenta. La terminación no genera derecho a reembolso por suscripciones ya pagadas.</p>
+
+            <h3>9.2 Suspensión por Violación</h3>
+            <p>Nos reservamos el derecho de suspender o terminar cuentas que violen estos términos y condiciones, sin previo aviso y sin derecho a reembolso.</p>
+
+            <h3>9.3 Efectos de la Terminación</h3>
+            <p>Al terminar la cuenta, se eliminará el acceso a la plataforma y se procederá a la eliminación de datos personales según nuestras políticas de retención de datos, manteniendo únicamente aquella información requerida por obligaciones legales.</p>
+
+            <h2>10. MODIFICACIONES</h2>
+            <h3>10.1 Modificaciones a los Términos</h3>
+            <p>Nos reservamos el derecho de modificar estos términos y condiciones en cualquier momento. Las modificaciones se comunicarán a los usuarios con al menos treinta días de anticipación y entrarán en vigor en la fecha especificada.</p>
+
+            <h3>10.2 Modificaciones al Servicio</h3>
+            <p>Training+ puede evolucionar con el tiempo, agregando nuevas funcionalidades o modificando las existentes. Nos reservamos el derecho de realizar cambios al servicio, siempre manteniendo la funcionalidad básica descrita en estos términos.</p>
+
+            <h2>11. RESOLUCIÓN DE CONFLICTOS</h2>
+            <h3>11.1 Comunicación Directa</h3>
+            <p>Alentamos a los usuarios a comunicarse directamente con nuestro equipo de soporte para resolver cualquier disputa o inquietud relacionada con el servicio.</p>
+
+            <h3>11.2 Jurisdicción</h3>
+            <p>Estos términos se rigen por las leyes de la República Argentina. En caso de conflicto, las partes se someten a la jurisdicción de los tribunales ordinarios de la ciudad de Oberá, Misiones, con renuncia a cualquier otro fuero o jurisdicción.</p>
+
+            <h2>12. SOPORTE Y CONTACTO</h2>
+            <h3>12.1 Soporte Técnico</h3>
+            <p>Los usuarios tienen acceso a soporte técnico para resolver problemas relacionados con el funcionamiento de la plataforma a través de los canales de comunicación establecidos.</p>
+
+            <h3>12.2 Manual de Usuario</h3>
+            <p>Se proporciona documentación detallada sobre el uso de la plataforma, disponible en la sección de 'Opciones' de la aplicación web.</p>
+
+            <h3>12.3 Información de Contacto</h3>
+            <p>Para consultas, sugerencias o reportes relacionados con estos términos y condiciones, los usuarios pueden contactarnos a través de:</p>
+            <ul>
+                <li>Correo electrónico: app.trainingplus@gmail.com</li>
+                <li>Formulario de contacto en la sección de soporte</li>
+            </ul>
+
+            <h2>13. DISPOSICIONES FINALES</h2>
+            <h3>13.1 Severabilidad</h3>
+            <p>Si alguna disposición de estos términos y condiciones es declarada inválida o inaplicable por un tribunal competente, las demás disposiciones permanecerán en pleno vigor y efecto.</p>
+
+            <h3>13.2 Acuerdo Completo</h3>
+            <p>Estos términos y condiciones constituyen el acuerdo completo entre los usuarios y Training+ con respecto al uso de la plataforma, y reemplazan cualquier acuerdo anterior relacionado con el mismo objeto.</p>
+
+            <h3>13.3 Idioma</h3>
+            <p>En caso de discrepancia entre versiones en diferentes idiomas de estos términos, prevalecerá la versión en español.</p>
+
+            <hr>
+            <p><strong>Al utilizar Training+, usted reconoce haber leído, entendido y aceptado estos términos y condiciones en su totalidad.</strong></p>
         </div>
-
 
         <!-- Contenido de la sección "Políticas de Privacidad" -->
         <div class="privacy-policy">
             <h1>Políticas de Privacidad</h1>
         
-            <p><strong>1. Introducción</strong><br>
+            <p><strong>1. Introducción</strong>
             La presente Política de Privacidad describe cómo Training+ (en adelante, "la Plataforma") recopila, utiliza, almacena y protege la información personal de sus usuarios. Esta política forma parte integral de los Términos y Condiciones de Uso.<br>
             Al utilizar la Plataforma, usted acepta las prácticas descritas en esta Política de Privacidad.</p>
         
-            <p><strong>2. Información Recopilada</strong></p>
-        
-            <p><strong>2.1 Información personal básica</strong><br>
+            <p><strong>2. Información Recopilada</strong>
             - Nombre y apellido<br>
             - Edad y fecha de nacimiento<br>
             - Sexo<br>
             - Nacionalidad</p>
         
-            <p><strong>2.2 Información física</strong><br>
+            <p><strong>2.2 Información física</strong>
             - Peso y altura<br>
             - Objetivo físico<br>
             - Datos de salud: lesiones previas, condición cardiovascular</p>
         
-            <p><strong>2.3 Contenido multimedia</strong><br>
+            <p><strong>2.3 Contenido multimedia</strong>
             - Fotografías de perfil<br>
             - Fotografías de progreso semanal</p>
         
-            <p><strong>2.4 Información adicional para entrenadores</strong><br>
+            <p><strong>2.4 Información adicional para entrenadores</strong>
             - Fotografía del título o certificado profesional<br>
             - Instituto de formación<br>
             - Título obtenido<br>
@@ -180,10 +284,10 @@
             - Experiencia profesional<br>
             - Datos profesionales adicionales</p>
         
-            <p><strong>2.5 Información de pago (solo para entrenadores)</strong><br>
+            <p><strong>2.5 Información de pago (solo para entrenadores)</strong>
             La información relacionada con pagos es procesada directamente por PayPal y no es almacenada en nuestras bases de datos.</p>
         
-            <p><strong>3. Uso de la Información</strong><br>
+            <p><strong>3. Uso de la Información</strong>
             La información recopilada se utiliza para:<br>
             - Crear y mantener las cuentas de usuarios y entrenadores.<br>
             - Personalizar la experiencia del usuario en la Plataforma.<br>
@@ -192,19 +296,19 @@
             - Mejorar la Plataforma y desarrollar nuevas funcionalidades.<br>
             - Comunicar actualizaciones importantes sobre la Plataforma.</p>
         
-            <p><strong>4. Almacenamiento de Datos</strong><br>
+            <p><strong>4. Almacenamiento de Datos</strong>
             Actualmente, la información se almacena en una base de datos SQLite local. En el futuro, se planea migrar a una solución basada en la nube o servidor dedicado, manteniendo siempre estándares adecuados de seguridad.</p>
         
-            <p><strong>5. Compartir Información</strong><br>
+            <p><strong>5. Compartir Información</strong>
             No compartimos, vendemos ni alquilamos su información personal a terceros, excepto:<br>
             - Con PayPal, exclusivamente para el procesamiento de pagos de suscripciones de entrenadores.<br>
             - Cuando sea requerido por ley o por orden judicial.<br>
             - Para proteger los derechos, la propiedad o la seguridad del desarrollador, los usuarios de la Plataforma o el público en general.</p>
         
-            <p><strong>6. Cookies y Tecnologías de Seguimiento</strong><br>
+            <p><strong>6. Cookies y Tecnologías de Seguimiento</strong>
             Actualmente, la Plataforma no utiliza cookies ni sistemas de rastreo. Si en el futuro se implementaran estas tecnologías, esta política será actualizada para reflejar dichos cambios.</p>
         
-            <p><strong>7. Derechos del Usuario sobre sus Datos</strong><br>
+            <p><strong>7. Derechos del Usuario sobre sus Datos</strong>
             Los usuarios tienen derecho a:<br>
             - Acceder a su información personal almacenada en la Plataforma.<br>
             - Rectificar datos inexactos o incompletos.<br>
@@ -212,22 +316,22 @@
             - Cancelar su cuenta, lo que resultará en la eliminación completa de sus datos.<br>
             Para ejercer estos derechos, el usuario puede utilizar las opciones disponibles en su perfil dentro de la Plataforma.</p>
         
-            <p><strong>8. Seguridad de la Información</strong><br>
+            <p><strong>8. Seguridad de la Información</strong>
             Implementamos medidas de seguridad técnicas y organizativas para proteger su información personal contra acceso no autorizado, alteración, divulgación o destrucción. Sin embargo, ningún método de transmisión por Internet o almacenamiento electrónico es 100% seguro.</p>
         
-            <p><strong>9. Menores de Edad</strong><br>
+            <p><strong>9. Menores de Edad</strong>
             Actualmente, la Plataforma no cuenta con una política específica sobre edad mínima para su uso. Sin embargo, los menores de edad deben contar con la autorización de sus padres o tutores legales para utilizar la Plataforma.</p>
         
-            <p><strong>10. Cambios en la Política de Privacidad</strong><br>
+            <p><strong>10. Cambios en la Política de Privacidad</strong>
             El desarrollador se reserva el derecho de modificar esta Política de Privacidad en cualquier momento. Las modificaciones entrarán en vigor inmediatamente después de su publicación en la Plataforma. El uso continuado de la Plataforma después de cualquier modificación constituye la aceptación de la nueva política.</p>
         
-            <p><strong>11. Transferencia Internacional de Datos</strong><br>
+            <p><strong>11. Transferencia Internacional de Datos</strong>
             Dado que la Plataforma puede ser utilizada desde diferentes países, la información personal puede ser transferida y procesada en países distintos al de residencia del usuario. Al utilizar la Plataforma, el usuario consiente esta transferencia.</p>
         
-            <p><strong>12. Contacto</strong><br>
+            <p><strong>12. Contacto</strong>
             Actualmente no existe un canal oficial para consultas relacionadas con privacidad. Esta información será actualizada tan pronto como se implemente un sistema de soporte.</p>
         
-            <p><strong>13. Período de Conservación de Datos</strong><br>
+            <p><strong>13. Período de Conservación de Datos</strong>
             Los datos personales se conservarán mientras el usuario mantenga su cuenta activa. Una vez que la cuenta sea eliminada, todos los datos asociados serán eliminados permanentemente de nuestros sistemas.</p>
         </div>
         

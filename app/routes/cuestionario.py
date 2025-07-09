@@ -35,7 +35,7 @@ def cuestionario():
 
     id_alumno = alumno[0]
 
-    # Manejar POST (guardar datos)
+    # Guardar datos
     if request.method == 'POST':
         # Obtener datos del formulario
         datos = {

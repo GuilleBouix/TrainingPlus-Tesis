@@ -7,6 +7,7 @@ from datetime import date
 import smtplib
 import os
 
+
 # Cargar las variables de entorno desde el archivo .env
 load_dotenv()
 
@@ -14,7 +15,8 @@ load_dotenv()
 EMAIL_DESTINO = os.getenv("EMAIL_GMAIL")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 
-# Crear un blueprint para las opciones
+
+# Blueprint para opciones
 opciones_bp = Blueprint('opciones', __name__)
 
 

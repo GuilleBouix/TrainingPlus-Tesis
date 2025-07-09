@@ -104,6 +104,99 @@
     margin-bottom: 1rem;
 }
 
+/* About */
+.about-subtitle {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+/* Sub-secciones (h3) */
+.about-subsection {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Párrafos */
+.about-paragraph {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Términos y Condiciones */
+.terms-conditions {
+  line-height: 1.6;
+  color: var(--color-text-primary);
+}
+
+.terms-conditions .version-info {
+    display: flex;
+    flex-direction: column;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 1rem;
+}
+
+.terms-conditions h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.terms-conditions h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+.terms-conditions p {
+  font-size: 1rem;
+  margin: 0.25rem 0 1rem;
+}
+
+.terms-conditions ul {
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.terms-conditions h2::before {
+  content: "";
+  display: block;
+  border-top: 1px solid var(--color-border);
+  margin: 2rem 0 1rem;
+}
+
+/* Políticas de Privacidad */
+.privacy-policy {
+  line-height: 1.6;
+  color: var(--color-text-primary);
+}
+
+.privacy-policy p strong {
+  display: block;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 0.25rem;
+}
+
+.privacy-policy p {
+  font-size: 1rem;
+  margin: 0.5rem 0 1rem;
+}
+
+.privacy-policy p strong::before {
+  content: "";
+  display: block;
+  border-top: 1px solid var(--color-border);
+  margin: 2rem 0 1rem;
+}
+
+
 .about ul {
     list-style: none;
 }
