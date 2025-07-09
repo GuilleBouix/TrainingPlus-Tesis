@@ -51,7 +51,7 @@ body {
     align-items: center;
     z-index: 9999; /* Asegura que esté encima de todo */
 }
-/* Spinner */
+
 .spinner {
     width: 56px;
     height: 56px;
@@ -61,7 +61,7 @@ body {
     border-right-color: #dc2626;
     animation: spin .75s infinite linear;
 }
-/* Texto de carga */
+
 #loading-screen p {
     margin-top: 20px;
     font-size: 1.2rem;
@@ -179,7 +179,6 @@ a span {
     pointer-events: none; 
 }
 
-/* Estilo para el botón de notificaciones */
 .btn-notificaciones-nav {
     position: relative;
     font-size: 16px;
@@ -192,7 +191,6 @@ a span {
     display: none;
 }
 
-/* Estilo para el span (el círculo) */
 .btn-notificaciones-nav span {
     display: inline-block;
     width: 30px;
@@ -481,7 +479,6 @@ main {
     color: var(--color-text-secondary);
 }
 
-/* Barra de progreso contenedora */
 .progress-bar-container {
     width: 100%;
     height: 10px;
@@ -492,7 +489,6 @@ main {
 
 }
 
-/* Barra de progreso estilizada */
 .progress-bar {
     height: 100%;
     background-color: var(--color-primary);
@@ -570,7 +566,6 @@ main {
 }
 
 
-/* Botón de notificaciones */
 .btn-notification {
     position: fixed;
     bottom: 20px;
@@ -591,16 +586,16 @@ main {
     font-size: 1.5rem;
 }
 
-/* Botón de traducción - POSICIÓN MODIFICADA */
+
 #translate-button {
     position: fixed;
-    bottom: 90px; /* Colocado encima del botón de notificaciones */
-    right: 20px; /* Misma posición horizontal */
+    bottom: 90px;
+    right: 20px;
     background-color: var(--color-background);
     color: var(--color-text-primary);
     border: 1px solid var(--color-border);
-    border-radius: 50%; /* Esto lo hace completamente redondo */
-    width: 60px; /* Mismo tamaño que notificaciones */
+    border-radius: 50%;
+    width: 60px;
     height: 60px;
     cursor: pointer;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -608,10 +603,9 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: all 0.3s ease; /* Misma transición que notificaciones */
+    transition: all 0.3s ease;
 }
 
-/* Resto del CSS permanece igual */
 .btn-notification span {
     display: inline-flex;
     align-items: center;
@@ -666,7 +660,6 @@ main {
     visibility: hidden !important;
 }
 
-/* Estilos para el botón en el navbar (móvil) */
 .translate-nav-btn {
     background: none;
     border: none;

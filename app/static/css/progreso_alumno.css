@@ -2,7 +2,7 @@
     display: flex;
     margin: 1rem 0;
     gap: 1rem;
-    align-items: stretch; /* Este es el truco */
+    align-items: stretch;
 }
 
 .alumno-container,
@@ -126,7 +126,7 @@
 .ficha {
     border-top: 1px solid var(--color-border);
     padding: .75rem 0;
-    margin-top: 1rem;
+    margin-top: .5rem;
     display: flex;
     flex-direction: column;
 }
@@ -141,7 +141,7 @@
     transition: all 0.1s ease-in-out;
     font-size: 1rem;
     color: var(--color-background);
-    margin-top: 1rem;
+    margin-top: .5rem;
     outline: none;
 }
 .ficha button:hover {
@@ -161,7 +161,7 @@
     transition: all 0.1s ease-in-out;
     font-size: 1rem;
     color: var(--color-background);
-    margin-top: 1rem;
+    margin-top: .5rem;
     outline: none;
     text-align: center;
 }
@@ -521,7 +521,7 @@
     overflow: hidden;
     border-radius: 10px;
     padding: 0;
-    background: transparent; /* Para que no tenga fondo blanco */
+    background: transparent;
 }
 #fotoModal::backdrop {
     background-color: rgba(0, 0, 0, 0.6);
@@ -556,7 +556,7 @@
 
 
 
-/* Media Querys */
+/* RESPONSIVE*/
 @media screen and (max-width: 1160px) {
     .alumno-container {
         padding: 1rem .5rem;

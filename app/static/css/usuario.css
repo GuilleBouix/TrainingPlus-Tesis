@@ -235,7 +235,7 @@
     margin: 0;
 }
 
-/* Estilos base para todos los botones de conexión */
+
 .connect-container form button {
     display: flex;
     justify-content: center;
@@ -251,13 +251,11 @@
     cursor: pointer;
 }
 
-/* Iconos dentro de los botones */
 .connect-container form button i {
     font-size: 1.3rem;
     margin-right: .3rem;
 }
 
-/* Botón Conectar */
 .connect-container form .btn-conectar {
     background-color: var(--color-button-primary);
 }
@@ -270,7 +268,6 @@
     background-color: var(--color-button-active);
 }
 
-/* Botón Pendiente */
 .btn-pendiente {
     position: relative;
     display: flex;
@@ -316,7 +313,6 @@
     opacity: 1;
 }
 
-/* Botón Conectado */
 .btn-conectado {
     position: relative;
     display: flex;
@@ -397,7 +393,6 @@
     margin-right: .3rem;
 }
 
-/* Estilos para el modal */
 .certification-modal {
     position: fixed;
     top: 50%;
@@ -416,21 +411,18 @@
     background-color: rgba(0, 0, 0, 0.5);
 }
 
-/* Clase para el efecto fade-in cuando se abre */
 .certification-modal[open] {
     opacity: 1;
     visibility: visible;
 }
 
-/* Contenido del modal */
 .certification-modal .modal-content {
     position: relative;
     background-color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    overflow: hidden;    /* Previene scroll en el contenido */
+    overflow: hidden;
 }
 
-/* Botón de cerrar (X) */
 .certification-modal .modal-content .close-modal {
     position: absolute;
     top: 10px;
@@ -438,7 +430,7 @@
     cursor: pointer;
     font-size: 24px;
     color: var(--color-text-primary);
-    z-index: 10000;      /* Asegura que esté por encima */
+    z-index: 10000;
     transition: all 0.2s ease-in-out;
 }
 .certification-modal .modal-content .close-modal:hover {
@@ -446,7 +438,6 @@
     transform: scale(1.1);
 }
 
-/* Estilo para la imagen dentro del modal */
 .certification-modal .modal-content img {
     max-width: 100%;
     max-height: 100%;
@@ -454,7 +445,6 @@
     object-fit: contain;
 }
 
-/* Prevenir scroll en el body cuando el modal está abierto */
 body.modal-open {
     overflow: hidden;
 }

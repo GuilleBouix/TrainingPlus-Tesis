@@ -190,7 +190,6 @@ td a:hover {
   width: 100%;
 }
 
-/* Estilos para desktop (tablet/escritorio) */
 .tabla-fuerza {
   width: 100%;
   border-collapse: collapse;
@@ -216,7 +215,6 @@ td a:hover {
   background-color: var(--color-background-hover);
   transition: 0.2s ease;
 }
-
 
 
 
@@ -258,8 +256,6 @@ h2 i {
 
 
 
-
-/* Media Querys */
 @media screen and (max-width: 1160px) {
 }
 @media screen and (max-width: 950px) {

@@ -264,7 +264,7 @@ form .register {
     text-decoration: underline;
 }
 
-/* Modal general */
+
 #password-recovery-modal {
     position: fixed;
     top: 50%;
@@ -291,7 +291,6 @@ form .register {
     visibility: visible;
 }
 
-/* Contenido interno del modal */
 #password-recovery-modal .modal-content {
     background-color: #fff;
     padding: 2rem;
@@ -302,7 +301,6 @@ form .register {
     position: relative;
 }
 
-/* Header */
 #password-recovery-modal .modal-header {
     display: flex;
     justify-content: space-between;
@@ -310,14 +308,12 @@ form .register {
     margin-bottom: 1rem;
 }
 
-/* Título */
 #password-recovery-modal .modal-header h1 {
     font-size: 1.3rem;
     margin: 0;
     font-weight: 600;
 }
 
-/* Botón de cerrar */
 #password-recovery-modal .close-modal {
     font-size: 1.5rem;
     color: var(--color-primary);
@@ -331,7 +327,6 @@ form .register {
     transform: scale(1.1);
 }
 
-/* Inputs y labels */
 #password-recovery-modal form div {
     margin-bottom: 1rem;
 }
@@ -359,7 +354,6 @@ form .register {
     border-color: var(--color-primary);
 }
 
-/* Botón de enviar */
 #password-recovery-modal .btn-recovery {
     width: 100%;
     padding: 1rem;

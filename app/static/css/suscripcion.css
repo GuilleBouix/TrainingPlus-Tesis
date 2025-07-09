@@ -286,7 +286,6 @@ main {
     width: 100%;
 }
 
-/* Billing Form Styles */
 .billing-form {
     margin: 30px 0;
 }
@@ -331,7 +330,7 @@ main {
     cursor: pointer;
 }
 
-/* Payment Method Styles */
+/* Metodo de pago */
 .payment-methods {
     margin: 1rem 0;
 }

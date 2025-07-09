@@ -158,7 +158,7 @@ main {
 }
 .excercise-title input {
     accent-color: var(--color-button-primary);
-    transform: scale(1.3); /* Aumenta el tamaño al 150% */
+    transform: scale(1.3);
     cursor: pointer;
     transition: all 0.5s ease-in-out;
 }
@@ -256,12 +256,12 @@ main {
 }
 
 .accordion-content textarea {
-    resize: none; /* Deshabilita el redimensionamiento */
-    width: 100%; /* Ocupa el 100% del contenedor */
-    border: 1px solid var(--color-border); /* Borde de color rojo */
+    resize: none;
+    width: 100%;
+    border: 1px solid var(--color-border);
     padding: 10px;
-    border-radius: 5px; /* Esquinas redondeadas */
-    overflow: hidden; /* Evita el desbordamiento */
+    border-radius: 5px;
+    overflow: hidden;
     outline: var(--color-button-active);
     height: 130px;
     font-size: 1rem;
@@ -307,7 +307,6 @@ main {
     background-color: rgba(0, 0, 0, 0.5);
 }
 
-/* Clase para el efecto fade-in cuando se abre */
 .exercise-dialog[open] {
     opacity: 1;
     visibility: visible;
@@ -318,10 +317,9 @@ main {
     position: relative;
     background-color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    overflow: hidden;    /* Previene scroll en el contenido */
+    overflow: hidden;
 }
 
-/* Botón de cerrar (X) */
 .close-modal {
     position: absolute;
     top: 10px;
@@ -329,7 +327,7 @@ main {
     cursor: pointer;
     font-size: 24px;
     color: var(--color-text-primary);
-    z-index: 10000;      /* Asegura que esté por encima */
+    z-index: 10000;
     transition: all 0.2s ease-in-out;
 }
 .close-modal:hover {
@@ -337,11 +335,10 @@ main {
     transform: scale(1.1);
 }
 
-/* Estilo para la imagen dentro del modal */
 .modal-content img {
     width: auto;
     height: auto;
-    max-width: min(100%, 600px); /* 600px o el ancho máximo que prefieras */
+    max-width: min(100%, 600px);
     max-height: 80vh;
     display: block;
     margin: 0 auto;
@@ -349,7 +346,6 @@ main {
 }
 
 
-/* Prevenir scroll en el body cuando el modal está abierto */
 body.modal-open {
     overflow: hidden;
 }
@@ -523,8 +519,8 @@ body.modal-open {
     }
 
     .modal-content img {
-        max-width: 95vw; /* Ocupará casi todo el ancho de la pantalla */
-        max-height: 70vh; /* Pero limitará la altura */
+        max-width: 95vw;
+        max-height: 70vh;
     }
 
     .week-progress-container {

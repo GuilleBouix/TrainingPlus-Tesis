@@ -34,7 +34,6 @@ main {
     font-weight: 600;
 }
 
-/* BARRA DE PROGRESO */
 .progreso-container-rutina {
     display: flex;
     align-items: center;
@@ -83,9 +82,6 @@ main {
 .line.completed {
     background: var(--color-button-primary);
 }
-
-
-
 
 
 
@@ -143,6 +139,7 @@ button:active {
 }
 
 
+
 /* SECCION 2 */
 .details-semana {
     margin: 1rem 0;
@@ -162,18 +159,18 @@ summary {
     background-color: var(--color-button-primary);
     color: var(--color-background);
     border-radius: 5px;
-    list-style: none; /* Oculta el ícono por defecto */
-    display: flex; /* Usa Flexbox */
-    justify-content: space-between; /* Alinea el contenido y el ícono */
-    align-items: center; /* Centra verticalmente */
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     transition: background-color 0.1s ease-in-out;
 }
 summary::-webkit-details-marker {
     display: none;
 }
 summary::after {
-    font-family: "boxicons"; /* Usa la fuente de Boxicons */
-    content: "\ea4a"; /* Código del ícono bx-chevron-down */
+    font-family: "boxicons";
+    content: "\ea4a";
     font-size: 20px;
     transition: transform .1s ease-in-out;
 }
@@ -185,7 +182,6 @@ summary:hover {
     background-color: var(--color-button-hover);
 }
 
-/* Animación al desplegar el contenido */
 details div {
     padding: 1rem;
     opacity: 0;
@@ -309,7 +305,7 @@ details[open] div {
     resize: none;
     background-color: var(--color-background);
 }
-/* Aplica el estilo tipo input al contenedor visible de Select2 */
+
 .select-ejercicio + .select2 .select2-selection--single {
   border: 1px solid var(--color-border);
   border-radius: 5px;
@@ -317,12 +313,12 @@ details[open] div {
   font-size: 1rem;
   height: 40px;
   box-sizing: border-box;
-  padding: 0; /* No usar padding acá */
+  padding: 0;
   display: flex;
   align-items: center;
 }
 
-/* Para que el texto no quede cortado */
+
 .select-ejercicio + .select2 .select2-selection__rendered {
   padding: 0 0.5rem;
   line-height: 1.5;
@@ -392,17 +388,17 @@ details[open] div {
 
     /* SECCION 2 */
     .details-semana {
-        margin: 0.5rem 0; /* Menos margen */
-        padding: 0.5rem; /* Menos padding */
+        margin: 0.5rem 0;
+        padding: 0.5rem;
     }
     
     .dias-container {
-        flex-direction: column; /* Asegura que todo quede en columna */
+        flex-direction: column;
         gap: 0.5rem;
     }
 
     .dias-container input {
-        width: 100%; /* Ocupa todo el ancho */
+        width: 100%;
     }
 
     /* SECCION 3 */
@@ -412,7 +408,7 @@ details[open] div {
     }
 
     .rutina-container {
-        flex-direction: column; /* Acomoda en columna */
+        flex-direction: column;
         gap: 0;
     }
 
@@ -426,7 +422,7 @@ details[open] div {
     }
 
     .inputs-container {
-        flex-direction: column; /* Hace que los inputs estén en columna */
+        flex-direction: column;
         gap: 0;
     }
 
@@ -436,16 +432,16 @@ details[open] div {
     }
 
     .btn-agregar-ejercicio {
-        width: 100%; /* Ocupa todo el ancho disponible */
-        margin: 0.5rem 0 !important; /* Margen consistente */
-        padding: 0.5rem; /* Espaciado interno adecuado */
-        white-space: nowrap; /* Evita que el texto se parta */
-        overflow: hidden; /* Contiene el texto largo */
-        text-overflow: ellipsis; /* Añade "..." si el texto es muy largo */
+        width: 100%;
+        margin: 0.5rem 0 !important;
+        padding: 0.5rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .ejercicios-semana {
-        width: 100%; /* Asegura que el contenedor ocupe todo el ancho */
+        width: 100%;
     }
 
 }

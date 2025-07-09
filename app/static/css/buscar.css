@@ -64,7 +64,7 @@ main {
 }
 
 .results-container {
-    position: relative; /* Necesario para posicionar el ícono dentro del contenedor */
+    position: relative;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -211,9 +211,8 @@ main {
         transition: all 0.1s ease-in;
     }
 
-    /* Hover para el botón de cerrar */
     #close-modal:hover {
-        transform: scale(1.1); /* Escala el botón al pasar el mouse */
+        transform: scale(1.1);
         color: var(--color-background);
     }
 }

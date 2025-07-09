@@ -110,7 +110,7 @@
     height: 100%;
     border-radius: 3px;
     transition: width 0.5s ease, background-color 0.3s ease;
-    background-color: var(--color-button-primary); /* o cualquier color de progreso */
+    background-color: var(--color-button-primary);
     width: 0%;
 }
 
@@ -197,7 +197,7 @@
     color: oklch(70.4% 0.04 256.788);
 }
 .ejercicio-marcador i.bronze {
-    color: oklch(75% 0.183 55.934); /* Color bronce */
+    color: oklch(75% 0.183 55.934);
 }
 .marcadores-alumno .marcador .valor-marcador {
     font-size: 1rem;

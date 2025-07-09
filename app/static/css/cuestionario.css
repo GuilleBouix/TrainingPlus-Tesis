@@ -173,15 +173,7 @@ textarea   {
 
 
 
-
-
-
-
-
-
-
 /* RESPONSIVE */
-/* Dispositivos con un ancho máximo de 1160px */
 @media screen and (max-width: 1160px) {
     main {
         padding: 0 100px;
@@ -200,7 +192,6 @@ textarea   {
     }
 }
 
-/* Dispositivos con un ancho máximo de 950px */
 @media screen and (max-width: 950px) {
     main {
         padding: 0 50px;
@@ -224,7 +215,6 @@ textarea   {
     }
 }
 
-/* Dispositivos con un ancho máximo de 768px */
 @media screen and (max-width: 768px) {
     main {
         padding: 0px 20px;
@@ -262,7 +252,6 @@ textarea   {
 
 }
 
-/* Dispositivos con un ancho máximo de 480px */
 @media screen and (max-width: 480px) {
     header .title {
         border: none;

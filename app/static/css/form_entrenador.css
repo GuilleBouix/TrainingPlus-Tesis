@@ -178,15 +178,7 @@ textarea   {
 
 
 
-
-
-
-
-
-
-
 /* RESPONSIVE */
-/* Dispositivos con un ancho máximo de 1160px */
 @media screen and (max-width: 1160px) {
     main {
         padding: 0 100px;

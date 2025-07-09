@@ -482,7 +482,7 @@ form .btn-guardar {
     padding: 0;
     background: var(--color-background);
     border-radius: 10px;
-    width: 500px !important; /* Ajuste del ancho a 300px */
+    width: 500px !important;
     max-height: 90vh;
     overflow-y: auto;
     border: none;
@@ -525,7 +525,7 @@ form .btn-guardar {
 .dialog-social-media form .input-container {
     display: flex;
     flex-direction: column;
-    margin-bottom: 1rem; /* Añadido para separación entre campos */
+    margin-bottom: 1rem;
 }
 
 .dialog-social-media form .input-container label {
