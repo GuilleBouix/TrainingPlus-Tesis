@@ -35,7 +35,6 @@
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-    <script src="{{ url_for('static', filename='javascript/script.js') }}" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 </head>
@@ -115,6 +114,115 @@
         <span class="notification-count" id="notificationCount" style="display: none;"></span>
         <i class='bx bxs-bell'></i>
     </a>
+
+    <!-- BARRA DE NAVEGACION (BASE) -->
+    <script>
+        const nav = document.querySelector(".nav"),
+            iconoBusqueda = document.querySelector("#iconoBusqueda"), 
+            navOpenBtn = document.querySelector(".navOpenBtn"), 
+            navCloseBtn = document.querySelector(".navCloseBtn");
+
+        iconoBusqueda.addEventListener("click", () => {
+            nav.classList.toggle("abrirBusqueda")
+            nav.classList.remove("openNav")
+            if(nav.classList.contains("abrirBusqueda")) {
+                return iconoBusqueda.classList.replace("bx-search", "bx-x");
+            }
+            iconoBusqueda.classList.replace("bx-x", "bx-search");
+        });
+
+        navOpenBtn.addEventListener("click", () => {
+            nav.classList.add("openNav");
+            nav.classList.remove("abrirBusqueda")
+            iconoBusqueda.classList.replace("bx-x", "bx-search");
+        })
+
+        navCloseBtn.addEventListener("click", () => {
+            nav.classList.remove("openNav");
+        })
+    </script>
+
+    <!-- BARRA DE BUSQUEDA -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchBox = document.querySelector('#busquedaInput');
+            const searchIcon = document.querySelector('#iconoBusqueda2');
+
+            function performSearch() {
+                const query = searchBox.value.trim();
+                if (query) {
+                    searchBox.value = '';
+                    window.location.href = `/buscador?query=${encodeURIComponent(query)}`;
+                }
+            }
+
+            searchBox.addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+
+            searchIcon.addEventListener('click', performSearch);
+        });
+    </script>
+
+    <!-- PERFIL SELECCIONADO -->
+    <script>
+        function mostrarDialogoPerfil(usuario) {
+            const dialog = document.getElementById("profile-dialog");
+
+            document.getElementById("profile-foto").src = `/static/uploads/${usuario.foto_perfil}`;
+            document.getElementById("profile-nombre").textContent = `${usuario.nombre.toUpperCase()} ${usuario.apellido.toUpperCase()}`;
+            document.getElementById("profile-username").textContent = `@${usuario.nombre_usuario}`;
+            document.getElementById("profile-bio").textContent = `"${usuario.bio}"`;
+            document.getElementById("profile-ubicacion").textContent = usuario.direccion;
+            document.getElementById("profile-fecha").textContent = usuario.fecha_nac;
+
+            dialog.showModal();
+        }
+
+        function cerrarDialogoPerfil() {
+            const dialog = document.getElementById("profile-dialog");
+            dialog.close();
+        }
+    </script>
+
+    <!-- PERFIL DE USUARIO -->
+    <script>
+        function habilitarEdicion() {
+            var inputs = document.querySelectorAll('input, select, textarea');
+            for (var i = 0; i < inputs.length; i++) {
+                if (inputs[i].id !== 'correo') {
+                    inputs[i].disabled = false;
+                }
+            }
+
+            document.querySelector('.boton-guardar').disabled = false;
+            document.querySelector('.boton-editar').disabled = true;
+        }
+
+        function deshabilitarEdicion() {
+            var inputs = document.querySelectorAll('input, select, textarea');
+            for (var i = 0; i < inputs.length; i++) {
+                inputs[i].disabled = true;
+            }
+
+            document.querySelector('.boton-guardar').disabled = true;
+            document.querySelector('.boton-editar').disabled = false;
+        }
+
+        function sin_espacio(input) {
+            input.value = input.value.replace(/ /g, '');
+        }
+    </script>
+
+    <!-- CERRAR SESION -->
+        <script>
+        window.history.pushState(null, "", window.location.href);
+        window.onpopstate = function() {
+            window.history.pushState(null, "", window.location.href);
+        };
+    </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -201,8 +309,6 @@
             document.body.style.top = '0';
         }
     </script>
-
-
 
 </body>
 </html>
