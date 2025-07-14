@@ -8,12 +8,12 @@
     <div class="training-container">
         <div class="training-header">
             <div class="title" data-aos="fade-right">
-                <h1>Tus Entrenamientos</h1>
-                <p>Visualiza y gestiona tus programas de entrenamiento.</p>
+                <h1 title="Listado de tus entrenamientos disponibles">Tus Entrenamientos</h1>
+                <p title="Aquí puedes visualizar y gestionar tus programas de entrenamiento">Visualiza y gestiona tus programas de entrenamiento.</p>
             </div>
             
             {% if rol_usuario == 2 %}
-                <a href="{{ url_for('entrenamiento.crear_entrenamiento') }}" class="btn-new-training" data-aos="fade-left">
+                <a href="{{ url_for('entrenamiento.crear_entrenamiento') }}" class="btn-new-training" data-aos="fade-left" title="Crear un nuevo entrenamiento">
                     <i class='bx bx-plus'></i> Nuevo Entrenamiento
                 </a>
             {% endif %}
@@ -21,9 +21,9 @@
         
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
-                <ul class="flash-messages">
+                <ul class="flash-messages" title="Mensajes informativos y de error">
                     {% for category, message in messages %}
-                        <li class="flash {{ category }}">
+                        <li class="flash {{ category }}" title="{{ 'Error' if category == 'error' else 'Éxito' }}: {{ message }}">
                             <i class="{{ 'bx bxs-error-circle' if category == 'error' else 'bx bxs-check-circle' }}"></i>
                             {{ message }}
                         </li>
@@ -34,58 +34,58 @@
 
         <!-- Filtros -->
         <div class="filters-box" role="group" aria-label="Filtrar entrenamientos">
-            <button class="filter active" data-aos="fade-in" data-aos-delay="100" data-filter="all" aria-pressed="true">Todos</button>
-            <button class="filter" data-aos="fade-in" data-aos-delay="200" data-filter="active" aria-pressed="false">Activos</button>
-            <button class="filter" data-aos="fade-in" data-aos-delay="300" data-filter="completed" aria-pressed="false">Completados</button>
+            <button class="filter active" data-aos="fade-in" data-aos-delay="100" data-filter="all" aria-pressed="true" title="Mostrar todos los entrenamientos">Todos</button>
+            <button class="filter" data-aos="fade-in" data-aos-delay="200" data-filter="active" aria-pressed="false" title="Mostrar solo entrenamientos activos">Activos</button>
+            <button class="filter" data-aos="fade-in" data-aos-delay="300" data-filter="completed" aria-pressed="false" title="Mostrar solo entrenamientos completados">Completados</button>
         </div>
 
         {% if entrenamientos %}
             <div class="training-box">
                 {% for entrenamiento in entrenamientos %}
-                    <div class="training" data-aos="flip-left" data-aos-delay="100">
+                    <div class="training" data-aos="flip-left" data-aos-delay="100" title="Entrenamiento: {{ entrenamiento.nombre_entrenamiento }}">
                         <div class="tipo">
-                            <h3>{{ entrenamiento.nombre_disciplina }}</h3>
-                            <i class='bx bx-dumbbell'></i>
+                            <h3 title="Disciplina del entrenamiento">{{ entrenamiento.nombre_disciplina }}</h3>
+                            <i class='bx bx-dumbbell' title="Icono de disciplina"></i>
                         </div>
                         
-                        <h1>{{ entrenamiento.nombre_entrenamiento }}</h1>
+                        <h1 title="Nombre del entrenamiento">{{ entrenamiento.nombre_entrenamiento }}</h1>
             
                         <div class="duration">
-                            <p><i class='bx bx-time-five'></i> {{ entrenamiento.duracion_semanas }} Semanas</p>
+                            <p title="Duración total del entrenamiento"><i class='bx bx-time-five'></i> {{ entrenamiento.duracion_semanas }} Semanas</p>
                         </div>
         
                         <div class="trainer-content">
                             {% if rol_usuario == 1 %}
-                                <img src="{{ url_for('static', filename='uploads/users/' ~ entrenamiento.entrenador_foto_perfil) }}" alt="Entrenador">
+                                <img src="{{ url_for('static', filename='uploads/users/' ~ entrenamiento.entrenador_foto_perfil) }}" alt="Entrenador" title="Foto de perfil del entrenador">
                                 <div class="trainer-info">
-                                    <h3>Entrenador</h3>
-                                    <p>{{ entrenamiento.entrenador_nombre }} {{ entrenamiento.entrenador_apellido }}</p>
+                                    <h3 title="Rol del usuario">Entrenador</h3>
+                                    <p title="Nombre completo del entrenador">{{ entrenamiento.entrenador_nombre }} {{ entrenamiento.entrenador_apellido }}</p>
                                 </div>
                             {% else %}
-                                <img src="{{ url_for('static', filename='uploads/users/' ~ entrenamiento.alumno_foto_perfil) }}" alt="Alumno">
+                                <img src="{{ url_for('static', filename='uploads/users/' ~ entrenamiento.alumno_foto_perfil) }}" alt="Alumno" title="Foto de perfil del alumno">
                                 <div class="trainer-info">
-                                    <h3>Alumno</h3>
-                                    <p>{{ entrenamiento.alumno_nombre }} {{ entrenamiento.alumno_apellido }}</p>
+                                    <h3 title="Rol del usuario">Alumno</h3>
+                                    <p title="Nombre completo del alumno">{{ entrenamiento.alumno_nombre }} {{ entrenamiento.alumno_apellido }}</p>
                                 </div>
                             {% endif %}
                         </div>
             
                         <div class="progress">
-                            <p>Progreso</p>
-                            <span class="progress-percentage">{{ entrenamiento.progreso }}%</span>
+                            <p title="Progreso actual del entrenamiento">Progreso</p>
+                            <span class="progress-percentage" title="Porcentaje de avance">{{ entrenamiento.progreso }}%</span>
                         </div>
             
-                        <div class="progress-bar-container">
-                            <div class="progress-bar" data-progreso="{{ entrenamiento.progreso }}"></div>
+                        <div class="progress-bar-container" title="Barra de progreso del entrenamiento">
+                            <div class="progress-bar" data-progreso="{{ entrenamiento.progreso }}" title="Porcentaje completado"></div>
                         </div>
             
                         <div class="actions">
-                            <a class="btn-view-training" href="{{ url_for('rutina.rutina', id_entrenamiento=entrenamiento.id_entrenamiento) }}">
+                            <a class="btn-view-training" href="{{ url_for('rutina.rutina', id_entrenamiento=entrenamiento.id_entrenamiento) }}" title="Ver detalles del entrenamiento">
                                 Ir al Entrenamiento <i class='bx bx-chevron-right'></i>
                             </a>
         
                             {% if rol_usuario == 2 %}
-                                <a href=" {{ url_for('entrenamiento.editar_entrenamiento', id_entrenamiento=entrenamiento.id_entrenamiento) }}" class="btn-edit-training" title="Editar Entrenamiento">
+                                <a href=" {{ url_for('entrenamiento.editar_entrenamiento', id_entrenamiento=entrenamiento.id_entrenamiento) }}" class="btn-edit-training" title="Editar este entrenamiento">
                                     <i class='bx bxs-pencil'></i>
                                 </a>
                             {% endif %}
@@ -94,7 +94,7 @@
                 {% endfor %}
             </div>
         {% else %}
-            <p class="no-training" data-aos="fade-in" data-aos-delay="100">
+            <p class="no-training" data-aos="fade-in" data-aos-delay="100" title="No tienes entrenamientos disponibles por el momento">
                 Aún no tienes entrenamientos disponibles.
             </p>
         {% endif %}

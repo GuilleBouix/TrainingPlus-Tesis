@@ -52,47 +52,47 @@
     </style>
 </head>
 <body>
-    <div class="ficha-content">
+    <div class="ficha-content" title="Ficha resumen del alumno">
 
-        <h1>Ficha de {{ alumno.nombre }} {{ alumno.apellido }}</h1>
+        <h1 title="Nombre completo del alumno">Ficha de {{ alumno.nombre }} {{ alumno.apellido }}</h1>
 
         <!-- Info Personal -->
-        <div class="container">
-            <h2>Información Personal</h2>
-            <div class="datos"><h3>Edad:</h3><span>{{ cuestionario.edad }} años</span></div>
-            <div class="datos"><h3>Experiencia:</h3><span>{{ cuestionario.experiencia | capitalize }}</span></div>
-            <div class="datos"><h3>Objetivo:</h3><span>{{ cuestionario.objetivo_general }}</span></div>
+        <div class="container" title="Información personal del alumno">
+            <h2 title="Sección de información personal">Información Personal</h2>
+            <div class="datos"><h3 title="Edad del alumno">Edad:</h3><span title="Edad actual del alumno en años">{{ cuestionario.edad }} años</span></div>
+            <div class="datos"><h3 title="Nivel de experiencia">Experiencia:</h3><span title="Experiencia declarada por el alumno">{{ cuestionario.experiencia | capitalize }}</span></div>
+            <div class="datos"><h3 title="Objetivo principal">Objetivo:</h3><span title="Objetivo general del alumno">{{ cuestionario.objetivo_general }}</span></div>
         </div>
 
         <!-- Datos Físicos -->
-        <div class="container">
-            <h2>Datos Físicos</h2>
-            <div class="datos"><h3>Peso:</h3><span>{{ cuestionario.peso }} kg</span></div>
-            <div class="datos"><h3>Altura:</h3><span>{{ cuestionario.altura }} cm</span></div>
+        <div class="container" title="Datos físicos del alumno">
+            <h2 title="Sección de datos físicos">Datos Físicos</h2>
+            <div class="datos"><h3 title="Peso del alumno">Peso:</h3><span title="Peso actual en kilogramos">{{ cuestionario.peso }} kg</span></div>
+            <div class="datos"><h3 title="Altura del alumno">Altura:</h3><span title="Altura actual en centímetros">{{ cuestionario.altura }} cm</span></div>
         </div>
 
         <!-- Entrenamiento -->
-        <div class="container">
-            <h2>Entrenamiento</h2>
-            <div class="datos"><h3>Nivel de Actividad:</h3><span>{{ cuestionario.nivel_actividad | capitalize }}</span></div>
-            <div class="datos"><h3>Frecuencia:</h3><span>{{ cuestionario.frecuencia_entreno | capitalize }}</span></div>
-            <div class="datos"><h3>Duración:</h3><span>{{ cuestionario.duracion_sesion }}</span></div>
+        <div class="container" title="Datos sobre el entrenamiento del alumno">
+            <h2 title="Sección de entrenamiento">Entrenamiento</h2>
+            <div class="datos"><h3 title="Nivel de actividad física">Nivel de Actividad:</h3><span title="Nivel de actividad física declarado">{{ cuestionario.nivel_actividad | capitalize }}</span></div>
+            <div class="datos"><h3 title="Frecuencia de entrenamiento semanal">Frecuencia:</h3><span title="Frecuencia semanal de entrenamiento">{{ cuestionario.frecuencia_entreno | capitalize }}</span></div>
+            <div class="datos"><h3 title="Duración de la sesión">Duración:</h3><span title="Duración típica de cada sesión">{{ cuestionario.duracion_sesion }}</span></div>
         </div>
 
         <!-- Salud -->
-        <div class="container">
-            <h2>Estado de Salud</h2>
-            <div class="datos"><h3>Estado General:</h3><span>{{ cuestionario.estado_salud | capitalize }}</span></div>
-            <div class="datos"><h3>Lesiones:</h3><span>{{ cuestionario.lesiones | capitalize }}</span></div>
-            <div class="datos"><h3>Condición Cardiovascular:</h3><span>{{ cuestionario.condicion_cardio | capitalize }}</span></div>
-            <div class="datos"><h3>Nivel de Estrés:</h3><span>{{ cuestionario.nivel_estres | capitalize }}</span></div>
+        <div class="container" title="Estado de salud del alumno">
+            <h2 title="Sección de salud">Estado de Salud</h2>
+            <div class="datos"><h3 title="Estado general de salud">Estado General:</h3><span title="Estado de salud declarado">{{ cuestionario.estado_salud | capitalize }}</span></div>
+            <div class="datos"><h3 title="Lesiones previas o actuales">Lesiones:</h3><span title="Lesiones declaradas por el alumno">{{ cuestionario.lesiones | capitalize }}</span></div>
+            <div class="datos"><h3 title="Condición cardiovascular">Condición Cardiovascular:</h3><span title="Condición cardiovascular declarada">{{ cuestionario.condicion_cardio | capitalize }}</span></div>
+            <div class="datos"><h3 title="Nivel de estrés">Nivel de Estrés:</h3><span title="Nivel de estrés declarado">{{ cuestionario.nivel_estres | capitalize }}</span></div>
         </div>
 
         <!-- Notas -->
-        <div class="container">
-            <h2>Notas Adicionales</h2>
+        <div class="container" title="Notas adicionales del alumno">
+            <h2 title="Sección de notas adicionales">Notas Adicionales</h2>
             <div class="datos">
-                <span class="nota-adicional">{{ cuestionario.nota_adicional if cuestionario.nota_adicional else 'No hay notas adicionales.' }}</span>
+                <span class="nota-adicional" title="Notas adicionales escritas por el alumno o entrenador">{{ cuestionario.nota_adicional if cuestionario.nota_adicional else 'No hay notas adicionales.' }}</span>
             </div>
         </div>
 

@@ -12,28 +12,28 @@
     <main>
         <header>
             <div class="title">
-                <h1>Formulario Entrenador</h1>
-                <p>Por favor, complete todos los campos del formulario.</p>
+                <h1 title="Formulario para registro de entrenador">Formulario Entrenador</h1>
+                <p title="Completa todos los campos para registrarte como entrenador">Por favor, complete todos los campos del formulario.</p>
             </div>
-            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Training+ Logo">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Training+ Logo" title="Logo de Training+">
         </header>
 
         <form action="" method="POST" enctype="multipart/form-data">
-            <h3>Información Personal</h3>
+            <h3 title="Datos personales del entrenador">Información Personal</h3>
             <div class="form-container">
                 <div class="input-box">
-                    <label for="apellido">Apellido <span>*</span></label>
-                    <input type="text" name="apellido" id="apellido" placeholder="Ingresa tu apellido" required>
+                    <label for="apellido" title="Tu apellido">Apellido <span>*</span></label>
+                    <input type="text" name="apellido" id="apellido" placeholder="Ingresa tu apellido" required title="Escribe tu apellido aquí">
                 </div>
 
                 <div class="input-box">
-                    <label for="nombre">Nombre <span>*</span></label>
-                    <input type="text" name="nombre" id="nombre" placeholder="Ingresa tu nombre" required>
+                    <label for="nombre" title="Tu nombre">Nombre <span>*</span></label>
+                    <input type="text" name="nombre" id="nombre" placeholder="Ingresa tu nombre" required title="Escribe tu nombre aquí">
                 </div>
 
                 <div class="input-box">
-                    <label for="sexo">Género <span>*</span></label>
-                    <select name="sexo" id="sexo" required placeholder="Seleccionar" required>
+                    <label for="sexo" title="Selecciona tu género">Género <span>*</span></label>
+                    <select name="sexo" id="sexo" required placeholder="Seleccionar" required title="Elige tu género">
                         <option value="">Seleccionar</option>
                         <option value="masculino">Masculino</option>
                         <option value="femenino">Femenino</option>
@@ -43,18 +43,18 @@
 
             <div class="form-container">
                 <div class="input-box">
-                    <label for="fecha_nacimiento">Fecha de Nacimiento <span>*</span></label>
-                    <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" required>
+                    <label for="fecha_nacimiento" title="Tu fecha de nacimiento">Fecha de Nacimiento <span>*</span></label>
+                    <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" required title="Selecciona tu fecha de nacimiento">
                 </div>
 
                 <div class="input-box">
-                    <label for="edad">Edad <span>*</span></label>
-                    <input type="number" name="edad" id="edad" placeholder="Ingresa tu edad" required>
+                    <label for="edad" title="Tu edad actual">Edad <span>*</span></label>
+                    <input type="number" name="edad" id="edad" placeholder="Ingresa tu edad" required title="Escribe tu edad aquí">
                 </div>
 
                 <div class="input-box">
-                    <label for="pais">País <span>*</span></label>
-                    <select name="pais" id="pais" required placeholder="Seleccionar">
+                    <label for="pais" title="Selecciona tu país de residencia">País <span>*</span></label>
+                    <select name="pais" id="pais" required placeholder="Seleccionar" title="Elige tu país">
                         <option value="">Seleccionar</option>
                         {% for id_pais, nombre_pais in paises %}
                             <option value="{{ id_pais }}">{{ nombre_pais }}</option>
@@ -63,24 +63,24 @@
                 </div>
             </div>
 
-            <h3>Información Profesional</h3>
+            <h3 title="Datos profesionales del entrenador">Información Profesional</h3>
             <div class="form-container">
                 <div class="input-box">
-                    <label for="especializacion">Especialización <span>*</span></label>
-                    <input type="text" name="especializacion" id="especializacion" placeholder="¿En qué te especializas?" required>
+                    <label for="especializacion" title="Área de especialización profesional">Especialización <span>*</span></label>
+                    <input type="text" name="especializacion" id="especializacion" placeholder="¿En qué te especializas?" required title="Escribe tu especialización aquí">
                 </div>
 
                 <div class="input-box">
-                    <label for="disciplina">Disciplina <span>*</span></label>
-                    <select name="disciplina" id="disciplina" required placeholder="Seleccionar">
+                    <label for="disciplina" title="Disciplina principal">Disciplina <span>*</span></label>
+                    <select name="disciplina" id="disciplina" required placeholder="Seleccionar" title="Elige tu disciplina principal">
                         <option value="">Seleccionar</option>
                         <option value="Fitness">Fitness</option>
                     </select>
                 </div>
 
                 <div class="input-box">
-                    <label for="experiencia">Experiencia <span>*</span></label>
-                    <select name="experiencia" id="experiencia" required placeholder="Seleccionar">
+                    <label for="experiencia" title="Años de experiencia profesional">Experiencia <span>*</span></label>
+                    <select name="experiencia" id="experiencia" required placeholder="Seleccionar" title="Elige tu experiencia profesional">
                         <option value="">Seleccionar</option>
                         <option value="1 Año">1 Año</option>
                         <option value="2 Años">2 Años</option>
@@ -93,29 +93,29 @@
                 </div>
             </div>
 
-            <label for="biografia" id="biografia">Biografía</label>
-            <textarea name="biografia" id="biografia" maxlength="200" placeholder="Escribe una breve biografía sobre ti"></textarea>
+            <label for="biografia" id="biografia" title="Breve biografía profesional">Biografía</label>
+            <textarea name="biografia" id="biografia" maxlength="200" placeholder="Escribe una breve biografía sobre ti" title="Escribe una breve biografía sobre tu experiencia y formación"></textarea>
 
             <div class="form-container">
                 <div class="input-box">
-                    <label for="titulo_imagen">Título/Certificado <span>*</span></label>
-                    <input type="file" name="titulo_imagen" id="titulo_imagen" accept="image/*" required>
+                    <label for="titulo_imagen" title="Imagen de tu título o certificado">Título/Certificado <span>*</span></label>
+                    <input type="file" name="titulo_imagen" id="titulo_imagen" accept="image/*" required title="Sube una imagen de tu título o certificado">
                 </div>
 
                 <div class="input-box">
-                    <label for="titulo">Nombre <span>*</span></label>
-                    <input type="text" name="titulo" id="titulo" placeholder="¿Cual es tu título o certificado?" required>
+                    <label for="titulo" title="Nombre del título o certificado">Nombre <span>*</span></label>
+                    <input type="text" name="titulo" id="titulo" placeholder="¿Cual es tu título o certificado?" required title="Escribe el nombre de tu título o certificado">
                 </div>
 
                 <div class="input-box">
-                    <label for="instituto">Universidad/Institución <span>*</span></label>
-                    <input type="text" name="instituto" id="instituto" placeholder="¿Donde lo obtuviste?" required>
+                    <label for="instituto" title="Nombre de la universidad o institución">Universidad/Institución <span>*</span></label>
+                    <input type="text" name="instituto" id="instituto" placeholder="¿Donde lo obtuviste?" required title="Escribe el nombre de la universidad o institución donde obtuviste el título">
                 </div>
             </div>
 
             <div class="form-container">
                 <div class="input-box button-input">
-                    <button type="submit"><i class='bx bx-check'></i> Finalizar</button>
+                    <button type="submit" title="Finaliza y envía el formulario"><i class='bx bx-check'></i> Finalizar</button>
                 </div>
             </div>
         </form>

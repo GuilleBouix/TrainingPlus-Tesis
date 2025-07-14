@@ -7,29 +7,29 @@
 {% block content %}
 
 <!-- Título y Filtros -->
-<div class="title">
-    <h1 data-aos="fade-right">Resultados de Búsqueda</h1>
-    <p data-aos="fade-right">Filtra los resultados para una búsqueda más precisa.</p>
-    <form class="filters-container" method="get" action="{{ url_for('buscar.buscador') }}">
-        <input type="hidden" name="query" value="{{ query }}">
+<div class="title" title="Sección de resultados de búsqueda">
+    <h1 data-aos="fade-right" title="Encabezado de resultados">Resultados de Búsqueda</h1>
+    <p data-aos="fade-right" title="Descripción de la búsqueda">Filtra los resultados para una búsqueda más precisa.</p>
+    <form class="filters-container" method="get" action="{{ url_for('buscar.buscador') }}" title="Formulario para filtrar resultados">
+        <input type="hidden" name="query" value="{{ query }}" title="Consulta de búsqueda actual">
         
-        <select name="tipo" id="tipo" onchange="this.form.submit()" data-aos="fade-in" data-aos-delay="100">
-            <option value="">Filtrar por Tipo</option>
-            <option value="2" {% if request.args.get('tipo') == '2' %}selected{% endif %}>Entrenador</option>
-            <option value="1" {% if request.args.get('tipo') == '1' %}selected{% endif %}>Usuario</option>
+        <select name="tipo" id="tipo" onchange="this.form.submit()" data-aos="fade-in" data-aos-delay="100" title="Filtra por tipo de usuario">
+            <option value="" title="Mostrar todos los tipos">Filtrar por Tipo</option>
+            <option value="2" {% if request.args.get('tipo') == '2' %}selected{% endif %} title="Mostrar solo entrenadores">Entrenador</option>
+            <option value="1" {% if request.args.get('tipo') == '1' %}selected{% endif %} title="Mostrar solo usuarios">Usuario</option>
         </select>
         
-        <select name="pais" id="pais" onchange="this.form.submit()" data-aos="fade-in" data-aos-delay="200">
-            <option value="">Filtrar por País</option>
+        <select name="pais" id="pais" onchange="this.form.submit()" data-aos="fade-in" data-aos-delay="200" title="Filtra por país de origen">
+            <option value="" title="Mostrar todos los países">Filtrar por País</option>
             {% for pais in paises %}
-                <option value="{{ pais.id_pais }}" {% if request.args.get('pais') == pais.id_pais|string %}selected{% endif %}>{{ pais.nombre }}</option>
+                <option value="{{ pais.id_pais }}" {% if request.args.get('pais') == pais.id_pais|string %}selected{% endif %} title="Filtrar por {{ pais.nombre }}">{{ pais.nombre }}</option>
             {% endfor %}
         </select>
         
-        <select name="sexo" id="sexo" onchange="this.form.submit()" data-aos="fade-in" data-aos-delay="300">
-            <option value="">Filtrar por Género</option>
-            <option value="masculino" {% if request.args.get('sexo') == 'masculino' %}selected{% endif %}>Masculino</option>
-            <option value="femenino" {% if request.args.get('sexo') == 'femenino' %}selected{% endif %}>Femenino</option>
+        <select name="sexo" id="sexo" onchange="this.form.submit()" data-aos="fade-in" data-aos-delay="300" title="Filtra por género">
+            <option value="" title="Mostrar todos los géneros">Filtrar por Género</option>
+            <option value="masculino" {% if request.args.get('sexo') == 'masculino' %}selected{% endif %} title="Mostrar solo masculino">Masculino</option>
+            <option value="femenino" {% if request.args.get('sexo') == 'femenino' %}selected{% endif %} title="Mostrar solo femenino">Femenino</option>
         </select>
     </form>
 </div>
@@ -37,41 +37,41 @@
 <!-- Mostrar Resultados -->
 {% if resultados %}
     {% for id_usuario, nombre_usuario, rol, nombre, apellido, foto_perfil, pais_alumno, iso_alumno, sexo_alumno, nombre_entrenador, apellido_entrenador, foto_entrenador, pais_entrenador, iso_entrenador, sexo_entrenador in resultados %}
-    <div class="results-container open-modal" id="open-modal" data-id="{{ id_usuario }}" data-aos="fade-right" data-aos-delay="100">
-        <div class="user-data">
-            <div class="photo">
+    <div class="results-container open-modal" id="open-modal" data-id="{{ id_usuario }}" data-aos="fade-right" data-aos-delay="100" title="Haz clic para ver el perfil de este usuario">
+        <div class="user-data" title="Datos del usuario encontrado">
+            <div class="photo" title="Foto de perfil del usuario">
                 {% if rol == 1 %}
-                    <img src="{{ url_for('static', filename='uploads/users/' + (foto_perfil or 'profile.webp')) }}" alt="Foto de Perfil">
+                    <img src="{{ url_for('static', filename='uploads/users/' + (foto_perfil or 'profile.webp')) }}" alt="Foto de Perfil" title="Foto de usuario">
                 {% else %}
-                    <img src="{{ url_for('static', filename='uploads/users/' + (foto_entrenador or 'profile.webp')) }}" alt="Foto de Perfil">
+                    <img src="{{ url_for('static', filename='uploads/users/' + (foto_entrenador or 'profile.webp')) }}" alt="Foto de Perfil" title="Foto de entrenador">
                 {% endif %}
             </div>
-            <div class="user">
+            <div class="user" title="Información del usuario">
                 {% if rol == 1 %}
-                    <h2>{{ nombre|upper }} {{ apellido|upper }} 
-                        <i class="bx bx-user"></i>
+                    <h2 title="Nombre y apellido del usuario">{{ nombre|upper }} {{ apellido|upper }} 
+                        <i class="bx bx-user" title="Icono de usuario"></i>
                     </h2>
-                    <p>@{{ nombre_usuario }}</p>
+                    <p title="Nombre de usuario">@{{ nombre_usuario }}</p>
                     {% if pais_alumno %}
-                        <p>{{ pais_alumno }}</p>
+                        <p title="País de origen">{{ pais_alumno }}</p>
                     {% endif %}
                 {% else %}
-                    <h2>{{ nombre_entrenador|upper }} {{ apellido_entrenador|upper }} 
-                        <i class="bx bx-medal"></i>
+                    <h2 title="Nombre y apellido del entrenador">{{ nombre_entrenador|upper }} {{ apellido_entrenador|upper }} 
+                        <i class="bx bx-medal" title="Icono de entrenador"></i>
                     </h2>
-                    <p>@{{ nombre_usuario }}</p>
+                    <p title="Nombre de usuario">@{{ nombre_usuario }}</p>
                     {% if pais_entrenador %}
-                        <p>{{ pais_entrenador }}</p>
+                        <p title="País de origen">{{ pais_entrenador }}</p>
                     {% endif %}
                 {% endif %}
             </div>
-            <i class='bx bx-chevron-right open-profile'></i>
+            <i class='bx bx-chevron-right open-profile' title="Ver perfil completo"></i>
         </div>
     </div>
     {% endfor %}
 {% else %}
-    <div class="results-container">
-        <p>No se encontraron resultados para "{{ query }}".</p>
+    <div class="results-container" title="No se encontraron resultados">
+        <p title="Mensaje de búsqueda vacía">No se encontraron resultados para "{{ query }}".</p>
     </div>
 {% endif %}
 

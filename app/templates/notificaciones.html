@@ -6,17 +6,17 @@
 
 {% block content %}
     <div class="notificactions-title">
-        <h1 data-aos="fade-right">Tus Notificaciones</h1>
-        <p data-aos="fade-right" data-aos-delay="100">Visualiza y gestiona tus notificaciones para mantenerte al día.</p>
+        <h1 data-aos="fade-right" title="Listado de tus notificaciones">Tus Notificaciones</h1>
+        <p data-aos="fade-right" data-aos-delay="100" title="Aquí puedes visualizar y gestionar tus notificaciones">Visualiza y gestiona tus notificaciones para mantenerte al día.</p>
     </div>
 
     <!-- Mensajes Flash -->
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-            <ul class="flash-messages">
+            <ul class="flash-messages" title="Mensajes informativos y de error">
                 {% for category, message in messages %}
-                    <li class="flash {{ category }}">
-                        <i class="{{ 'bx bxs-error-circle' if category == 'error' else 'bx bxs-check-circle' }}"></i>
+                    <li class="flash {{ category }}" title="{{ 'Error' if category == 'error' else 'Éxito' }}: {{ message }}">
+                        <i class="{{ 'bx bxs-error-circle' if category == 'error' else 'bx bxs-check-circle' }}" title="Icono de estado"></i>
                         {{ message }}
                     </li>
                 {% endfor %}
@@ -27,50 +27,50 @@
     <div class="notifications-container">
         <!-- Filtros y Eliminar -->
         <div class="notifications-sections section-filter" data-aos="flip-right" data-aos-delay="200">
-            <h2 data-aos="fade-right" data-aos-delay="300">Filtros</h2>
+            <h2 data-aos="fade-right" data-aos-delay="300" title="Filtrar notificaciones">Filtros</h2>
 
             <form id="filtro-form" data-aos="fade-right" data-aos-delay="300">
-                <select name="orden" id="orden-notificaciones">
+                <select name="orden" id="orden-notificaciones" title="Ordenar notificaciones por fecha">
                     <option value="desc" {% if orden_actual=='desc' %}selected{% endif %}>Más Recientes</option>
                     <option value="asc" {% if orden_actual=='asc' %}selected{% endif %}>Más Antiguas</option>
                 </select>
             </form>
 
             <form action="{{ url_for('notificaciones.eliminar_notificaciones') }}" class="eliminar-notificaciones-form" method="POST" data-aos="fade-right" data-aos-delay="300">
-                <button type="submit">Eliminar Notificaciones</button>
+                <button type="submit" title="Eliminar todas las notificaciones">Eliminar Notificaciones</button>
             </form>
         </div>
 
         <!-- Notificaciones -->
         <div class="notifications-sections section-notificaction" data-aos="flip-left" data-aos-delay="200">
             {% for solicitud in solicitudes %}
-                <ul class="notificacion">
+                <ul class="notificacion" title="Solicitud de conexión de entrenador">
                     <li data-aos="fade-down" data-aos-delay="300">
-                        <h3>Solicitud de Conexión <i class='bx bxs-group'></i></h3>
-                        <div class="message">
-                            <strong>El entrenador @<a href="#">{{ solicitud['nombre_usuario'] }}</a> ha solicitado conectarse contigo.</strong>
-                            <p class="fecha">{{ solicitud['fecha_solicitud'] }}</p>
+                        <h3 title="Solicitud de conexión"><i class='bx bxs-group' title="Icono de grupo"></i> Solicitud de Conexión</h3>
+                        <div class="message" title="Mensaje de solicitud">
+                            <strong title="Nombre del entrenador solicitante">El entrenador @<a href="#" title="Ver perfil del entrenador">{{ solicitud['nombre_usuario'] }}</a> ha solicitado conectarse contigo.</strong>
+                            <p class="fecha" title="Fecha de la solicitud">{{ solicitud['fecha_solicitud'] }}</p>
                         </div>
                         <form action="{{ url_for('notificaciones.responder_solicitud', id_vinculacion=solicitud['id_vinculacion']) }}" method="POST">
-                            <button name="respuesta" value="aceptar" type="submit">Aceptar</button>
-                            <button name="respuesta" value="rechazar" type="submit">Rechazar</button>
+                            <button name="respuesta" value="aceptar" type="submit" title="Aceptar solicitud de conexión">Aceptar</button>
+                            <button name="respuesta" value="rechazar" type="submit" title="Rechazar solicitud de conexión">Rechazar</button>
                         </form>
                     </li>
                 </ul>
             {% endfor %}
         
             {% for notificacion in notificaciones %}
-                <ul class="notificacion">
+                <ul class="notificacion" title="Notificación recibida">
                     <li class="{% if notificacion['leida'] %}leida{% else %}no-leida{% endif %}" data-aos-delay="300">
-                        <h3>Notificación <i class='bx bxs-bell'></i></h3>
-                        <div class="message">
-                            <strong>{{ notificacion['mensaje'] }}</strong>
-                            <p class="fecha">{{ notificacion['fecha'] }}</p>
+                        <h3 title="Notificación"><i class='bx bxs-bell' title="Icono de notificación"></i> Notificación</h3>
+                        <div class="message" title="Mensaje de notificación">
+                            <strong title="Mensaje recibido">{{ notificacion['mensaje'] }}</strong>
+                            <p class="fecha" title="Fecha de la notificación">{{ notificacion['fecha'] }}</p>
                         </div>
 
                         {% if notificacion.get('id_entrenamiento') %}
                             <div class="notificacion-container">
-                                <a class="btn-notificacion-entrenamiento" href="/entrenamiento/rutina/{{ notificacion['id_entrenamiento'] }}">
+                                <a class="btn-notificacion-entrenamiento" href="/entrenamiento/rutina/{{ notificacion['id_entrenamiento'] }}" title="Ir al entrenamiento relacionado">
                                     Ir a Entrenamiento
                                 </a>
                             </div>
@@ -80,7 +80,7 @@
             {% endfor %}
         
             {% if not solicitudes and not notificaciones %}
-                <p>No tienes notificaciones pendientes.</p>
+                <p title="No tienes notificaciones pendientes">No tienes notificaciones pendientes.</p>
             {% endif %}
         </div>
     </div>

@@ -342,7 +342,6 @@ def obtener_evolucion_peso_mensual(id_entrenador):
 def dashboard():
     id_entrenador = session.get('id_usuario')
     
-    # Verificar si el entrenador tiene al menos un entrenamiento asignado
     conexion = conexion_basedatos()
     cursor = conexion.cursor()
     cursor.execute("""
@@ -357,7 +356,6 @@ def dashboard():
         flash("Debes tener al menos una rutina de entrenamiento activa para acceder al dashboard.", "error")
         return redirect(url_for('entrenamiento.entrenamiento'))
 
-    # Obtener el total de alumnos con planes activos
     total_alumnos = obtener_total_alumnos(id_entrenador)
 
     # Obtener el promedio de adherencia

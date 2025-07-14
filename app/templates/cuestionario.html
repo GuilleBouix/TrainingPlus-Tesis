@@ -19,138 +19,138 @@
         </header>
 
         <form action="" method="POST">
-            <h3>Información Personal</h3>
+            <h3 title="Completa tus datos personales">Información Personal</h3>
             <div class="form-container">
                 <div class="input-box">
-                    <label for="edad">Edad <span>*</span></label>
+                    <label for="edad" title="Campo obligatorio">Edad <span>*</span></label>
                     <input type="number" min="1" max="100" name="edad" id="edad" 
                            placeholder="Ingresa tu edad" required
-                           value="{{ datos.edad if datos.edad }}">
+                           value="{{ datos.edad if datos.edad }}" title="Ingresa tu edad en años">
                 </div>
 
                 <div class="input-box">
-                    <label for="nivel">Nivel de experiencia <span>*</span></label>
-                    <select name="nivel" id="nivel" required>
-                        <option value="">Seleccionar</option>
-                        <option value="principiante" {% if datos.nivel == 'principiante' %}selected{% endif %}>Principiante</option>
-                        <option value="intermedio" {% if datos.nivel == 'intermedio' %}selected{% endif %}>Intermedio</option>
-                        <option value="avanzado" {% if datos.nivel == 'avanzado' %}selected{% endif %}>Avanzado</option>
+                    <label for="nivel" title="Campo obligatorio">Nivel de experiencia <span>*</span></label>
+                    <select name="nivel" id="nivel" required title="Selecciona tu nivel de experiencia">
+                        <option value="" title="Selecciona tu nivel">Seleccionar</option>
+                        <option value="principiante" {% if datos.nivel == 'principiante' %}selected{% endif %} title="Principiante: nunca entrenaste o recién comienzas">Principiante</option>
+                        <option value="intermedio" {% if datos.nivel == 'intermedio' %}selected{% endif %} title="Intermedio: tienes algo de experiencia">Intermedio</option>
+                        <option value="avanzado" {% if datos.nivel == 'avanzado' %}selected{% endif %} title="Avanzado: entrenas regularmente">Avanzado</option>
                     </select>
                 </div>
 
                 <div class="input-box">
-                    <label for="objetivo">¿Cuál es tu objetivo principal? <span>*</span></label>
+                    <label for="objetivo" title="Campo obligatorio">¿Cuál es tu objetivo principal? <span>*</span></label>
                     <input type="text" maxlength="70" name="objetivo" id="objetivo" 
                            placeholder="Ej: Bajar de peso, ganar masa muscular" required
-                           value="{{ datos.objetivo if datos.objetivo }}">
+                           value="{{ datos.objetivo if datos.objetivo }}" title="Describe tu objetivo principal de entrenamiento">
                 </div>
             </div>
 
-            <h3>Datos Físicos</h3>
+            <h3 title="Completa tus datos físicos">Datos Físicos</h3>
             <div class="form-container">
                 <div class="input-box">
-                    <label for="altura">Altura (cm) <span>*</span></label>
+                    <label for="altura" title="Campo obligatorio">Altura (cm) <span>*</span></label>
                     <input type='number' min='100' name="altura" id="altura" 
                            placeholder="Ingresa tu altura en cm" required
-                           value="{{ datos.altura if datos.altura }}">
+                           value="{{ datos.altura if datos.altura }}" title="Ingresa tu altura en centímetros">
                 </div>
 
                 <div class="input-box">
-                    <label for="peso">Peso (kg) <span>*</span></label>
+                    <label for="peso" title="Campo obligatorio">Peso (kg) <span>*</span></label>
                     <input type='number' min='1.10' step='0.01' name="peso" id="peso" 
                            placeholder="Ingresa tu peso en kilos" required
-                           value="{{ datos.peso if datos.peso }}">
+                           value="{{ datos.peso if datos.peso }}" title="Ingresa tu peso en kilogramos">
                 </div>
             </div>
 
-            <h3>Entrenamiento</h3>
+            <h3 title="Completa tus datos de entrenamiento">Entrenamiento</h3>
             <div class="form-container">
                 <div class="input-box">
-                    <label for="actividad">Nivel de actividad <span>*</span></label>
-                    <select name="actividad" id="actividad" required>
-                        <option value="">Seleccionar</option>
-                        <option value="sedentario" {% if datos.actividad == 'sedentario' %}selected{% endif %}>Sedentario</option>
-                        <option value="ligera" {% if datos.actividad == 'ligera' %}selected{% endif %}>Ligera</option>
-                        <option value="moderada" {% if datos.actividad == 'moderada' %}selected{% endif %}>Moderada</option>
-                        <option value="alta" {% if datos.actividad == 'alta' %}selected{% endif %}>Alta</option>
-                        <option value="muy alta" {% if datos.actividad == 'muy alta' %}selected{% endif %}>Muy alta</option>
+                    <label for="actividad" title="Campo obligatorio">Nivel de actividad <span>*</span></label>
+                    <select name="actividad" id="actividad" required title="Selecciona tu nivel de actividad física">
+                        <option value="" title="Selecciona tu nivel">Seleccionar</option>
+                        <option value="sedentario" {% if datos.actividad == 'sedentario' %}selected{% endif %} title="Sedentario: poca o ninguna actividad física">Sedentario</option>
+                        <option value="ligera" {% if datos.actividad == 'ligera' %}selected{% endif %} title="Ligera: actividad física ocasional">Ligera</option>
+                        <option value="moderada" {% if datos.actividad == 'moderada' %}selected{% endif %} title="Moderada: actividad física regular">Moderada</option>
+                        <option value="alta" {% if datos.actividad == 'alta' %}selected{% endif %} title="Alta: actividad física intensa">Alta</option>
+                        <option value="muy alta" {% if datos.actividad == 'muy alta' %}selected{% endif %} title="Muy alta: actividad física muy intensa">Muy alta</option>
                     </select>
                 </div>
 
                 <div class="input-box">
-                    <label for="frecuencia">Frecuencia de entreno por semana <span>*</span></label>
-                    <select name="frecuencia" id="frecuencia" required>
-                        <option value="">Seleccionar</option>
-                        <option value="1 a 2 días" {% if datos.frecuencia == '1 a 2 días' %}selected{% endif %}>1 a 2 días</option>
-                        <option value="3 a 4 días" {% if datos.frecuencia == '3 a 4 días' %}selected{% endif %}>3 a 4 días</option>
-                        <option value="5 a 6 días" {% if datos.frecuencia == '5 a 6 días' %}selected{% endif %}>5 a 6 días</option>
-                        <option value="todos los días" {% if datos.frecuencia == 'todos los días' %}selected{% endif %}>Todos los días</option>
+                    <label for="frecuencia" title="Campo obligatorio">Frecuencia de entreno por semana <span>*</span></label>
+                    <select name="frecuencia" id="frecuencia" required title="Selecciona cuántos días entrenas por semana">
+                        <option value="" title="Selecciona la frecuencia">Seleccionar</option>
+                        <option value="1 a 2 días" {% if datos.frecuencia == '1 a 2 días' %}selected{% endif %} title="Entrenas 1 a 2 días por semana">1 a 2 días</option>
+                        <option value="3 a 4 días" {% if datos.frecuencia == '3 a 4 días' %}selected{% endif %} title="Entrenas 3 a 4 días por semana">3 a 4 días</option>
+                        <option value="5 a 6 días" {% if datos.frecuencia == '5 a 6 días' %}selected{% endif %} title="Entrenas 5 a 6 días por semana">5 a 6 días</option>
+                        <option value="todos los días" {% if datos.frecuencia == 'todos los días' %}selected{% endif %} title="Entrenas todos los días">Todos los días</option>
                     </select>
                 </div>
 
                 <div class="input-box">
-                    <label for="duracion_sesion">Duración estimada por sesión <span>*</span></label>
-                    <select name="duracion_sesion" id="duracion_sesion" required>
-                        <option value="">Seleccionar</option>
-                        <option value="15-30 min" {% if datos.duracion_sesion == '15-30 min' %}selected{% endif %}>15 a 30 minutos</option>
-                        <option value="30-45 min" {% if datos.duracion_sesion == '30-45 min' %}selected{% endif %}>30 a 45 minutos</option>
-                        <option value="45-60 min" {% if datos.duracion_sesion == '45-60 min' %}selected{% endif %}>45 minutos a 1 hora</option>
-                        <option value="más de 1 hora" {% if datos.duracion_sesion == 'más de 1 hora' %}selected{% endif %}>Más de 1 hora</option>
-                        <option value="más de 2 horas" {% if datos.duracion_sesion == 'más de 2 horas' %}selected{% endif %}>Más de 2 horas</option>
+                    <label for="duracion_sesion" title="Campo obligatorio">Duración estimada por sesión <span>*</span></label>
+                    <select name="duracion_sesion" id="duracion_sesion" required title="Selecciona cuánto dura cada sesión de entrenamiento">
+                        <option value="" title="Selecciona la duración">Seleccionar</option>
+                        <option value="15-30 min" {% if datos.duracion_sesion == '15-30 min' %}selected{% endif %} title="Sesión de 15 a 30 minutos">15 a 30 minutos</option>
+                        <option value="30-45 min" {% if datos.duracion_sesion == '30-45 min' %}selected{% endif %} title="Sesión de 30 a 45 minutos">30 a 45 minutos</option>
+                        <option value="45-60 min" {% if datos.duracion_sesion == '45-60 min' %}selected{% endif %} title="Sesión de 45 minutos a 1 hora">45 minutos a 1 hora</option>
+                        <option value="más de 1 hora" {% if datos.duracion_sesion == 'más de 1 hora' %}selected{% endif %} title="Sesión de más de 1 hora">Más de 1 hora</option>
+                        <option value="más de 2 horas" {% if datos.duracion_sesion == 'más de 2 horas' %}selected{% endif %} title="Sesión de más de 2 horas">Más de 2 horas</option>
                     </select>                    
                 </div>
             </div>
 
-            <h3>Estado de Salud</h3>
+            <h3 title="Completa tus datos de salud">Estado de Salud</h3>
             <div class="form-container">
                 <div class="input-box">
-                    <label for="estado_general">Estado general <span>*</span></label>
+                    <label for="estado_general" title="Campo obligatorio">Estado general <span>*</span></label>
                     <input type="text" maxlength="100" name="estado_general" id="estado_general" 
                            placeholder="Ingresa tu estado de salud en general" required
-                           value="{{ datos.estado_general if datos.estado_general }}">
+                           value="{{ datos.estado_general if datos.estado_general }}" title="Describe tu estado de salud general">
                 </div>
 
                 <div class="input-box">
-                    <label for="lesiones">Lesiones <span>*</span></label>
+                    <label for="lesiones" title="Campo obligatorio">Lesiones <span>*</span></label>
                     <input type="text" maxlength="100" name="lesiones" id="lesiones" 
                            placeholder="¿Tienes o haz tenido alguna lesión?" required
-                           value="{{ datos.lesiones if datos.lesiones }}">
+                           value="{{ datos.lesiones if datos.lesiones }}" title="Indica si tienes o tuviste alguna lesión relevante">
                 </div>
 
                 <div class="input-box">
-                    <label for="condicion_cardio">Condición cardiovascular <span>*</span></label>
-                    <select name="condicion_cardio" id="condicion_cardio" required>
-                        <option value="">Seleccionar</option>
-                        <option value="muy baja" {% if datos.condicion_cardio == 'muy baja' %}selected{% endif %}>Muy baja - Se fatiga fácilmente</option>
-                        <option value="baja" {% if datos.condicion_cardio == 'baja' %}selected{% endif %}>Baja - Esfuerzo leve causa fatiga</option>
-                        <option value="moderada" {% if datos.condicion_cardio == 'moderada' %}selected{% endif %}>Moderada - Resistencia aceptable</option>
-                        <option value="buena" {% if datos.condicion_cardio == 'buena' %}selected{% endif %}>Buena - Realiza cardio regular</option>
-                        <option value="excelente" {% if datos.condicion_cardio == 'excelente' %}selected{% endif %}>Excelente - Gran capacidad aeróbica</option>
+                    <label for="condicion_cardio" title="Campo obligatorio">Condición cardiovascular <span>*</span></label>
+                    <select name="condicion_cardio" id="condicion_cardio" required title="Selecciona tu condición cardiovascular">
+                        <option value="" title="Selecciona tu condición">Seleccionar</option>
+                        <option value="muy baja" {% if datos.condicion_cardio == 'muy baja' %}selected{% endif %} title="Muy baja: se fatiga fácilmente">Muy baja - Se fatiga fácilmente</option>
+                        <option value="baja" {% if datos.condicion_cardio == 'baja' %}selected{% endif %} title="Baja: esfuerzo leve causa fatiga">Baja - Esfuerzo leve causa fatiga</option>
+                        <option value="moderada" {% if datos.condicion_cardio == 'moderada' %}selected{% endif %} title="Moderada: resistencia aceptable">Moderada - Resistencia aceptable</option>
+                        <option value="buena" {% if datos.condicion_cardio == 'buena' %}selected{% endif %} title="Buena: realiza cardio regular">Buena - Realiza cardio regular</option>
+                        <option value="excelente" {% if datos.condicion_cardio == 'excelente' %}selected{% endif %} title="Excelente: gran capacidad aeróbica">Excelente - Gran capacidad aeróbica</option>
                     </select>
                 </div>
             </div>
 
             <div class="form-container estres">
                 <div class="input-box">
-                    <label for="nivel_estres">Nivel de estrés <span>*</span></label>
-                    <select name="nivel_estres" id="nivel_estres" required>
-                        <option value="">Seleccionar</option>
-                        <option value="muy bajo" {% if datos.nivel_estres == 'muy bajo' %}selected{% endif %}>Muy bajo - Tranquilo casi siempre</option>
-                        <option value="bajo" {% if datos.nivel_estres == 'bajo' %}selected{% endif %}>Bajo - Estrés ocasional</option>
-                        <option value="moderado" {% if datos.nivel_estres == 'moderado' %}selected{% endif %}>Moderado - Tensión diaria leve</option>
-                        <option value="alto" {% if datos.nivel_estres == 'alto' %}selected{% endif %}>Alto - Estrés frecuente</option>
-                        <option value="muy alto" {% if datos.nivel_estres == 'muy alto' %}selected{% endif %}>Muy alto - Afecta mi día a día</option>
+                    <label for="nivel_estres" title="Campo obligatorio">Nivel de estrés <span>*</span></label>
+                    <select name="nivel_estres" id="nivel_estres" required title="Selecciona tu nivel de estrés actual">
+                        <option value="" title="Selecciona tu nivel">Seleccionar</option>
+                        <option value="muy bajo" {% if datos.nivel_estres == 'muy bajo' %}selected{% endif %} title="Muy bajo: tranquilo casi siempre">Muy bajo - Tranquilo casi siempre</option>
+                        <option value="bajo" {% if datos.nivel_estres == 'bajo' %}selected{% endif %} title="Bajo: estrés ocasional">Bajo - Estrés ocasional</option>
+                        <option value="moderado" {% if datos.nivel_estres == 'moderado' %}selected{% endif %} title="Moderado: tensión diaria leve">Moderado - Tensión diaria leve</option>
+                        <option value="alto" {% if datos.nivel_estres == 'alto' %}selected{% endif %} title="Alto: estrés frecuente">Alto - Estrés frecuente</option>
+                        <option value="muy alto" {% if datos.nivel_estres == 'muy alto' %}selected{% endif %} title="Muy alto: afecta tu día a día">Muy alto - Afecta mi día a día</option>
                     </select>
                 </div>
             </div>
 
-            <h3>Comentarios Adicionales</h3>
+            <h3 title="Agrega información adicional relevante">Comentarios Adicionales</h3>
             <textarea name="comentarios" id="comentarios" maxlength="300" 
-                      placeholder="Escribe aquí información complementaria sobre tu estado físico">{{ datos.comentarios if datos.comentarios }}</textarea>
+                      placeholder="Escribe aquí información complementaria sobre tu estado físico" title="Agrega información relevante sobre tu estado físico, salud o necesidades especiales">{{ datos.comentarios if datos.comentarios }}</textarea>
 
             <div class="form-container">
                 <div class="input-box button-input">
-                    <button type="submit"><i class='bx bx-check'></i> 
+                    <button type="submit" title="Guarda o actualiza tu ficha"><i class='bx bx-check'></i> 
                         {{ "Actualizar" if datos.objetivo else "Guardar" }}
                     </button>
                 </div>

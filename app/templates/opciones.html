@@ -6,124 +6,124 @@
 
     <div class="opciones-container">
         <ul class="opciones-menu">
-            <li class="li-active">Sobre la Aplicación</a></li>
-            <li>Términos y Condiciones</a></li>
-            <li>Políticas de Privacidad</a></li>
-            <li>Soporte</a></li>
+            <li class="li-active" title="Información general sobre la aplicación">Sobre la Aplicación</li>
+            <li title="Consulta los términos y condiciones de uso">Términos y Condiciones</li>
+            <li title="Lee las políticas de privacidad">Políticas de Privacidad</li>
+            <li title="Accede a soporte y preguntas frecuentes">Soporte</li>
         </ul>
 
         <!-- Contenido de la sección "Sobre la Aplicación" -->
         <div class="about">
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
-                    <ul class="flash-messages">
-                        {% for category, message in messages %}
-                            <li class="flash {{ category }}">
-                                <i class="{{ 'bx bxs-error-circle' if category == 'error' else 'bx bxs-check-circle' }}"></i>
-                                {{ message }}
-                            </li>
-                        {% endfor %}
-                    </ul>
+            <ul class="flash-messages" title="Mensajes informativos y de error">
+                {% for category, message in messages %}
+                    <li class="flash {{ category }}" title="{{ 'Error' if category == 'error' else 'Éxito' }}: {{ message }}">
+                        <i class="{{ 'bx bxs-error-circle' if category == 'error' else 'bx bxs-check-circle' }}" title="Icono de estado"></i>
+                        {{ message }}
+                    </li>
+                {% endfor %}
+            </ul>
                 {% endif %}
             {% endwith %}
 
 
             <div class="about-title">
-                <h1>Sobre la Aplicación</h1>
-                <a href="{{ url_for('static', filename='manual/manual_usuario_trainingplus.pdf') }}" download><i class='bx bx-download'></i> Descargar Manual</a>
+                <h1 title="Información general sobre la aplicación">Sobre la Aplicación</h1>
+                <a href="{{ url_for('static', filename='manual/manual_usuario_trainingplus.pdf') }}" download title="Descargar el manual de usuario"><i class='bx bx-download' title="Icono de descarga"></i> Descargar Manual</a>
             </div>
         
-            <h2 class="about-subtitle">Visión General del Sistema</h2>
-            <p class="about-paragraph">
+            <h2 class="about-subtitle" title="Descripción general de la plataforma">Visión General del Sistema</h2>
+            <p class="about-paragraph" title="Descripción de la funcionalidad principal de Training+">
                 Training+ es una aplicación web integral diseñada para optimizar la relación entre profesionales del fitness y sus clientes, mediante una mejor comunicación, seguimiento estructurado del progreso y una gestión eficiente de los programas de entrenamiento. La plataforma aborda una deficiencia crítica en la industria del fitness, donde los métodos tradicionales suelen carecer de supervisión continua y retroalimentación personalizada, factores que disminuyen la motivación del cliente y los resultados obtenidos.
             </p>
 
-            <h2 class="about-subtitle">Propósito y Objetivos</h2>
-            <p class="about-paragraph">
+            <h2 class="about-subtitle" title="Propósito y objetivos de la aplicación">Propósito y Objetivos</h2>
+            <p class="about-paragraph" title="Objetivo principal de Training+">
                 El objetivo principal de Training+ es brindar a los profesionales del fitness un ecosistema digital centralizado para la gestión integral de sus clientes, mientras que permite a los usuarios acceder en tiempo real a sus programas personalizados. El sistema facilita el monitoreo constante del progreso, permitiendo a los entrenadores realizar ajustes basados en datos y mantener la conexión con sus clientes sin importar su ubicación.
             </p>
-            <p class="about-paragraph">
+            <p class="about-paragraph" title="Estadísticas y problemática que resuelve Training+">
                 Estudios indican que aproximadamente el 50% de las personas abandonan sus programas de entrenamiento en los primeros seis meses, principalmente por falta de supervisión y motivación. Training+ responde directamente a este problema creando un entorno estructurado donde los entrenadores brindan orientación continua y los usuarios mantienen la constancia mediante el registro de avances.
             </p>
 
-            <h2 class="about-subtitle">Funcionalidades Principales</h2>
+            <h2 class="about-subtitle" title="Funciones principales de la plataforma">Funcionalidades Principales</h2>
 
-            <h3 class="about-subsection">Para Profesionales del Fitness</h3>
-            <p class="about-paragraph">
+            <h3 class="about-subsection" title="Funciones para entrenadores">Para Profesionales del Fitness</h3>
+            <p class="about-paragraph" title="Herramientas para entrenadores">
                 Training+ ofrece herramientas avanzadas para la gestión de clientes y la creación de rutinas. Permite desarrollar programas organizados por semanas y sesiones diarias, con especificaciones detalladas como series, repeticiones, pesos y tiempos de descanso. Los entrenadores pueden monitorear el avance mediante tableros con tasas de cumplimiento, métricas de rendimiento y estadísticas de adherencia.
             </p>
-            <p class="about-paragraph">
+            <p class="about-paragraph" title="Límites y verificación profesional">
                 El sistema admite hasta seis programas activos por entrenador, lo que garantiza atención enfocada sin comprometer la eficiencia. También incluye verificación profesional mediante el envío obligatorio de credenciales académicas y certificados.
             </p>
 
-            <h3 class="about-subsection">Para Usuarios</h3>
-            <p class="about-paragraph">
+            <h3 class="about-subsection" title="Funciones para usuarios">Para Usuarios</h3>
+            <p class="about-paragraph" title="Interfaz y registro de progreso para usuarios">
                 Los usuarios acceden a sus rutinas mediante una interfaz clara, donde pueden ver la planificación semanal y registrar el progreso en tiempo real. Esto incluye ejercicios completados, pesos utilizados y observaciones personales. Este enfoque permite detectar patrones, celebrar logros y corregir errores de forma efectiva.
             </p>
-            <p class="about-paragraph">
+            <p class="about-paragraph" title="Cuestionarios y personalización de rutinas">
                 Además, los usuarios completan cuestionarios sobre objetivos, condición física, historial médico y preferencias, lo que permite generar programas más seguros y personalizados.
             </p>
 
-            <h2 class="about-subtitle">Arquitectura Técnica</h2>
-            <p class="about-paragraph">
+            <h2 class="about-subtitle" title="Tecnologías utilizadas">Arquitectura Técnica</h2>
+            <p class="about-paragraph" title="Tecnologías y seguridad">
                 Training+ está desarrollado con tecnologías modernas: Python con Flask en el backend, HTML, CSS y JavaScript para el frontend, y SQLite para la base de datos. Cuenta con autenticación de usuarios, control de accesos por roles y medidas de seguridad para proteger los datos.
             </p>
-            <p class="about-paragraph">
+            <p class="about-paragraph" title="Modelo de suscripción y accesibilidad">
                 Funciona bajo un modelo de suscripción para entrenadores, mientras que el acceso para los usuarios es gratuito, asegurando accesibilidad sin comprometer la sustentabilidad.
             </p>
 
-            <h2 class="about-subtitle">Modelo de Negocio y Accesibilidad</h2>
-            <p class="about-paragraph">
+            <h2 class="about-subtitle" title="Modelo de negocio">Modelo de Negocio y Accesibilidad</h2>
+            <p class="about-paragraph" title="Modelo freemium y acceso de usuarios">
                 La aplicación se basa en un modelo freemium. Los entrenadores pagan una suscripción mensual que habilita funciones completas como creación de rutinas, monitoreo del progreso y comunicación con clientes. Los usuarios acceden gratuitamente a sus planes, historial y contacto con su entrenador.
             </p>
 
-            <h2 class="about-subtitle">Impacto y Beneficios</h2>
-            <p class="about-paragraph">
+            <h2 class="about-subtitle" title="Impacto y beneficios de la plataforma">Impacto y Beneficios</h2>
+            <p class="about-paragraph" title="Problemas que resuelve Training+">
                 Training+ resuelve problemas comunes en el entrenamiento físico mediante una comunicación estructurada, seguimiento sistemático y orientación profesional continua. Está diseñado para aumentar la retención de clientes en un 30% y reducir el abandono en un 50%.
             </p>
-            <p class="about-paragraph">
+            <p class="about-paragraph" title="Centralización y motivación">
                 Al centralizar la gestión de entrenamientos, documentación del progreso y comunicación, la plataforma permite que los entrenadores se concentren en el entrenamiento real y que los usuarios se mantengan motivados mediante retroalimentación constante.
             </p>
 
-            <h2 class="about-subtitle">Seguridad y Privacidad</h2>
-            <p class="about-paragraph">
+            <h2 class="about-subtitle" title="Seguridad y privacidad de datos">Seguridad y Privacidad</h2>
+            <p class="about-paragraph" title="Medidas de seguridad y privacidad">
                 La plataforma implementa medidas de seguridad como autenticación segura, cifrado de datos y manejo responsable de la información. Todos los datos personales y de salud están protegidos bajo estándares de privacidad, y sólo pueden ser accedidos por las partes autorizadas.
             </p>
 
-            <h2 class="about-subtitle">Conclusión</h2>
-            <p class="about-paragraph">
+            <h2 class="about-subtitle" title="Conclusión sobre la plataforma">Conclusión</h2>
+            <p class="about-paragraph" title="Resumen final de beneficios">
                 Training+ representa una evolución en la tecnología fitness, integrando lo mejor del entrenamiento tradicional con herramientas digitales modernas. Ofrece funciones completas para la creación de programas, registro del progreso y contacto constante, elevando la calidad del servicio profesional y potenciando los resultados del usuario.
             </p>
         </div>
 
         <!-- Contenido de la sección "Términos y Condiciones" -->
         <div class="terms-conditions">
-            <h1>Términos y Condiciones</h1>
-            <p class="version-info">
+            <h1 title="Sección de términos y condiciones">Términos y Condiciones</h1>
+            <p class="version-info" title="Fechas de vigencia y actualización">
                 <strong>Fecha de vigencia: Agosto de 2025</strong> 
                 <strong>Última actualización: Julio de 2025</strong>
             </p>
 
-            <h2>1. INFORMACIÓN GENERAL</h2>
-            <h3>1.1 Definición del Servicio</h3>
-            <p>Training+ es una aplicación web desarrollada para mejorar la comunicación y seguimiento en el entrenamiento personal, facilitando la interacción entre entrenadores certificados y usuarios que buscan orientación en su preparación física. La plataforma permite a los entrenadores crear, gestionar y supervisar planes de entrenamiento personalizados, mientras que los usuarios pueden acceder a sus rutinas y registrar su progreso de manera continua.</p>
+            <h2 title="Información general sobre el servicio">1. INFORMACIÓN GENERAL</h2>
+            <h3 title="Definición del servicio">1.1 Definición del Servicio</h3>
+            <p title="Descripción del servicio">Training+ es una aplicación web desarrollada para mejorar la comunicación y seguimiento en el entrenamiento personal, facilitando la interacción entre entrenadores certificados y usuarios que buscan orientación en su preparación física. La plataforma permite a los entrenadores crear, gestionar y supervisar planes de entrenamiento personalizados, mientras que los usuarios pueden acceder a sus rutinas y registrar su progreso de manera continua.</p>
 
-            <h3>1.2 Operador del Servicio</h3>
-            <p>El servicio Training+ es operado por Guillermo Bouix, con domicilio en Ricardo Balbin 48, Oberá, en cumplimiento de las normativas vigentes en materia de servicios digitales y protección de datos personales.</p>
+            <h3 title="Operador del servicio">1.2 Operador del Servicio</h3>
+            <p title="Información del operador">El servicio Training+ es operado por Guillermo Bouix, con domicilio en Ricardo Balbin 48, Oberá, en cumplimiento de las normativas vigentes en materia de servicios digitales y protección de datos personales.</p>
 
-            <h3>1.3 Aceptación de los Términos</h3>
-            <p>El acceso y uso de Training+ implica la aceptación plena y sin reservas de estos términos y condiciones. Los usuarios que no estén de acuerdo con cualquier disposición contenida en este documento deberán abstenerse de utilizar la plataforma.</p>
+            <h3 title="Aceptación de los términos">1.3 Aceptación de los Términos</h3>
+            <p title="Condiciones de aceptación">El acceso y uso de Training+ implica la aceptación plena y sin reservas de estos términos y condiciones. Los usuarios que no estén de acuerdo con cualquier disposición contenida en este documento deberán abstenerse de utilizar la plataforma.</p>
 
-            <h2>2. DEFINICIONES</h2>
-            <p>Para efectos de estos términos y condiciones, se establecen las siguientes definiciones:</p>
-            <p><strong>Usuario:</strong> Persona física mayor de edad que utiliza la plataforma Training+, pudiendo ser clasificado como Alumno o Entrenador según el rol seleccionado durante el registro.</p>
-            <p><strong>Entrenador:</strong> Usuario profesional certificado que ha completado el proceso de verificación académica y cuenta con suscripción activa para acceder a las funcionalidades de gestión de entrenamientos.</p>
-            <p><strong>Alumno:</strong> Usuario que utiliza la plataforma de forma gratuita para acceder a rutinas de entrenamiento y registrar progreso</p>
-            <p><strong>Suscripción:</strong> Plan de pago mensual requerido para usuarios que deseen acceder a funcionalidades de entrenador.</p>
-            <p><strong>Vinculación:</strong> Proceso mediante el cual un entrenador establece una relación profesional con un alumno, previo consentimiento mutuo.</p>
-            <p><strong>Contenido:</strong> Toda información, datos, textos, imágenes, videos, rutinas, ejercicios y demás material disponible en la plataforma.</p>
+            <h2 title="Definiciones legales">2. DEFINICIONES</h2>
+            <p title="Definiciones legales">Para efectos de estos términos y condiciones, se establecen las siguientes definiciones:</p>
+            <p title="Definición de usuario"><strong>Usuario:</strong> Persona física mayor de edad que utiliza la plataforma Training+, pudiendo ser clasificado como Alumno o Entrenador según el rol seleccionado durante el registro.</p>
+            <p title="Definición de entrenador"><strong>Entrenador:</strong> Usuario profesional certificado que ha completado el proceso de verificación académica y cuenta con suscripción activa para acceder a las funcionalidades de gestión de entrenamientos.</p>
+            <p title="Definición de alumno"><strong>Alumno:</strong> Usuario que utiliza la plataforma de forma gratuita para acceder a rutinas de entrenamiento y registrar progreso</p>
+            <p title="Definición de suscripción"><strong>Suscripción:</strong> Plan de pago mensual requerido para usuarios que deseen acceder a funcionalidades de entrenador.</p>
+            <p title="Definición de vinculación"><strong>Vinculación:</strong> Proceso mediante el cual un entrenador establece una relación profesional con un alumno, previo consentimiento mutuo.</p>
+            <p title="Definición de contenido"><strong>Contenido:</strong> Toda información, datos, textos, imágenes, videos, rutinas, ejercicios y demás material disponible en la plataforma.</p>
 
-            <h2>3. REGISTRO Y CUENTAS DE USUARIO</h2>
+            <h2 title="Registro y cuentas de usuario">3. REGISTRO Y CUENTAS DE USUARIO</h2>
             <h3>3.1 Requisitos de Registro</h3>
             <p>Los usuarios deberán proporcionar información veraz, completa y actualizada durante el proceso de registro, incluyendo dirección de correo electrónico válida, contraseña segura y selección del rol apropiado. La falsificación de datos constituye una violación grave de estos términos y puede resultar en la suspensión inmediata de la cuenta.</p>
 
@@ -255,28 +255,28 @@
 
         <!-- Contenido de la sección "Políticas de Privacidad" -->
         <div class="privacy-policy">
-            <h1>Políticas de Privacidad</h1>
+            <h1 title="Sección de políticas de privacidad">Políticas de Privacidad</h1>
         
-            <p><strong>1. Introducción</strong>
+            <p title="Introducción a la política"><strong>1. Introducción</strong>
             La presente Política de Privacidad describe cómo Training+ (en adelante, "la Plataforma") recopila, utiliza, almacena y protege la información personal de sus usuarios. Esta política forma parte integral de los Términos y Condiciones de Uso.<br>
             Al utilizar la Plataforma, usted acepta las prácticas descritas en esta Política de Privacidad.</p>
         
-            <p><strong>2. Información Recopilada</strong>
+            <p title="Información recopilada"><strong>2. Información Recopilada</strong>
             - Nombre y apellido<br>
             - Edad y fecha de nacimiento<br>
             - Sexo<br>
             - Nacionalidad</p>
         
-            <p><strong>2.2 Información física</strong>
+            <p title="Información física"><strong>2.2 Información física</strong>
             - Peso y altura<br>
             - Objetivo físico<br>
             - Datos de salud: lesiones previas, condición cardiovascular</p>
         
-            <p><strong>2.3 Contenido multimedia</strong>
+            <p title="Contenido multimedia"><strong>2.3 Contenido multimedia</strong>
             - Fotografías de perfil<br>
             - Fotografías de progreso semanal</p>
         
-            <p><strong>2.4 Información adicional para entrenadores</strong>
+            <p title="Información adicional para entrenadores"><strong>2.4 Información adicional para entrenadores</strong>
             - Fotografía del título o certificado profesional<br>
             - Instituto de formación<br>
             - Título obtenido<br>
@@ -284,10 +284,10 @@
             - Experiencia profesional<br>
             - Datos profesionales adicionales</p>
         
-            <p><strong>2.5 Información de pago (solo para entrenadores)</strong>
+            <p title="Información de pago"><strong>2.5 Información de pago (solo para entrenadores)</strong>
             La información relacionada con pagos es procesada directamente por PayPal y no es almacenada en nuestras bases de datos.</p>
         
-            <p><strong>3. Uso de la Información</strong>
+            <p title="Uso de la información"><strong>3. Uso de la Información</strong>
             La información recopilada se utiliza para:<br>
             - Crear y mantener las cuentas de usuarios y entrenadores.<br>
             - Personalizar la experiencia del usuario en la Plataforma.<br>
@@ -296,19 +296,19 @@
             - Mejorar la Plataforma y desarrollar nuevas funcionalidades.<br>
             - Comunicar actualizaciones importantes sobre la Plataforma.</p>
         
-            <p><strong>4. Almacenamiento de Datos</strong>
+            <p title="Almacenamiento de datos"><strong>4. Almacenamiento de Datos</strong>
             Actualmente, la información se almacena en una base de datos SQLite local. En el futuro, se planea migrar a una solución basada en la nube o servidor dedicado, manteniendo siempre estándares adecuados de seguridad.</p>
         
-            <p><strong>5. Compartir Información</strong>
+            <p title="Compartir información"><strong>5. Compartir Información</strong>
             No compartimos, vendemos ni alquilamos su información personal a terceros, excepto:<br>
             - Con PayPal, exclusivamente para el procesamiento de pagos de suscripciones de entrenadores.<br>
             - Cuando sea requerido por ley o por orden judicial.<br>
             - Para proteger los derechos, la propiedad o la seguridad del desarrollador, los usuarios de la Plataforma o el público en general.</p>
         
-            <p><strong>6. Cookies y Tecnologías de Seguimiento</strong>
+            <p title="Cookies y tecnologías de seguimiento"><strong>6. Cookies y Tecnologías de Seguimiento</strong>
             Actualmente, la Plataforma no utiliza cookies ni sistemas de rastreo. Si en el futuro se implementaran estas tecnologías, esta política será actualizada para reflejar dichos cambios.</p>
         
-            <p><strong>7. Derechos del Usuario sobre sus Datos</strong>
+            <p title="Derechos del usuario"><strong>7. Derechos del Usuario sobre sus Datos</strong>
             Los usuarios tienen derecho a:<br>
             - Acceder a su información personal almacenada en la Plataforma.<br>
             - Rectificar datos inexactos o incompletos.<br>
@@ -316,158 +316,158 @@
             - Cancelar su cuenta, lo que resultará en la eliminación completa de sus datos.<br>
             Para ejercer estos derechos, el usuario puede utilizar las opciones disponibles en su perfil dentro de la Plataforma.</p>
         
-            <p><strong>8. Seguridad de la Información</strong>
+            <p title="Seguridad de la información"><strong>8. Seguridad de la Información</strong>
             Implementamos medidas de seguridad técnicas y organizativas para proteger su información personal contra acceso no autorizado, alteración, divulgación o destrucción. Sin embargo, ningún método de transmisión por Internet o almacenamiento electrónico es 100% seguro.</p>
         
-            <p><strong>9. Menores de Edad</strong>
+            <p title="Menores de edad"><strong>9. Menores de Edad</strong>
             Actualmente, la Plataforma no cuenta con una política específica sobre edad mínima para su uso. Sin embargo, los menores de edad deben contar con la autorización de sus padres o tutores legales para utilizar la Plataforma.</p>
         
-            <p><strong>10. Cambios en la Política de Privacidad</strong>
+            <p title="Cambios en la política"><strong>10. Cambios en la Política de Privacidad</strong>
             El desarrollador se reserva el derecho de modificar esta Política de Privacidad en cualquier momento. Las modificaciones entrarán en vigor inmediatamente después de su publicación en la Plataforma. El uso continuado de la Plataforma después de cualquier modificación constituye la aceptación de la nueva política.</p>
         
-            <p><strong>11. Transferencia Internacional de Datos</strong>
+            <p title="Transferencia internacional de datos"><strong>11. Transferencia Internacional de Datos</strong>
             Dado que la Plataforma puede ser utilizada desde diferentes países, la información personal puede ser transferida y procesada en países distintos al de residencia del usuario. Al utilizar la Plataforma, el usuario consiente esta transferencia.</p>
         
-            <p><strong>12. Contacto</strong>
+            <p title="Contacto para privacidad"><strong>12. Contacto</strong>
             Actualmente no existe un canal oficial para consultas relacionadas con privacidad. Esta información será actualizada tan pronto como se implemente un sistema de soporte.</p>
         
-            <p><strong>13. Período de Conservación de Datos</strong>
+            <p title="Conservación de datos"><strong>13. Período de Conservación de Datos</strong>
             Los datos personales se conservarán mientras el usuario mantenga su cuenta activa. Una vez que la cuenta sea eliminada, todos los datos asociados serán eliminados permanentemente de nuestros sistemas.</p>
         </div>
         
         <!-- Seccion de "Soporte" -->
         <div class="support">
-            <h1>Preguntas Frecuentes (FAQ)</h1>
+            <h1 title="Sección de preguntas frecuentes">Preguntas Frecuentes (FAQ)</h1>
             <div class="faq-container">
-                <h2 class="category">Primeros Pasos</h2>
+                <h2 class="category" title="Primeros pasos en la plataforma">Primeros Pasos</h2>
                 
-                <details>
-                    <summary>¿Cómo me registro en la aplicación?</summary>
-                    <div class="answer">
+                <details title="Cómo registrarse en la aplicación">
+                    <summary title="¿Cómo me registro en la aplicación?">¿Cómo me registro en la aplicación?</summary>
+                    <div class="answer" title="Explicación sobre el registro">
                         Para registrarte, dirígete a la página de registro donde podrás crear tu cuenta ingresando tu email, contraseña y seleccionando tu rol (usuario o entrenador). Una vez completado el registro, podrás acceder a todas las funcionalidades según tu tipo de usuario.
                     </div>
                 </details>
                 
-                <details>
-                    <summary>¿Cuál es la diferencia entre un alumno y un entrenador?</summary>
-                    <div class="answer">
+                <details title="Diferencia entre alumno y entrenador">
+                    <summary title="¿Cuál es la diferencia entre un alumno y un entrenador?">¿Cuál es la diferencia entre un alumno y un entrenador?</summary>
+                    <div class="answer" title="Explicación de roles">
                         Los alumnos tienen acceso a sus rutinas de entrenamiento, pueden seguir su progreso y completar cuestionarios de salud. Los entrenadores, además de estas funciones, pueden crear y editar entrenamientos para sus alumnos, acceder al dashboard con estadísticas de rendimiento y gestionar suscripciones mensuales.
                     </div>
                 </details>
                 
-                <details>
-                    <summary>No puedo iniciar sesión, ¿qué hago?</summary>
-                    <div class="answer">
+                <details title="Problemas para iniciar sesión">
+                    <summary title="No puedo iniciar sesión, ¿qué hago?">No puedo iniciar sesión, ¿qué hago?</summary>
+                    <div class="answer" title="Solución para problemas de inicio de sesión">
                         Verifica que estés ingresando correctamente tu email y contraseña. Si el problema persiste, puedes contactar a soporte técnico a través de la sección "Opciones" en el menú principal de la aplicación.
                     </div>
                 </details>
                 
-                <h2 class="category">Perfil y Configuración</h2>
+                <h2 class="category" title="Configuración de perfil">Perfil y Configuración</h2>
                 
-                <details>
-                    <summary>¿Cómo actualizo mi foto de perfil?</summary>
-                    <div class="answer">
+                <details title="Actualizar foto de perfil">
+                    <summary title="¿Cómo actualizo mi foto de perfil?">¿Cómo actualizo mi foto de perfil?</summary>
+                    <div class="answer" title="Explicación sobre actualización de foto de perfil">
                         Ve a la sección "Perfil" donde podrás subir una nueva imagen. El sistema automáticamente comprimirá y convertirá tu imagen al formato .webp para optimizar el rendimiento de la aplicación.
                     </div>
                 </details>
                 
-                <details>
-                    <summary>¿Puedo cambiar mis datos personales después del registro?</summary>
-                    <div class="answer">
+                <details title="Cambiar datos personales">
+                    <summary title="¿Puedo cambiar mis datos personales después del registro?">¿Puedo cambiar mis datos personales después del registro?</summary>
+                    <div class="answer" title="Explicación sobre edición de datos personales">
                         Sí, puedes actualizar tu información personal en cualquier momento desde tu perfil. Los entrenadores también pueden completar información adicional como títulos profesionales y experiencia.
                     </div>
                 </details>
                 
-                <h2 class="category">Entrenamientos y Rutinas</h2>
+                <h2 class="category" title="Entrenamientos y rutinas">Entrenamientos y Rutinas</h2>
                 
-                <details>
-                    <summary>¿Cómo creo un entrenamiento como entrenador?</summary>
-                    <div class="answer">
+                <details title="Crear entrenamiento como entrenador">
+                    <summary title="¿Cómo creo un entrenamiento como entrenador?">¿Cómo creo un entrenamiento como entrenador?</summary>
+                    <div class="answer" title="Explicación sobre creación de entrenamiento">
                         Dirígete a la sección "Entrenamiento" y selecciona "Crear nuevo entrenamiento". Podrás configurar el nombre, duración en semanas, días de entrenamiento y ejercicios específicos para cada día. El sistema te guiará paso a paso a través del proceso.
                     </div>
                 </details>
                 
-                <details>
-                    <summary>¿Puedo editar un entrenamiento que ya creé?</summary>
-                    <div class="answer">
+                <details title="Editar entrenamiento existente">
+                    <summary title="¿Puedo editar un entrenamiento que ya creé?">¿Puedo editar un entrenamiento que ya creé?</summary>
+                    <div class="answer" title="Explicación sobre edición de entrenamiento">
                         Absolutamente. Desde la lista de entrenamientos puedes seleccionar cualquier entrenamiento existente y editarlo, modificando días, ejercicios, series y repeticiones según sea necesario.
                     </div>
                 </details>
                 
-                <details>
-                    <summary>¿Cómo registro mi progreso en las rutinas?</summary>
-                    <div class="answer">
+                <details title="Registrar progreso en rutinas">
+                    <summary title="¿Cómo registro mi progreso en las rutinas?">¿Cómo registro mi progreso en las rutinas?</summary>
+                    <div class="answer" title="Explicación sobre registro de progreso">
                         Como alumno, puedes acceder a tu rutina asignada y registrar el progreso de cada ejercicio, incluyendo peso utilizado, repeticiones completadas y observaciones personales sobre tu rendimiento.
                     </div>
                 </details>
                 
-                <h2 class="category">Seguimiento y Progreso</h2>
+                <h2 class="category" title="Seguimiento y progreso">Seguimiento y Progreso</h2>
                 
-                <details>
-                    <summary>¿Cómo veo mi progreso general?</summary>
-                    <div class="answer">
+                <details title="Ver progreso general">
+                    <summary title="¿Cómo veo mi progreso general?">¿Cómo veo mi progreso general?</summary>
+                    <div class="answer" title="Explicación sobre visualización de progreso">
                         En la sección "Progreso" encontrarás gráficos detallados que muestran tu rendimiento semanal, días completados, peso total levantado y otras métricas importantes para evaluar tu evolución.
                     </div>
                 </details>
                 
-                <details>
-                    <summary>¿Mi entrenador puede ver mi progreso?</summary>
-                    <div class="answer">
+                <details title="Entrenador ve el progreso">
+                    <summary title="¿Mi entrenador puede ver mi progreso?">¿Mi entrenador puede ver mi progreso?</summary>
+                    <div class="answer" title="Explicación sobre acceso del entrenador al progreso">
                         Sí, los entrenadores tienen acceso a un dashboard donde pueden monitorear el progreso de todos sus alumnos, incluyendo porcentajes de cumplimiento y estadísticas de rendimiento.
                     </div>
                 </details>
                 
-                <h2 class="category">Problemas Técnicos</h2>
+                <h2 class="category" title="Problemas técnicos">Problemas Técnicos</h2>
                 
-                <details>
-                    <summary>La aplicación va lenta, ¿qué puedo hacer?</summary>
-                    <div class="answer">
+                <details title="Aplicación lenta">
+                    <summary title="La aplicación va lenta, ¿qué puedo hacer?">La aplicación va lenta, ¿qué puedo hacer?</summary>
+                    <div class="answer" title="Explicación sobre optimización de rendimiento">
                         Asegúrate de tener una conexión estable a internet. El sistema optimiza automáticamente las imágenes y utiliza tecnologías web modernas para mejorar el rendimiento.
                     </div>
                 </details>
                 
-                <details>
-                    <summary>¿Cómo reporto un error en la aplicación?</summary>
-                    <div class="answer">
+                <details title="Reportar error en la aplicación">
+                    <summary title="¿Cómo reporto un error en la aplicación?">¿Cómo reporto un error en la aplicación?</summary>
+                    <div class="answer" title="Explicación sobre reporte de errores">
                         Ve a "Opciones" y selecciona la sección "Soporte" donde puedes enviar un reporte detallado del problema que estás experimentando. Incluye la mayor cantidad de detalles posible para ayudarnos a resolverlo rápidamente.
                     </div>
                 </details>
                 
-                <details>
-                    <summary>¿Mis datos están seguros?</summary>
-                    <div class="answer">
+                <details title="Seguridad de los datos">
+                    <summary title="¿Mis datos están seguros?">¿Mis datos están seguros?</summary>
+                    <div class="answer" title="Explicación sobre seguridad de datos">
                         Sí, utilizamos sistemas de autenticación seguros y todas las imágenes se procesan y almacenan de forma optimizada. Nunca compartimos tu información personal con terceros.
                     </div>
                 </details>
                 
-                <h2 class="category">Suscripciones (Para Entrenadores)</h2>
+                <h2 class="category" title="Suscripciones para entrenadores">Suscripciones (Para Entrenadores)</h2>
                 
-                <details>
-                    <summary>¿Cómo funciona la suscripción mensual?</summary>
-                    <div class="answer">
+                <details title="Funcionamiento de la suscripción mensual">
+                    <summary title="¿Cómo funciona la suscripción mensual?">¿Cómo funciona la suscripción mensual?</summary>
+                    <div class="answer" title="Explicación sobre suscripción mensual">
                         Los entrenadores pueden suscribirse al servicio para acceder a funcionalidades premium. La suscripción se gestiona desde la sección correspondiente donde se actualizan automáticamente las fechas de inicio y fin.
                     </div>
                 </details>
             </div>
 
             <div class="formulario-soporte">
-                <h1>Soporte</h1>
+                <h1 title="Formulario de contacto para soporte">Soporte</h1>
             
-                <p>¿No encontraste la respuesta que buscabas? Puedes contactarnos directamente a través del siguiente formulario de contacto donde podrás enviar tu consulta específica y nuestro equipo te responderá lo antes posible.</p>
+                <p title="Explicación sobre contacto de soporte">¿No encontraste la respuesta que buscabas? Puedes contactarnos directamente a través del siguiente formulario de contacto donde podrás enviar tu consulta específica y nuestro equipo te responderá lo antes posible.</p>
             
                 <form action="{{ url_for('opciones.opciones') }}" method="POST">
                     <input type="hidden" name="id_usuario" value="{{ session.id_usuario }}">
             
-                    <label for="nombre">Nombre y Apellido <span>*</span></label>
-                    <input type="text" id="nombre" name="nombre" value="{{ datos_soporte.nombre_completo if datos_soporte else '' }}" disabled>
+                    <label for="nombre" title="Nombre y apellido del usuario">Nombre y Apellido <span>*</span></label>
+                    <input type="text" id="nombre" name="nombre" value="{{ datos_soporte.nombre_completo if datos_soporte else '' }}" disabled title="Campo de nombre y apellido">
             
-                    <label for="email">Email <span>*</span></label>
-                    <input type="email" id="email" name="email" value="{{ datos_soporte.email if datos_soporte else '' }}" disabled>
+                    <label for="email" title="Correo electrónico del usuario">Email <span>*</span></label>
+                    <input type="email" id="email" name="email" value="{{ datos_soporte.email if datos_soporte else '' }}" disabled title="Campo de correo electrónico">
             
-                    <label for="mensaje">Mensaje <span>*</span></label>
-                    <textarea id="mensaje" name="mensaje" placeholder="Escribe tu mensaje" required></textarea>
+                    <label for="mensaje" title="Mensaje de consulta">Mensaje <span>*</span></label>
+                    <textarea id="mensaje" name="mensaje" placeholder="Escribe tu mensaje" required title="Escribe tu consulta aquí"></textarea>
             
-                    <button type="submit">Enviar Mensaje</button>
+                    <button type="submit" title="Enviar mensaje de soporte">Enviar Mensaje</button>
                 </form>
             </div>
         </div>

@@ -9,22 +9,22 @@
     <div id="data-ejercicios" data-ejercicios="{{ ejercicios|tojson }}" style="display: none;"></div>
 
     <div class="edit-training-container">
-        <h1 class="edit-training-title" data-aos="fade-right">Editar Entrenamiento</h1>
-        <p data-aos="fade-right">Modifica o agrega ejercicios a la rutina de entrenamiento.</p>
+        <h1 class="edit-training-title" data-aos="fade-right" title="Editar el entrenamiento seleccionado">Editar Entrenamiento</h1>
+        <p data-aos="fade-right" title="Aquí puedes modificar o agregar ejercicios a la rutina de entrenamiento">Modifica o agrega ejercicios a la rutina de entrenamiento.</p>
         
         <form method="POST" class="edit-training-form">
             <!-- Nombre del entrenamiento -->
             <div class="training-name-group" data-aos="fade-in">
-                <label class="input-label">Nombre del Entrenamiento</label>
+                <label class="input-label" title="Nombre identificador del entrenamiento">Nombre del Entrenamiento</label>
                 <input type="text" name="nombre_entrenamiento" class="text-input" 
-                    value="{{ entrenamiento.nombre_entrenamiento }}" placeholder="Ingresa un nuevo nombre para el entrenamiento (máx. 50 caracteres)" maxlength="50" required>
+                    value="{{ entrenamiento.nombre_entrenamiento }}" placeholder="Ingresa un nuevo nombre para el entrenamiento (máx. 50 caracteres)" maxlength="50" required title="Escribe el nombre del entrenamiento aquí">
             </div>
 
             <!-- Navegación por semanas -->
             <div class="edit-week-navigator">
-                <button type="button" class="previous-week" title="Anterior"><i class='bx bx-chevrons-left'></i></button>
-                <h2>Semana <span id="week-number">1</span></h2>
-                <button type="button" class="next-week" title="Siguiente"><i class='bx bx-chevrons-right'></i></button>
+                <button type="button" class="previous-week" title="Ir a la semana anterior"><i class='bx bx-chevrons-left'></i></button>
+                <h2 title="Semana actual que estás editando">Semana <span id="week-number">1</span></h2>
+                <button type="button" class="next-week" title="Ir a la siguiente semana"><i class='bx bx-chevrons-right'></i></button>
             </div>
 
             <!-- Días y ejercicios por semana -->
@@ -33,21 +33,21 @@
                 {% for dia in dias if dia.numero_semana == semana_numero %}
                 <div class="week-container" data-aos="fade-in" data-aos-delay="100">
                     <div class="week-header">
-                        <h3 class="week-title">
+                        <h3 class="week-title" title="Día de la semana que estás editando">
                             Día {{ dia.numero_dia }}
                         </h3>
                         <input type="text" name="nombre_dia_{{ dia.id_dia }}" class="text-input day-name-input" 
-                            value="{{ dia.nombre_rutina }}" placeholder="Ingresa un nuevo nombre para la rutina del día {{ dia.numero_dia }} de la semana {{ dia.numero_semana }}" required>
+                            value="{{ dia.nombre_rutina }}" placeholder="Ingresa un nuevo nombre para la rutina del día {{ dia.numero_dia }} de la semana {{ dia.numero_semana }}" required title="Escribe el nombre para la rutina de este día">
                     </div>
                     
                     <div class="exercises-container">
-                        <h4 class="section-title">Ejercicios Actuales</h4>
+                        <h4 class="section-title" title="Ejercicios que ya están asignados a este día">Ejercicios Actuales</h4>
                         
                         {% for ejercicio in ejercicios_por_dia[dia.id_dia] %}
                         <div class="exercise-item">
                             <div class="exercise-field exercise-select-container">
-                                <label class="input-label">Ejercicio</label>
-                                <select name="ejercicio_{{ ejercicio.id_dia_ejercicio }}" class="select-input select-buscador" required>
+                                <label class="input-label" title="Selecciona el ejercicio que deseas modificar">Ejercicio</label>
+                                <select name="ejercicio_{{ ejercicio.id_dia_ejercicio }}" class="select-input select-buscador" required title="Elige el ejercicio actual">
                                     {% for ej in ejercicios %}
                                     <option value="{{ ej.id_ejercicio }}" 
                                         {% if ej.id_ejercicio == ejercicio.id_ejercicio %}selected{% endif %}>
@@ -59,47 +59,47 @@
 
                             <div class="exercise-fields">
                                 <div class="exercise-field">
-                                    <label class="input-label">Series</label>
-                                    <input type="number" name="series_{{ ejercicio.id_dia_ejercicio }}" 
-                                        class="number-input" value="{{ ejercicio.series }}" min="1" required>
+                                <label class="input-label" title="Cantidad de series para este ejercicio">Series</label>
+                                <input type="number" name="series_{{ ejercicio.id_dia_ejercicio }}" 
+                                    class="number-input" value="{{ ejercicio.series }}" min="1" required title="Indica el número de series">
                                 </div>
                                 
                                 <div class="exercise-field">
-                                    <label class="input-label">Repeticiones</label>
-                                    <input type="number" name="repeticiones_{{ ejercicio.id_dia_ejercicio }}" 
-                                        class="number-input" value="{{ ejercicio.repeticiones }}" min="1" required>
+                                <label class="input-label" title="Cantidad de repeticiones por serie">Repeticiones</label>
+                                <input type="number" name="repeticiones_{{ ejercicio.id_dia_ejercicio }}" 
+                                    class="number-input" value="{{ ejercicio.repeticiones }}" min="1" required title="Indica el número de repeticiones por serie">
                                 </div>
                                 
                                 <div class="exercise-field">
-                                    <label class="input-label">Peso (kg)</label>
-                                    <input type="number" step="0.1" name="peso_{{ ejercicio.id_dia_ejercicio }}" 
-                                        class="number-input" value="{{ ejercicio.peso }}" min="0" required>
+                                <label class="input-label" title="Peso recomendado para este ejercicio">Peso (kg)</label>
+                                <input type="number" step="0.1" name="peso_{{ ejercicio.id_dia_ejercicio }}" 
+                                    class="number-input" value="{{ ejercicio.peso }}" min="0" required title="Indica el peso en kilogramos">
                                 </div>
                                 
                                 <div class="exercise-field">
-                                    <label class="input-label">Descanso (s)</label>
-                                    <input type="number" name="descanso_{{ ejercicio.id_dia_ejercicio }}" 
-                                        class="number-input" value="{{ ejercicio.tiempo_descanso }}" min="0" required>
+                                <label class="input-label" title="Tiempo de descanso recomendado entre series">Descanso (s)</label>
+                                <input type="number" name="descanso_{{ ejercicio.id_dia_ejercicio }}" 
+                                    class="number-input" value="{{ ejercicio.tiempo_descanso }}" min="0" required title="Indica el tiempo de descanso en segundos">
                                 </div>
                             </div>
                             
                             <div class="exercise-actions">
-                                <label class="checkbox-label">
+                                <label class="checkbox-label" title="Marca para eliminar este ejercicio de la rutina">
                                     <input type="checkbox" name="eliminar_ejercicio" value="{{ ejercicio.id_dia_ejercicio }}"> 
                                     Eliminar Ejercicio
                                 </label>
-                                <span class="checkbox-note">(No se eliminará si ya tiene progreso registrado).</span>
+                                <span class="checkbox-note" title="Si el ejercicio tiene progreso registrado, no se eliminará">(No se eliminará si ya tiene progreso registrado).</span>
                             </div>
                         </div>
                         {% endfor %}
                     </div>
                     
                     <div class="add-exercise-container">
-                        <h4 class="section-title new-excercise"><i class='bx bx-plus'></i> Agregar Nuevo Ejercicio</h4>
+                        <h4 class="section-title new-excercise" title="Agregar un nuevo ejercicio a este día"><i class='bx bx-plus'></i> Agregar Nuevo Ejercicio</h4>
 
                         <div class="exercise-field excercise-add-select-container">
-                            <label class="input-label">Ejercicio</label>
-                            <select name="nuevo_ejercicio_{{ dia.id_dia }}" class="select-input select-buscador">
+                            <label class="input-label" title="Selecciona el ejercicio que deseas agregar">Ejercicio</label>
+                            <select name="nuevo_ejercicio_{{ dia.id_dia }}" class="select-input select-buscador" title="Elige el ejercicio para agregar">
                                 <option value="">Seleccionar Ejercicio</option>
                                 {% for ej in ejercicios %}
                                 <option value="{{ ej.id_ejercicio }}">{{ ej.nombre_ejercicio }}</option>
@@ -109,23 +109,23 @@
 
                         <div class="exercise-fields">
                             <div class="exercise-field">
-                                <label class="input-label">Series</label>
-                                <input type="number" name="nuevo_series_{{ dia.id_dia }}" class="number-input" min="1">
+                                <label class="input-label" title="Cantidad de series para el nuevo ejercicio">Series</label>
+                                <input type="number" name="nuevo_series_{{ dia.id_dia }}" class="number-input" min="1" title="Indica el número de series">
                             </div>
                             
                             <div class="exercise-field">
-                                <label class="input-label">Repeticiones</label>
-                                <input type="number" name="nuevo_repeticiones_{{ dia.id_dia }}" class="number-input" min="1">
+                                <label class="input-label" title="Cantidad de repeticiones por serie">Repeticiones</label>
+                                <input type="number" name="nuevo_repeticiones_{{ dia.id_dia }}" class="number-input" min="1" title="Indica el número de repeticiones por serie">
                             </div>
                             
                             <div class="exercise-field">
-                                <label class="input-label">Peso (kg)</label>
-                                <input type="number" step="0.1" name="nuevo_peso_{{ dia.id_dia }}" class="number-input" min="0">
+                                <label class="input-label" title="Peso recomendado para el nuevo ejercicio">Peso (kg)</label>
+                                <input type="number" step="0.1" name="nuevo_peso_{{ dia.id_dia }}" class="number-input" min="0" title="Indica el peso en kilogramos">
                             </div>
                             
                             <div class="exercise-field">
-                                <label class="input-label">Descanso (s)</label>
-                                <input type="number" name="nuevo_descanso_{{ dia.id_dia }}" class="number-input" min="0">
+                                <label class="input-label" title="Tiempo de descanso recomendado entre series">Descanso (s)</label>
+                                <input type="number" name="nuevo_descanso_{{ dia.id_dia }}" class="number-input" min="0" title="Indica el tiempo de descanso en segundos">
                             </div>
                         </div>
                     </div>
@@ -135,7 +135,7 @@
             {% endfor %}
             
             <div class="form-actions">
-                <button type="submit" class="primary-button">Guardar Cambios</button>
+                <button type="submit" class="primary-button" title="Guarda todos los cambios realizados en el entrenamiento">Guardar Cambios</button>
             </div>
         </form>
     </div>

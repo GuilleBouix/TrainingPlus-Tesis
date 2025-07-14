@@ -5,19 +5,19 @@
 {% block content %}
 
 <form id="form-entrenamiento" class="crear-entrenamiento" method="POST" action="/crear_entrenamiento">
-    <div class="crear-entrenamiento-title" data-aos="fade-in">
-        <h1>Crear Entrenamiento</h1>
+    <div class="crear-entrenamiento-title" data-aos="fade-in" title="Encabezado para crear un nuevo entrenamiento">
+        <h1 title="Título de la página">Crear Entrenamiento</h1>
 
-        <div class="progreso-container-rutina">
-            <span class="step active" id="step-1" title="Configuración de Entrenamiento" data-aos="fade-in" data-aos-delay="100">1</span>
+        <div class="progreso-container-rutina" title="Barra de progreso para configurar el entrenamiento">
+            <span class="step active" id="step-1" title="Primer paso: configuración básica del entrenamiento" data-aos="fade-in" data-aos-delay="100">1</span>
 
-            <div class="line" data-aos="fade-in" data-aos-delay="100"></div>
+            <div class="line" data-aos="fade-in" data-aos-delay="100" title="Separador de pasos"></div>
 
-            <span class="step" id="step-2" title="Configuración de Días" data-aos="fade-in" data-aos-delay="200">2</span>
+            <span class="step" id="step-2" title="Segundo paso: configuración de días de entrenamiento" data-aos="fade-in" data-aos-delay="200">2</span>
             
-            <div class="line" data-aos="fade-in" data-aos-delay="200"></div>
+            <div class="line" data-aos="fade-in" data-aos-delay="200" title="Separador de pasos"></div>
             
-            <span class="step" id="step-3" title="Configuración de Ejercicios" data-aos="fade-in" data-aos-delay="300">3</span>
+            <span class="step" id="step-3" title="Tercer paso: configuración de ejercicios" data-aos="fade-in" data-aos-delay="300">3</span>
         </div>
     </div>
 
@@ -37,48 +37,48 @@
     <!-- Sección 1 -->
     <div class="seccion seccion-1">
         <div class="inputs" data-aos="fade-down" data-aos-delay="100">
-            <label for="nombre_entrenamiento">Nombre del Entrenamiento <span>*</span></label>
-            <input type="text" id="nombre_entrenamiento" name="nombre_entrenamiento" maxlength="50" placeholder="Ingresa un nombre para el entrenamiento (máx. 50 caracteres)" required>
+            <label for="nombre_entrenamiento" title="Campo obligatorio">Nombre del Entrenamiento <span>*</span></label>
+            <input type="text" id="nombre_entrenamiento" name="nombre_entrenamiento" maxlength="50" placeholder="Ingresa un nombre para el entrenamiento (máx. 50 caracteres)" required title="Escribe el nombre del entrenamiento que vas a crear">
         </div>
 
         <div class="inputs" data-aos="fade-down" data-aos-delay="200">
-            <label for="alumno">Alumno <span>*</span></label>
-            <select id="alumno" name="id_alumno" required>
-                <option value="" disabled selected>Seleccionar Alumno</option>
+            <label for="alumno" title="Campo obligatorio">Alumno <span>*</span></label>
+            <select id="alumno" name="id_alumno" required title="Selecciona el alumno al que asignarás el entrenamiento">
+                <option value="" disabled selected title="Selecciona un alumno">Seleccionar Alumno</option>
                 {% for alumno in alumnos %}
-                <option value="{{ alumno.id_alumno }}">{{ alumno.nombre }} {{ alumno.apellido }}</option>
+                <option value="{{ alumno.id_alumno }}" title="Alumno: {{ alumno.nombre }} {{ alumno.apellido }}">{{ alumno.nombre }} {{ alumno.apellido }}</option>
                 {% endfor %}
             </select>
         </div>
 
         <div class="inputs" data-aos="fade-down" data-aos-delay="300">
-            <label for="disciplina">Disciplina <span>*</span></label>
-            <select name="disciplina" id="disciplina" required>
-                <option value="" disabled selected>Seleccionar Disciplina</option>
-                <option value="1">Fitness</option>
+            <label for="disciplina" title="Campo obligatorio">Disciplina <span>*</span></label>
+            <select name="disciplina" id="disciplina" required title="Selecciona la disciplina del entrenamiento">
+                <option value="" disabled selected title="Selecciona una disciplina">Seleccionar Disciplina</option>
+                <option value="1" title="Disciplina Fitness">Fitness</option>
             </select>
         </div>
 
         <div class="inputs" data-aos="fade-down" data-aos-delay="400">
-            <label for="duracion_semanas">Duración (en semanas) <span>*</span></label>
-            <input type="number" id="duracion_semanas" name="duracion_semanas" min="1" max="12" placeholder="Ingresa la duración en semanas" onkeydown="return false;" required>
+            <label for="duracion_semanas" title="Campo obligatorio">Duración (en semanas) <span>*</span></label>
+            <input type="number" id="duracion_semanas" name="duracion_semanas" min="1" max="12" placeholder="Ingresa la duración en semanas" onkeydown="return false;" required title="Indica cuántas semanas durará el entrenamiento (máx. 12)">
         </div>
 
-        <button type="button" onclick="generarSemanas()" data-aos="fade-right" data-aos-delay="500">Continuar</button>
+        <button type="button" onclick="generarSemanas()" data-aos="fade-right" data-aos-delay="500" title="Avanza a la configuración de semanas">Continuar</button>
     </div>
 
     <!-- Sección 2 -->
     <div class="seccion seccion-2" style="display: none;">
-        <div id="semanas-contenedor"></div>
-        <button type="button atras" onclick="mostrarSeccion(1)">Atrás</button>
-        <button type="button" onclick="generarDias()">Continuar</button>
+        <div id="semanas-contenedor" title="Aquí se configuran las semanas del entrenamiento"></div>
+        <button type="button atras" onclick="mostrarSeccion(1)" title="Regresa a la sección anterior">Atrás</button>
+        <button type="button" onclick="generarDias()" title="Avanza a la configuración de días">Continuar</button>
     </div>
 
     <!-- Sección 3 -->
     <div class="seccion seccion-3" style="display: none;">
-        <div id="dias-contenedor"></div>
-        <button type="button" onclick="mostrarSeccion(2)">Atrás</button>
-        <button type="submit" disabled>Finalizar</button>
+        <div id="dias-contenedor" title="Aquí se configuran los días y ejercicios del entrenamiento"></div>
+        <button type="button" onclick="mostrarSeccion(2)" title="Regresa a la sección anterior">Atrás</button>
+        <button type="submit" disabled title="Finaliza y guarda el entrenamiento">Finalizar</button>
     </div>
 </form>
 

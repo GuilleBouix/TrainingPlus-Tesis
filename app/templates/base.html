@@ -42,58 +42,58 @@
 
 <body class="base-body">
     <!-- Pantalla de carga -->
-    <div id="loading-screen">
-        <div class="spinner"></div>
+    <div id="loading-screen" title="Pantalla de carga: espera mientras se carga la página">
+        <div class="spinner" title="Animación de carga"></div>
     </div>
 
     <!-- Modal de Notificaciones -->
     <dialog class="modal-notificaciones" id="modalNotificaciones">
-        <div class="title">
-            <h1>Notificaciones</h1>
-            <i class='bx bx-x' id="close-modal-notification"></i>
+        <div class="title" title="Encabezado de notificaciones">
+            <h1 title="Lista de notificaciones recibidas">Notificaciones</h1>
+            <i class='bx bx-x' id="close-modal-notification" title="Cerrar ventana de notificaciones"></i>
         </div>
     
-        <div class="notifications-container" id="notifications-list">
+        <div class="notifications-container" id="notifications-list" title="Aquí se mostrarán las notificaciones dinámicamente">
             <!-- Aquí se mostrarán las notificaciones dinámicamente -->
         </div>
     </dialog>
     
     <!-- Barra de navegación -->
     <nav class="nav">
-        <i class='bx bx-menu navOpenBtn'></i>
-        <img src="/static/images/logo.png" alt="" class="logo-image" width="50px" height="auto">
-        <ul class="nav-links">
-            <i class='bx bx-x navCloseBtn'></i>
-            <li><a href="{{ url_for('entrenamiento.entrenamiento') }}">ENTRENAMIENTO</a></li>
-            <li><a href="{{ url_for('perfil.perfil', nombre_usuario=session['nombre_usuario']) }}">PERFIL</a></li>
+        <i class='bx bx-menu navOpenBtn' title="Abrir menú de navegación"></i>
+        <img src="/static/images/logo.png" alt="Logo de Training+" class="logo-image" width="50px" height="auto" title="Logo de la aplicación">
+        <ul class="nav-links" title="Barra de navegación principal">
+            <i class='bx bx-x navCloseBtn' title="Cerrar menú de navegación"></i>
+            <li><a href="{{ url_for('entrenamiento.entrenamiento') }}" title="Ir a la sección de entrenamientos">ENTRENAMIENTO</a></li>
+            <li><a href="{{ url_for('perfil.perfil', nombre_usuario=session['nombre_usuario']) }}" title="Ver y editar tu perfil">PERFIL</a></li>
             {% if session['rol'] == 2 %}
-                <li><a href="{{ url_for('dashboard.dashboard') }}">DASHBOARD</a></li>
+                <li><a href="{{ url_for('dashboard.dashboard') }}" title="Ver el dashboard de entrenador">DASHBOARD</a></li>
             {% else %}
-                <li><a href="{{ url_for('progreso.progreso') }}">PROGRESO</a></li>
+                <li><a href="{{ url_for('progreso.progreso') }}" title="Ver tu progreso personal">PROGRESO</a></li>
             {% endif %}
-            <li class="menu-opciones"><a href="{{  url_for('opciones.opciones') }}">OPCIONES</a></li>
-            <li class="menu-notificacion"><a href="{{ url_for('notificaciones.listar_solicitudes') }}">NOTIFICACIONES</a>
+            <li class="menu-opciones"><a href="{{  url_for('opciones.opciones') }}" title="Configuración y ayuda">OPCIONES</a></li>
+            <li class="menu-notificacion"><a href="{{ url_for('notificaciones.listar_solicitudes') }}" title="Ver tus notificaciones">NOTIFICACIONES</a>
             </li>
 
-            <li class="menu-traduccion">
-                <button id="translate-button-nav" class="translate-nav-btn">
-                    <span class="translate-text">TRADUCIR</span>
+            <li class="menu-traduccion" title="Traduce la página a otro idioma">
+                <button id="translate-button-nav" class="translate-nav-btn" title="Traducir la navegación">
+                    <span class="translate-text" title="Botón para traducir la navegación">TRADUCIR</span>
                 </button>
-                <div id="google_translate_element_nav" style="display: none;"></div>
+                <div id="google_translate_element_nav" style="display: none;" title="Widget de traducción"></div>
             </li>
 
-            <li><a href="{{ url_for('auth.logout') }}">LOGOUT</a></li>
+            <li><a href="{{ url_for('auth.logout') }}" title="Cerrar sesión">LOGOUT</a></li>
         </ul>
         
-        <div class="search-setting-box">
-            <a title="Opciones" class="menu-opciones-icon" href="{{  url_for('opciones.opciones') }}"><i class='bx bx-dots-vertical-rounded'></i></a>
-            <i class='bx bx-search icono-busqueda' id="iconoBusqueda"></i>
+        <div class="search-setting-box" title="Opciones y búsqueda">
+            <a title="Ir a opciones" class="menu-opciones-icon" href="{{  url_for('opciones.opciones') }}"><i class='bx bx-dots-vertical-rounded' title="Ir a opciones"></i></a>
+            <i class='bx bx-search icono-busqueda' id="iconoBusqueda" title="Abrir barra de búsqueda"></i>
         </div>
 
-        <div class="busqueda-box" id="busquedaBox">
-            <i class="bx bx-search icono-busqueda" id="iconoBusqueda2"></i>
-            <input type="text" id="busquedaInput" onkeyup="buscarUsuarios()" placeholder="Buscar usuarios o entrenadores">
-            <div id="resultadosBusqueda" class="resultados-busqueda"></div>
+        <div class="busqueda-box" id="busquedaBox" title="Barra para buscar usuarios o entrenadores">
+            <i class="bx bx-search icono-busqueda" id="iconoBusqueda2" title="Buscar"></i>
+            <input type="text" id="busquedaInput" onkeyup="buscarUsuarios()" placeholder="Buscar usuarios o entrenadores" title="Escribe para buscar usuarios o entrenadores">
+            <div id="resultadosBusqueda" class="resultados-busqueda" title="Resultados de búsqueda"></div>
         </div>
     </nav>
 

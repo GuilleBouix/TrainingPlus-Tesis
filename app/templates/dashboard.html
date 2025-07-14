@@ -6,94 +6,85 @@
 
 {% block content %}
 
-    <div class="title" data-aos="fade-right">
-        <h1>Dashboard de Entrenador</h1>
-        <p>Gestiona y visualiza el progreso de tus alumnos.</p>
+    <div class="title" data-aos="fade-right" title="Encabezado del dashboard del entrenador">
+        <h1 title="Panel principal para entrenadores">Dashboard de Entrenador</h1>
+        <p title="Descripción del dashboard">Gestiona y visualiza el progreso de tus alumnos.</p>
     </div>
 
     <!-- Resumen en general -->
     <section class="resumen-general">
-        <div class="card" data-aos="fade-in" data-aos-delay="150">
-            <div class="card-title">
-                <h2>Cumplimiento Promedio</h2>
-                <i class='bx bxs-award'></i>
+        <div class="card" data-aos="fade-in" data-aos-delay="150" title="Promedio de cumplimiento de rutinas">
+            <div class="card-title" title="Título de la tarjeta">
+                <h2 title="Porcentaje de cumplimiento">Cumplimiento Promedio</h2>
+                <i class='bx bxs-award' title="Icono de cumplimiento"></i>
             </div>
-
-            <div class="card-data">
-                <h3>{{ cumplimiento_promedio }}%</h3>
-                
-                <div class="bar day-progress">
+            <div class="card-data" title="Datos de cumplimiento promedio">
+                <h3 title="Porcentaje de cumplimiento">{{ cumplimiento_promedio }}%</h3>
+                <div class="bar day-progress" title="Barra de progreso de cumplimiento">
                     <div class="bar-progress-day"
                         id="barra-dias"
-                        data-progreso="{{ cumplimiento_promedio }}">
+                        data-progreso="{{ cumplimiento_promedio }}"
+                        title="Porcentaje de cumplimiento visualizado">
                     </div>
                 </div>
-                
-                <p>Promedio de cumplimiento de tus alumnos.</p>
+                <p title="Descripción del cumplimiento">Promedio de cumplimiento de tus alumnos.</p>
             </div>
         </div>
-
-        <div class="card" data-aos="fade-in" data-aos-delay="100">
-            <div class="card-title">
-                <h2>Adherencia Promedio</h2>
-                <i class='bx bx-target-lock'></i>
+        <div class="card" data-aos="fade-in" data-aos-delay="100" title="Promedio de adherencia de alumnos">
+            <div class="card-title" title="Título de la tarjeta">
+                <h2 title="Porcentaje de adherencia">Adherencia Promedio</h2>
+                <i class='bx bx-target-lock' title="Icono de adherencia"></i>
             </div>
-
-            <div class="card-data">
-                <h3>{{ adherencia_promedio }}%</h3>
-
-                <p>Adherencia promedio de todos tus alumnos.</p>
+            <div class="card-data" title="Datos de adherencia promedio">
+                <h3 title="Porcentaje de adherencia">{{ adherencia_promedio }}%</h3>
+                <p title="Descripción de la adherencia">Adherencia promedio de todos tus alumnos.</p>
             </div>
         </div>
-
-        <div class="card" data-aos="fade-in" data-aos-delay="100">
-            <div class="card-title">
-                <h2>Total de Alumnos</h2>
-                <i class='bx bxs-group'></i>
+        <div class="card" data-aos="fade-in" data-aos-delay="100" title="Cantidad total de alumnos vinculados">
+            <div class="card-title" title="Título de la tarjeta">
+                <h2 title="Total de alumnos">Total de Alumnos</h2>
+                <i class='bx bxs-group' title="Icono de alumnos"></i>
             </div>
-
-            <div class="card-data">
-                <h3>{{ total_alumnos }}/6</h3>
-
-                <p>{{ total_alumnos }} {% if total_alumnos == 1 %}alumno{% else %}alumnos{% endif %} de 6.</p>
+            <div class="card-data" title="Datos de cantidad de alumnos">
+                <h3 title="Cantidad de alumnos">{{ total_alumnos }}/6</h3>
+                <p title="Descripción de la cantidad">{{ total_alumnos }} {% if total_alumnos == 1 %}alumno{% else %}alumnos{% endif %} de 6.</p>
             </div>
         </div>
     </section>
 
     <!-- Vinculaciones -->
     <section class="vinculaciones-container" data-aos="fade-in" data-aos-delay="200">
-        <h2 class="section-h2"><i class='bx bxs-user'></i> Alumnos Vinculados</h2>
-
+        <h2 class="section-h2" title="Sección de alumnos vinculados"><i class='bx bxs-user' title="Icono de alumnos vinculados"></i> Alumnos Vinculados</h2>
         <div class="table-container">
             <table class="dashboard-table">
                 <thead>
                     <tr>
-                        <th scope="col">Alumno</th>
-                        <th scope="col">Rutina</th>
-                        <th scope="col">Fecha</th>
-                        <th scope="col">Acciones</th>
+                        <th scope="col" title="Nombre del alumno">Alumno</th>
+                        <th scope="col" title="Rutina asignada">Rutina</th>
+                        <th scope="col" title="Fecha de vinculación">Fecha</th>
+                        <th scope="col" title="Acciones disponibles">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for alumno in alumnos_vinculados %}
                     <tr data-aos="fade-right" data-aos-delay="250">
-                        <td data-label="alumno" id="alumno">
-                            <div class="foto-nombre">
-                                <img src="{{ url_for('static', filename='uploads/users/' ~ alumno.foto_perfil) }}" alt="{{ alumno.nombre_completo }}">
-                                <span class="nombre-alumno">{{ alumno.nombre_completo }}</span>
+                        <td data-label="alumno" id="alumno" title="Nombre y foto del alumno vinculado">
+                            <div class="foto-nombre" title="Foto y nombre del alumno">
+                                <img src="{{ url_for('static', filename='uploads/users/' ~ alumno.foto_perfil) }}" alt="{{ alumno.nombre_completo }}" title="Foto de perfil del alumno">
+                                <span class="nombre-alumno" title="Nombre completo del alumno">{{ alumno.nombre_completo }}</span>
                             </div>
                         </td>
-                        <td class="dashboard-table-rutina" data-label="entrenamiento">
+                        <td class="dashboard-table-rutina" data-label="entrenamiento" title="Rutina asignada al alumno">
                             {{ alumno.rutina }}
                             {% if not alumno.tiene_rutina %}
-                                <span class="no-rutina-badge"></span>
+                                <span class="no-rutina-badge" title="El alumno no tiene rutina asignada"></span>
                             {% endif %}
                         </td>
-                        <td class="dashboard-table-fecha" data-label="fecha">{{ alumno.fecha }}</td>
-                        <td class="dashboard-table-detalles" data-label="detalles">
+                        <td class="dashboard-table-fecha" data-label="fecha" title="Fecha de vinculación">{{ alumno.fecha }}</td>
+                        <td class="dashboard-table-detalles" data-label="detalles" title="Acciones disponibles">
                             <a href="{{ url_for('dashboard.progreso_alumno', alumno_id=alumno.id_alumno) }}" 
-                                class="{{ 'disabled-link' if not alumno.tiene_rutina else '' }}">
-                                Ver <i class='bx bx-chevron-right'></i>
+                                class="{{ 'disabled-link' if not alumno.tiene_rutina else '' }}" title="Ver progreso del alumno">
+                                Ver <i class='bx bx-chevron-right' title="Ir al progreso del alumno"></i>
                             </a>
                         </td>
                     </tr>
@@ -105,51 +96,44 @@
 
     <!-- Evolución fuerza (Empuje/Jale/Resistencia) -->
     <section class="rendimiento-container" data-aos="fade-in" data-aos-delay="250">
-        <h2 class="section-h2"><i class='bx bx-radar' ></i> Evolución de Fuerza y Resistencia</h2>
-        <p class="section-p">Porcentaje de mejora en fuerza y resistencia entre todos los alumnos.</p>
-
+        <h2 class="section-h2" title="Sección de evolución de fuerza y resistencia"><i class='bx bx-radar' title="Icono de fuerza y resistencia"></i> Evolución de Fuerza y Resistencia</h2>
+        <p class="section-p" title="Descripción de la evolución de fuerza">Porcentaje de mejora en fuerza y resistencia entre todos los alumnos.</p>
         <div class="grafico-container">
-            <canvas id="graficoRadarFuerza" width="500" height="500"></canvas>
+            <canvas id="graficoRadarFuerza" width="500" height="500" title="Gráfico radar de fuerza y resistencia"></canvas>
         </div>
-
         <div class="tabla-fuerza-container">
             <table class="tabla-fuerza">
                 <thead>
                     <tr>
-                        <th>Tipo</th>
-                        <th>% Distribución</th>
-                        <th>Peso Avg (kg)</th>
-                        <th>Reps Avg</th>
-                        <th>Alumnos</th>
-                        <th>Desequilibrio</th>
+                        <th title="Tipo de fuerza">Tipo</th>
+                        <th title="Porcentaje de distribución">% Distribución</th>
+                        <th title="Peso promedio levantado">Peso Avg (kg)</th>
+                        <th title="Repeticiones promedio">Reps Avg</th>
+                        <th title="Cantidad de alumnos">Alumnos</th>
+                        <th title="Desequilibrio respecto al ideal">Desequilibrio</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for tipo in datos_fuerza.tipos_fuerza %}
                     <tr data-tipo="{{ tipo }}">
-                        <td data-label="Tipo">{{ tipo }}</td>
-                        <td data-label="% Distribución">{{ datos_fuerza.valores[loop.index0] }}%</td>
-                        
-                        <!-- CORREGIDO: Mostrar peso siempre que exista -->
-                        <td data-label="Peso Avg">
+                        <td data-label="Tipo" title="Tipo de fuerza evaluada">{{ tipo }}</td>
+                        <td data-label="% Distribución" title="Porcentaje de distribución de fuerza">{{ datos_fuerza.valores[loop.index0] }}%</td>
+                        <td data-label="Peso Avg" title="Peso promedio levantado por los alumnos">
                             {% if datos_fuerza.detalle[tipo].avg_peso > 0 %}
                                 {{ datos_fuerza.detalle[tipo].avg_peso | round(1) }} kg
                             {% else %}
                                 -
                             {% endif %}
                         </td>
-                        
-                        <!-- CORREGIDO: Mostrar repeticiones siempre que existan -->
-                        <td data-label="Reps Avg">
+                        <td data-label="Reps Avg" title="Repeticiones promedio realizadas">
                             {% if datos_fuerza.detalle[tipo].avg_rep > 0 %}
                                 {{ datos_fuerza.detalle[tipo].avg_rep | round(1) }}
                             {% else %}
                                 -
                             {% endif %}
                         </td>
-                        
-                        <td data-label="Alumnos">{{ datos_fuerza.detalle[tipo].alumnos }}</td>
-                        <td data-label="Desequilibrio">
+                        <td data-label="Alumnos" title="Cantidad de alumnos evaluados">{{ datos_fuerza.detalle[tipo].alumnos }}</td>
+                        <td data-label="Desequilibrio" title="Diferencia respecto al valor ideal">
                             {% if tipo == 'Empuje' %}
                                 {{ (datos_fuerza.valores[loop.index0] - 35) | abs }}% 
                                 {{ '↓' if datos_fuerza.valores[loop.index0] < 35 else '↑' }}
@@ -166,7 +150,6 @@
                 </tbody>
             </table>
         </div>
-
         <div id="datosFuerza"
             data-labels='{{ datos_fuerza.tipos_fuerza | tojson }}'
             data-valores='{{ datos_fuerza.valores | tojson }}'
@@ -270,16 +253,15 @@
 
     <!-- Evolución del peso levantado -->
     <section class="peso-mensual-container" data-aos="fade-in" data-aos-delay="300">
-        <h2 class="section-h2"><i class='bx bx-line-chart'></i> Evolución del Peso Levantado</h2>
-        <p class="section-p">Evolución del peso total levantado por cada alumno.</p>
-
-        <canvas id="graficoPesoMensual" height="130"></canvas>
-
+        <h2 class="section-h2" title="Sección de evolución del peso levantado"><i class='bx bx-line-chart' title="Icono de evolución de peso"></i> Evolución del Peso Levantado</h2>
+        <p class="section-p" title="Descripción de la evolución de peso">Evolución del peso total levantado por cada alumno.</p>
+        <canvas id="graficoPesoMensual" height="130" title="Gráfico de evolución mensual del peso levantado"></canvas>
         <div id="datosPesoMensual"
             data-meses='{{ evolucion_peso.meses | tojson }}'
-            data-alumnos='{{ evolucion_peso.alumnos | tojson }}'>
+            data-alumnos='{{ evolucion_peso.alumnos | tojson }}'
+            title="Datos para el gráfico de evolución mensual">
         </div>
-
+        
         <script>
             const dataPeso = document.getElementById("datosPesoMensual");
             const alumnos = JSON.parse(dataPeso.dataset.alumnos);
@@ -343,8 +325,6 @@
             });
         </script>
     </section>
-
-
     <!-- Barra de progreso -->
     <script>
         // Barra de progreso rutina

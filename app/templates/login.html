@@ -17,31 +17,31 @@
     </div>
 
     <!-- Modal de recuperar contraseña -->
-    <dialog class="password-recovery-dialog" id="password-recovery-modal">
+    <dialog class="password-recovery-dialog" id="password-recovery-modal" title="Recupera tu contraseña">
         <div class="modal-content">
             <form action="{{ url_for('auth.recovery_password') }}" method="POST">
                 <div class="modal-header">
-                    <h1>Cambiar Contraseña</h1>
-                    <i class='bx bx-x close-modal'></i>
+                    <h1 title="Formulario para cambiar tu contraseña">Cambiar Contraseña</h1>
+                    <i class='bx bx-x close-modal' title="Cerrar ventana de recuperación"></i>
                 </div>
 
                 <div>
-                    <label for="email">Email</label>
-                    <input type="email" name="email" id="email" placeholder="Ingresa tu Email" required>
+                    <label for="email" title="Correo electrónico registrado">Email</label>
+                    <input type="email" name="email" id="email" placeholder="Ingresa tu Email" required title="Escribe tu correo electrónico aquí">
                 </div>
 
                 <div>
-                    <label for="password">Nueva Contraseña</label>
-                    <input type="password" name="password" id="password" placeholder="Ingresa tu nueva contraseña" required>
+                    <label for="password" title="Nueva contraseña">Nueva Contraseña</label>
+                    <input type="password" name="password" id="password" placeholder="Ingresa tu nueva contraseña" required title="Escribe tu nueva contraseña aquí">
                 </div>
 
                 <div>
-                    <label for="password">Repite tu Contraseña</label>
-                    <input type="password" name="password" id="password" placeholder="Ingresa nuevamente la contraseña" required>
+                    <label for="password" title="Repite la nueva contraseña">Repite tu Contraseña</label>
+                    <input type="password" name="password" id="password" placeholder="Ingresa nuevamente la contraseña" required title="Repite la nueva contraseña para confirmar">
                 </div>
 
                 <div>
-                    <button type="submit" class="btn-recovery">Cambiar Contraseña</button>
+                    <button type="submit" class="btn-recovery" title="Confirmar cambio de contraseña">Cambiar Contraseña</button>
                 </div>
             </form>
         </div>
@@ -56,12 +56,12 @@
         <div class="login-form">
             <form action="{{ url_for('auth.login') }}" method="POST">
                 <div class="logo-image">
-                    <img src="/static/images/logo.png" alt="Training+ Logo" data-aos="fade-in" data-aos-duration="1000">
+                    <img src="/static/images/logo.png" alt="Training+ Logo" data-aos="fade-in" data-aos-duration="1000" title="Logo de Training+">
                 </div>
                 
                 <div class="title" data-aos="fade-left">
-                    <h1>Iniciar Sesión</h1>
-                    <p>Ingresa con tu cuenta de <span>Training+</span></p>
+                    <h1 title="Formulario de inicio de sesión">Iniciar Sesión</h1>
+                    <p title="Ingresa con tu cuenta de Training+">Ingresa con tu cuenta de <span>Training+</span></p>
                 </div>
     
                 <!-- Mensajes Flash -->
@@ -79,23 +79,23 @@
                 {% endwith %}
 
                 <div class="input-box" data-aos="fade-left" data-aos-delay="100">
-                    <input type="text" name="email" placeholder="Email" required>
-                    <i class='bx bxs-envelope'></i>
+                    <input type="text" name="email" placeholder="Email" required title="Escribe tu correo electrónico aquí">
+                    <i class='bx bxs-envelope' title="Campo de correo electrónico"></i>
                 </div>
     
                 <div class="input-box" data-aos="fade-left" data-aos-delay="200">
-                    <input type="password" name="contrasena" placeholder="Contraseña" required>
-                    <i class='bx bxs-lock-alt'></i>
+                    <input type="password" name="contrasena" placeholder="Contraseña" required title="Escribe tu contraseña aquí">
+                    <i class='bx bxs-lock-alt' title="Campo de contraseña"></i>
                 </div>
     
                 <div class="forgot-password" data-aos="fade-left" data-aos-delay="300">
-                    <a id="open-password-recovery" class="btn-link" href="#">¿Olvidaste tu contraseña?</a>
+                    <a id="open-password-recovery" class="btn-link" href="#" title="Recupera tu contraseña si la olvidaste">¿Olvidaste tu contraseña?</a>
                 </div>
     
-                <button type="submit" class="btn" data-aos="fade-left" data-aos-delay="400">Ingresar</button>
+                <button type="submit" class="btn" data-aos="fade-left" data-aos-delay="400" title="Iniciar sesión en Training+">Ingresar</button>
     
                 <div class="register" data-aos="fade-left" data-aos-delay="500" data-aos-offset="0">
-                    <p>¿No tienes una cuenta? <a href="{{ url_for('auth.signup') }}">Regístrate</a></p>
+                    <p title="¿No tienes cuenta? Regístrate aquí">¿No tienes una cuenta? <a href="{{ url_for('auth.signup') }}" title="Ir al formulario de registro">Regístrate</a></p>
                 </div>
             </form>
         </div>

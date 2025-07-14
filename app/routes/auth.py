@@ -25,9 +25,9 @@ def login():
         finally:
             conn.close()
 
-        if user and check_password_hash(user[2], contrasena):  # Corrige el índice de la contraseña
+        if user and check_password_hash(user[2], contrasena):
             session['id_usuario'] = user[0]
-            session['nombre_usuario'] = user[1]  # Guarda el nombre de usuario en la sesión
+            session['nombre_usuario'] = user[1]
             session['rol'] = user[3]
 
             # Si el usuario es entrenador, comprobar si tiene el formulario completo
