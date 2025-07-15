@@ -5,14 +5,14 @@
 {% endblock %}
 
 {% block content %}
-    <div class="progreso-title" data-aos="fade-right">
+    <div class="progreso-title" data-aos="fade-right" title="Visualiza el progreso en tus planes de entrenamiento">
         <h1>Mi Progreso</h1>
         <p>Visualiza tu rendimiento y progreso</p>
     </div>
 
     <!-- Formulario para seleccionar entrenamiento -->
     <div class="select-training" data-aos="fade-right">
-        <select id="entrenamiento-select" onchange="cambiarEntrenamiento(this)">
+        <select id="entrenamiento-select" title="Selecciona un entrenamiento para ver su progreso" onchange="cambiarEntrenamiento(this)">
             <option value="" disabled {% if not id_entrenamiento_actual %}selected{% endif %}>
                 Selecciona un entrenamiento
             </option>
@@ -27,7 +27,7 @@
 
     <!-- Progreso en general -->
     <section class="progreso-general">
-        <div class="card" data-aos="fade-in" data-aos-delay="100">
+        <div class="card" data-aos="fade-in" data-aos-delay="100" title="Progreso general del entrenamiento">
             <div class="card-title">
                 <h2>Progreso General</h2>
                 <i class='bx bx-trending-up'></i>
@@ -38,10 +38,11 @@
 
                 <div class="card-data">
                     {% if entrenamiento_actual %}
-                        <h3 id="porcentaje-texto">{{ "%.1f"|format(entrenamiento_actual.progreso) }}%</h3>
+                        <h3 id="porcentaje-texto" title="Porcentaje de progreso">{{ "%.1f"|format(entrenamiento_actual.progreso) }}%</h3>
 
                         <div class="bar">
-                            <div class="bar-progress" 
+                            <div class="bar-progress"
+                                 title="Barra de progreso" 
                                  id="barra-progreso" 
                                  data-progreso="{{ "%.1f"|format(entrenamiento_actual.progreso) }}">
                             </div>
@@ -53,10 +54,11 @@
 
                         {% set primer_entrenamiento = entrenamientos[0] %}
 
-                        <h3 id="porcentaje-texto">{{ "%.1f"|format(primer_entrenamiento.progreso) }}%</h3>
+                        <h3 id="porcentaje-texto" title="Porcentaje de progreso">{{ "%.1f"|format(primer_entrenamiento.progreso) }}%</h3>
 
                         <div class="bar">
                             <div class="bar-progress" 
+                                 title="Barra de progreso"
                                  id="barra-progreso" 
                                  data-progreso="{{ "%.1f"|format(primer_entrenamiento.progreso) }}">
                             </div>
@@ -77,7 +79,7 @@
             </div>
         </div>
 
-        <div class="card" data-aos="fade-in" data-aos-delay="200">
+        <div class="card" data-aos="fade-in" data-aos-delay="200" title="Días completados del entrenamiento">
             <div class="card-title">
                 <h2>Días Completados</h2>
                 <i class='bx bx-calendar'></i>
@@ -85,10 +87,11 @@
 
             <div class="card-data">
                 {% if id_entrenamiento_actual %}
-                    <h3>{{ dias_completados }}/{{ total_dias }}</h3>
+                    <h3 title="Días completados">{{ dias_completados }}/{{ total_dias }}</h3>
 
                     <div class="bar day-progress">
                         <div class="bar-progress-day"
+                            title="Barra de progreso de días completados"
                             id="barra-dias"
                             data-progreso="{{ (dias_completados / total_dias * 100) if total_dias != 0 else 0 }}">
                         </div>
@@ -109,7 +112,7 @@
             </div>
         </div>
 
-        <div class="card" data-aos="fade-in" data-aos-delay="300">
+        <div class="card" data-aos="fade-in" data-aos-delay="300" title="Entrenador asociado">
             <div class="card-title">
                 <h2>Entrenador</h2>
                 <i class='bx bxs-medal'></i>
@@ -126,7 +129,7 @@
     </section>
 
     <!-- Grafico de rendimiento (lineal) -->
-    <section class="rendimiento-container" data-aos="fade-right" data-aos-delay="300">
+    <section class="rendimiento-container" data-aos="fade-right" data-aos-delay="300" title="Gráfico de rendimiento del entrenamiento">
         <h2><span><i class='bx bx-line-chart'></i></span> Gráfico de Rendimiento</h2>
 
         <canvas id="lineChart" data-rendimiento='{{ datos_rendimiento_json }}'></canvas>
@@ -275,7 +278,7 @@
     </section>
 
     <!-- Grafico de fuerza -->
-    <section class="rendimiento-container" data-aos="fade-right">
+    <section class="rendimiento-container" data-aos="fade-right" title="Gráfico de fuerza del entrenamiento">
         <h2><span><i class='bx bx-bar-chart-alt-2'></i></span> Evolución de Fuerza</h2>
 
         <canvas id="fuerzaMovChart" data-fuerza='{{ datos_fuerza_json }}'></canvas>
@@ -398,17 +401,17 @@
     </section>
 
     <!-- Mejores Marcas-->
-    <section class="marcadores-container-alumno" data-aos="fade-right">
+    <section class="marcadores-container-alumno" data-aos="fade-right" title="Tus mejores marcas en el entrenamiento">
         <h2><span><i class='bx bx-trophy'></i></span> Mejores Marcas</h2>
 
         <div class="marcadores-alumno">
             {% for marca in mejores_marcas %}
                 <div class="marcador">
-                    <strong class="ejercicio-marcador">
+                    <strong class="ejercicio-marcador" title="Marca destacada: {{ marca.nombre }}">
                         <i class='bx bxs-trophy {% if loop.index == 1 %}gold{% elif loop.index == 2 %}silver{% elif loop.index == 3 %}bronze{% endif %}'></i> 
                         {{ marca.nombre }}
                     </strong>
-                    <span class="valor-marcador">
+                    <span class="valor-marcador" title="Valor de la marca">
                         {% if marca.peso > 0 %}
                             {{ marca.peso }} Kg x {{ marca.repeticiones }} <strong>({{ marca.series }} series)</strong>
                         {% else %}
@@ -421,20 +424,20 @@
     </section>
 
     <!-- Progreso Semanal -->
-    <section class="progreso-semanal-container" data-aos="fade-right">
+    <section class="progreso-semanal-container" data-aos="fade-right" title="Progreso semanal del entrenamiento">
         <h2><span><i class='bx bx-calendar'></i></span> Progreso Semanal</h2>
         
         {% if progreso_semanal %}
             {% for semana in progreso_semanal %}
             <div class="semana">
-                <div class="semana-title">
+                <div class="semana-title" title="Semana {{ semana.numero_semana }} del entrenamiento">
                     <strong>Semana {{ semana.numero_semana }}</strong>
                     <p>{{ semana.fecha_semana }}</p>
                 </div>
 
                 <div class="datos">
                     <div class="dias">
-                        <p>
+                        <p title="Días completados de la semana">
                             Días completados: 
                             <span class="{% if semana.dias_completados.split('/')[0] == semana.dias_completados.split('/')[1] %}completo{% endif %}">
                                 {{ semana.dias_completados }}
@@ -445,7 +448,7 @@
                     </div>
 
                     <div class="ejercicios">
-                        <p>
+                        <p title="Ejercicios completados de la semana">
                             Ejercicios completados: 
                             <span class="{% if semana.ejercicios_completados.split('/')[0] == semana.ejercicios_completados.split('/')[1] %}completo{% endif %}">
                                 {{ semana.ejercicios_completados }}

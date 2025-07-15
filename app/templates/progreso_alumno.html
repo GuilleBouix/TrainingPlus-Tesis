@@ -7,6 +7,7 @@
 {% block content %}
 
     <div class="progreso-alumno-container">
+        <!-- Alumno -->
         <section class="alumno-container" data-aos="fade-in">
             <div class="datos" data-aos="fade-in" data-aos-delay="100">
                 <img src="{{ url_for('static', filename=alumno.foto_perfil) }}" alt="">
@@ -18,46 +19,47 @@
             </div>
 
             <div class="progreso-plan" data-aos="fade-in" data-aos-delay="200">
-                <strong>Progreso del Plan</strong>
-                <span>{{ "%.1f"|format(porcentaje_progreso) }}%</span>
+                <strong title="Porcentaje de avance del plan de entrenamiento">Progreso del Plan</strong>
+                <span title="Porcentaje completado del plan">{{ "%.1f"|format(porcentaje_progreso) }}%</span>
     
                 <div class="bar">
                     <div class="bar-progress" 
                          id="barra-progreso" 
-                         data-progreso="{{ porcentaje_progreso }}">
+                         data-progreso="{{ porcentaje_progreso }}"
+                         title="Barra visual del progreso semanal">
                     </div>
                 </div>
             </div>
 
             <div class="info" data-aos="fade-in" data-aos-delay="300">
                 <div class="edad">
-                    <h3>Edad</h3>
-                    <span>{{ cuestionario.edad }} años</span>
+                    <h3 title="Edad actual del alumno">Edad</h3>
+                    <span title="Edad en años">{{ cuestionario.edad }} años</span>
                 </div>
 
                 <div class="peso">
-                    <h3>Peso</h3>
-                    <span>{{ cuestionario.peso }} kg</span>
+                    <h3 title="Peso actual del alumno">Peso</h3>
+                    <span title="Peso en kilogramos">{{ cuestionario.peso }} kg</span>
                 </div>
 
                 <div class="altura">
-                    <h3>Altura</h3>
-                    <span>{{ cuestionario.altura }} cm</span>
+                    <h3 title="Altura actual del alumno">Altura</h3>
+                    <span title="Altura en centímetros">{{ cuestionario.altura }} cm</span>
                 </div>
 
                 <div class="inicio">
-                    <h3>Inicio</h3>
-                    <span>{{ entrenamiento.fecha_inicio }}</span>
+                    <h3 title="Fecha de inicio del plan">Inicio</h3>
+                    <span title="Fecha en que comenzó el plan">{{ entrenamiento.fecha_inicio }}</span>
                 </div>
             </div>
 
             <div class="ficha" data-aos="fade-in" data-aos-delay="400">
-                <button class="btn-open-cuestionario" id="abrir-cuestionario">
+                <button class="btn-open-cuestionario" id="abrir-cuestionario" title="Ver todos los datos del alumno en detalle">
                     <i class='bx bxs-file'></i>
                     Ver Ficha Completa
                 </button>
 
-                <a class="btn-ver-observaciones" href="{{ url_for('dashboard.reporte_observaciones', alumno_id=alumno.id_alumno) }}">
+                <a class="btn-ver-observaciones" href="{{ url_for('dashboard.reporte_observaciones', alumno_id=alumno.id_alumno) }}" title="Ver observaciones semanales registradas">
                     <i class='bx bxs-notepad'></i>
                     Ver Observaciones
                 </a>
@@ -78,103 +80,104 @@
                 <div class="ficha-content">
                     <!-- Información Personal -->
                     <div class="container">
-                        <h1>
+                        <h1 title="Datos personales del alumno">
                             <i class='bx bx-user'></i> Información Personal
                         </h1>
 
                         <div class="datos">
-                            <h3>Edad</h3>
-                            <span>{{ cuestionario.edad }} años</span>
+                            <h3 title="Edad del alumno">Edad</h3>
+                            <span title="Edad en años">{{ cuestionario.edad }} años</span>
                         </div>
 
                         <div class="datos">
-                            <h3>Experiencia</h3>
-                            <span>{{ cuestionario.experiencia | capitalize }}</span>
+                            <h3 title="Nivel de experiencia en entrenamiento">Experiencia</h3>
+                            <span title="Experiencia declarada">{{ cuestionario.experiencia | capitalize }}</span>
                         </div>
 
                         <div class="datos">
-                            <h3>Objetivo</h3>
-                            <span>{{ cuestionario.objetivo_general }}</span>
+                            <h3 title="Objetivo principal del alumno">Objetivo</h3>
+                            <span title="Meta física o de salud">{{ cuestionario.objetivo_general }}</span>
                         </div>
                     </div>
 
                     <!-- Datos Físicos -->
                     <div class="container container-2">
-                        <h1>
+                        <h1 title="Datos físicos del alumno">
                             <i class='bx bx-ruler regla'></i> Datos Físicos
                         </h1>
 
                         <div class="datos">
-                            <h3>Peso</h3>
-                            <span>{{ cuestionario.peso }} kg</span>
+                            <h3 title="Peso actual">Peso</h3>
+                            <span title="Peso en kilogramos">{{ cuestionario.peso }} kg</span>
                         </div>
 
                         <div class="datos">
-                            <h3>Altura</h3>
-                            <span>{{ cuestionario.altura }} cm</span>
+                            <h3 title="Altura actual">Altura</h3>
+                            <span title="Altura en centímetros">{{ cuestionario.altura }} cm</span>
                         </div>
                     </div>
 
                     <!-- Entrenamiento -->
                     <div class="container container-2">
-                        <h1>
+                        <h1 title="Datos sobre el entrenamiento actual">
                             <i class='bx bx-dumbbell regla'></i> Entrenamiento
                         </h1>
 
                         <div class="datos">
-                            <h3>Nivel de Actividad</h3>
-                            <span>{{ cuestionario.nivel_actividad | capitalize }}</span>
+                            <h3 title="Nivel de actividad física semanal">Nivel de Actividad</h3>
+                            <span title="Nivel de actividad declarado">{{ cuestionario.nivel_actividad | capitalize }}</span>
                         </div>
 
                         <div class="datos">
-                            <h3>Frecuencia</h3>
-                            <span>{{ cuestionario.frecuencia_entreno | capitalize }}</span>
+                            <h3 title="Frecuencia de entrenamiento semanal">Frecuencia</h3>
+                            <span title="Cantidad de entrenamientos por semana">{{ cuestionario.frecuencia_entreno | capitalize }}</span>
                         </div>
 
                         <div class="datos">
-                            <h3>Duración de Entrenamiento</h3>
-                            <span>{{ cuestionario.duracion_sesion }}</span>
+                            <h3 title="Duración promedio de cada sesión">Duración de Entrenamiento</h3>
+                            <span title="Duración en minutos">{{ cuestionario.duracion_sesion }}</span>
                         </div>
                     </div>
 
                     <!-- Salud -->
                     <div class="container container-2">
-                        <h1>
+                        <h1 title="Información sobre la salud del alumno">
                             <i class='bx bx-heart'></i> Estado de Salud
                         </h1>
 
                         <div class="datos">
-                            <h3>Estado General</h3>
-                            <span>{{ cuestionario.estado_salud | capitalize }}</span>
+                            <h3 title="Estado general de salud">Estado General</h3>
+                            <span title="Salud declarada">{{ cuestionario.estado_salud | capitalize }}</span>
                         </div>
 
                         <div class="datos">
-                            <h3>Lesiones</h3>
-                            <span>{{ cuestionario.lesiones | capitalize }}</span>
+                            <h3 title="Lesiones previas o actuales">Lesiones</h3>
+                            <span title="Lesiones declaradas">{{ cuestionario.lesiones | capitalize }}</span>
                         </div>
 
                         <div class="datos">
-                            <h3>Condición Cardiovascular</h3>
-                            <span>{{ cuestionario.condicion_cardio | capitalize }}</span>
+                            <h3 title="Condición cardiovascular">Condición Cardiovascular</h3>
+                            <span title="Estado cardiovascular declarado">{{ cuestionario.condicion_cardio | capitalize }}</span>
                         </div>
 
                         <div class="datos">
-                            <h3>Nivel de Estrés</h3>
-                            <span>{{ cuestionario.nivel_estres | capitalize }}</span>
+                            <h3 title="Nivel de estrés actual">Nivel de Estrés</h3>
+                            <span title="Estrés declarado">{{ cuestionario.nivel_estres | capitalize }}</span>
                         </div>
                     </div>
 
                     <!-- Notas adicionales -->
                     <div class="container container-2">
-                        <h1>
+                        <h1 title="Notas adicionales registradas por el alumno">
                             <i class='bx bx-comment'></i> Notas Adicionales
                         </h1>
 
                         <div class="datos">
-                            <span class="nota-adicional">{{ cuestionario.nota_adicional if cuestionario.nota_adicional else 'No hay notas adicionales.' }}</span>
+                            <span class="nota-adicional" title="Notas personales o comentarios extra">{{ cuestionario.nota_adicional if cuestionario.nota_adicional else 'No hay notas adicionales.' }}</span>
                         </div>
 
                         <a class="descargar-pdf" href="{{ url_for('dashboard.descargar_ficha_pdf', alumno_id=alumno.id_alumno) }}">Descargar PDF</a>
+                <a class="descargar-pdf" href="{{ url_for('dashboard.descargar_ficha_pdf', alumno_id=alumno.id_alumno) }}" title="Descargar la ficha completa en PDF">Descargar PDF</a>
                     </div>
                 </div>
             </div>
@@ -182,14 +185,15 @@
 
         <div class="progreso-container">
             <section class="rendimiento" data-aos="fade-in">
-                <h2><i class='bx bx-stats'></i> Rendimiento</h2>
+                <h2 title="Gráfico de rendimiento semanal"><i class='bx bx-stats'></i> Rendimiento</h2>
 
-                <canvas id="lineChart"></canvas>
+                <canvas id="lineChart" title="Gráfico lineal del rendimiento semanal"></canvas>
 
                 <div id="datas"
                     data-labels='{{ rendimiento_semanal.semanas|tojson }}'
                     data-valores='{{ rendimiento_semanal.volumenes_normalizados|tojson }}'
-                    data-volumenes='{{ rendimiento_semanal.volumenes|tojson }}'>
+                    data-volumenes='{{ rendimiento_semanal.volumenes|tojson }}'
+                    title="Datos para el gráfico de rendimiento">
                 </div>
 
                 <!-- Gráfico de Rendimiento (lineal) -->
@@ -254,18 +258,18 @@
             </section>
 
             <section class="evolucion-fuerza" data-aos="fade-in" data-aos-delay="100">
-                <h2><i class='bx bxs-bar-chart-alt-2'></i> Evolución de Fuerza</h2>
+                <h2 title="Gráfico de evolución de fuerza"><i class='bx bxs-bar-chart-alt-2'></i> Evolución de Fuerza</h2>
 
                 <div style="width: 100%; height: 400px;">
-                    <canvas id="graficoEvolucion"></canvas>
+                    <canvas id="graficoEvolucion" title="Gráfico de barras de evolución de fuerza"></canvas>
                 </div>
                   
                 <div class="navigation-buttons">
-                    <button onclick="cambiarBloque(-1)">
+                    <button onclick="cambiarBloque(-1)" title="Ver semanas anteriores">
                         <i class='bx bx-chevron-left'></i>
                     </button>
 
-                    <button onclick="cambiarBloque(1)">
+                    <button onclick="cambiarBloque(1)" title="Ver semanas siguientes">
                         <i class='bx bx-chevron-right'></i>
                     </button>
                 </div>
@@ -274,7 +278,8 @@
                     data-semanas='{{ progreso_fuerza.semanas|tojson }}'
                     data-empuje='{{ progreso_fuerza.empuje|tojson }}'
                     data-jale='{{ progreso_fuerza.jale|tojson }}'
-                    data-resistencia='{{ progreso_fuerza.resistencia|tojson }}'>
+                    data-resistencia='{{ progreso_fuerza.resistencia|tojson }}'
+                    title="Datos para el gráfico de fuerza">
                 </div>
 
                 <script>
@@ -362,15 +367,15 @@
             </section>
 
             <section class="mejores-marcas-alumno" data-aos="fade-in" data-aos-delay="200">
-                <h2><i class='bx bxs-trophy'></i> Mejores Marcas</h2>
+                <h2 title="Mejores marcas logradas por el alumno"><i class='bx bxs-trophy'></i> Mejores Marcas</h2>
 
                 <div class="marcadores-container">
                     {% for marca in mejores_marcas %}
-                        <div class="marcador">
-                            <strong>
+                        <div class="marcador" title="Marca destacada: {{ marca.nombre }}">
+                            <strong title="Nombre de la marca lograda">
                                 <i class='bx bx-trophy {% if loop.index == 1 %}gold{% elif loop.index == 2 %}silver{% elif loop.index == 3 %}bronze{% endif %}'></i> {{ marca.nombre }}
                             </strong>
-                            <span>{{ marca.display }}</span>
+                            <span title="Valor de la marca">{{ marca.display }}</span>
                         </div>
                     {% endfor %}
                 </div>
@@ -378,24 +383,24 @@
             </section>
 
             <section class="observaciones-semanales" data-aos="fade-in" data-aos-delay="300">
-                <h2><i class='bx bx-calendar-check'></i> Observaciones Semanales</h2>
+                <h2 title="Observaciones semanales registradas"><i class='bx bx-calendar-check'></i> Observaciones Semanales</h2>
             
                 {% if observaciones_semanales %}
                     {% for obs in observaciones_semanales %}
-                    <div class="observacion">
+                    <div class="observacion" title="Observación de la semana {{ obs.semana }}">
                         <div class="header-observacion">
-                            <strong class="semana">{{ obs.semana }}</strong>
+                            <strong class="semana" title="Semana de la observación">{{ obs.semana }}</strong>
                             {% if obs.foto %}
-                            <button class="btn-ver-foto" data-src="{{ obs.foto }}">
+                            <button class="btn-ver-foto" data-src="{{ obs.foto }}" title="Ver foto de progreso semanal">
                                 <i class='bx bxs-camera'></i>
                             </button>
                             {% endif %}
                         </div>
-                        <p class="observacion-texto">{{ obs.observacion }}</p>
+                        <p class="observacion-texto" title="Observación semanal registrada">{{ obs.observacion }}</p>
                     </div>
                     {% endfor %}
                 {% else %}
-                    <p class="sin-datos observacion-texto">No hay registros de progreso semanal disponibles.</p>
+                    <p class="sin-datos observacion-texto" title="No hay registros disponibles">No hay registros de progreso semanal disponibles.</p>
                 {% endif %}
             </section>
 

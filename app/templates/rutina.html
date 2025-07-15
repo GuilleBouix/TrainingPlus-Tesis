@@ -9,19 +9,19 @@
     <div class="routine-container">
         <div class="routine-header">
             <div class="title">
-                <h1 data-aos="fade-right">{{ entrenamiento.nombre_entrenamiento }}</h1>
+                <h1 data-aos="fade-right" title="Nombre del entrenamiento actual">{{ entrenamiento.nombre_entrenamiento }}</h1>
                 <div class="routine-data" data-aos="fade-right" data-aos-delay="100">
-                    <p>Disciplina: {{ entrenamiento.nombre_disciplina }}</p>
-                    <p>Duración: {{ entrenamiento.duracion_semanas }} Semanas</p>
+                    <p title="Disciplina del entrenamiento">Disciplina: {{ entrenamiento.nombre_disciplina }}</p>
+                    <p title="Duración total en semanas">Duración: {{ entrenamiento.duracion_semanas }} Semanas</p>
                 </div>
             </div>
         </div>
 
         <div class="plan-container" data-aos="fade-in" data-aos-delay="200">
             <div class="weeks">
-                <button class="previous-week" title="Anterior"><i class='bx bx-chevrons-left'></i></button>
-                <h1>Semana <span id="week-number">1</span></h1>
-                <button class="next-week" title="Siguiente"><i class='bx bx-chevrons-right'></i></button>
+                <button class="previous-week" title="Ver semana anterior"><i class='bx bx-chevrons-left' title="Ícono semana anterior"></i></button>
+                <h1 title="Número de semana actual">Semana <span id="week-number" title="Semana seleccionada">1</span></h1>
+                <button class="next-week" title="Ver semana siguiente"><i class='bx bx-chevrons-right' title="Ícono semana siguiente"></i></button>
             </div>
         </div>
 
@@ -29,8 +29,8 @@
             {% if messages %}
                 <ul class="flash-messages">
                     {% for category, message in messages %}
-                        <li class="flash {{ category }}">
-                            <i class="{{ 'bx bxs-error-circle' if category == 'error' else 'bx bxs-check-circle' }}"></i>
+                        <li class="flash {{ category }}" title="Mensaje de alerta o confirmación">
+                            <i class="{{ 'bx bxs-error-circle' if category == 'error' else 'bx bxs-check-circle' }}" title="Ícono de mensaje"></i>
                             {{ message }}
                         </li>
                     {% endfor %}
@@ -43,80 +43,81 @@
                 {% for dia in semana.dias %}
                 <div class="accordion-item">
                     <div class="accordion-header">
-                        <h1><span>Día {{ dia.numero_dia }}</span> - {{ dia.nombre_rutina }}</h1>
-                        <span class="icon"><i class='bx bx-chevron-down'></i></span>
+                        <h1 title="Nombre y número de día de rutina"><span title="Número de día">Día {{ dia.numero_dia }}</span> - {{ dia.nombre_rutina }}</h1>
+                        <span class="icon" title="Expandir/cerrar ejercicios"><i class='bx bx-chevron-down' title="Ícono expandir"></i></span>
                     </div>
                     <div class="accordion-content">
                         {% for ejercicio in dia.ejercicios %}
                             <div class="excercise">
                                 <div class="excercise-title">
-                                    <h3>{{ ejercicio.nombre_ejercicio }}</h3>
+                                    <h3 title="Nombre del ejercicio">{{ ejercicio.nombre_ejercicio }}</h3>
                                 </div>
                                 <div class="parameters">
-                                    <p class="sets"><i class='bx bx-dumbbell'></i> {{ ejercicio.series }} Series</p>
-                                    <p class="reps">{{ ejercicio.repeticiones }} Repeticiones</p>
-                                    <p class="weight"><i class='bx bx-weight'></i> {{ ejercicio.peso }}kg</p>
-                                    <p class="rest"><i class='bx bx-time-five'></i> {{ ejercicio.tiempo_descanso }}s Descanso</p>
+                                    <p class="sets" title="Cantidad de series"><i class='bx bx-dumbbell' title="Ícono series"></i> {{ ejercicio.series }} Series</p>
+                                    <p class="reps" title="Cantidad de repeticiones">{{ ejercicio.repeticiones }} Repeticiones</p>
+                                    <p class="weight" title="Peso recomendado"><i class='bx bx-weight' title="Ícono peso"></i> {{ ejercicio.peso }}kg</p>
+                                    <p class="rest" title="Tiempo de descanso recomendado"><i class='bx bx-time-five' title="Ícono descanso"></i> {{ ejercicio.tiempo_descanso }}s Descanso</p>
                                 </div>
                                 <button class="btn-see-exercise" data-imagen="{{ ejercicio.imagen_url }}">
-                                    <i class='bx bxs-show'></i> Ver Ejercicio
+                                    <i class='bx bxs-show' title="Ícono ver ejercicio"></i> <span title="Abrir imagen del ejercicio">Ver Ejercicio</span>
                                 </button>
 
                                 <!-- Modal del ejercicio -->
                                 <dialog class="exercise-dialog" id="exercise-modal">
-                                    <div class="modal-content">
-                                        <img src="{{ url_for('static', filename='uploads/exercises/fitness/' + ejercicio.imagen_url) }}" alt="{{ ejercicio.nombre_ejercicio }}">
-                                        <span class="close-modal">
-                                            <i class='bx bx-x'></i>
+                                    <div class="modal-content" title="Modal de imagen del ejercicio">
+                                        <img src="{{ url_for('static', filename='uploads/exercises/fitness/' + ejercicio.imagen_url) }}" alt="{{ ejercicio.nombre_ejercicio }}" title="Imagen del ejercicio">
+                                        <span class="close-modal" title="Cerrar modal">
+                                            <i class='bx bx-x' title="Ícono cerrar"></i>
                                         </span>
                                     </div>
                                 </dialog>
 
                                 <!-- Progreso del Alumno en cada ejercicio -->
                                 <form action="{{ url_for('rutina.guardar_progreso') }}" method="POST">
-                                    <input type="hidden" name="id_dia_ejercicio" value="{{ ejercicio.id_dia_ejercicio }}">
-                                    <input type="hidden" name="id_entrenamiento" value="{{ entrenamiento.id_entrenamiento }}">
-                                    <input type="hidden" name="id_alumno" value="{{ session['id_usuario'] }}">
+                                    <input type="hidden" name="id_dia_ejercicio" value="{{ ejercicio.id_dia_ejercicio }}" title="ID del ejercicio">
+                                    <input type="hidden" name="id_entrenamiento" value="{{ entrenamiento.id_entrenamiento }}" title="ID del entrenamiento">
+                                    <input type="hidden" name="id_alumno" value="{{ session['id_usuario'] }}" title="ID del alumno">
 
                                 
                                     <div class="registers">
                                         <div>
                                             {% if session.get('rol') == 2 %}
-                                                <label for="sets_{{ ejercicio.id_dia_ejercicio }}">Series Realizadas</label>
+                                                <label for="sets_{{ ejercicio.id_dia_ejercicio }}" title="Series realizadas por el alumno">Series Realizadas</label>
                                             {% else %}
-                                                <label for="sets_{{ ejercicio.id_dia_ejercicio }}">¿Cuántas series pudiste hacer?</label><span class="asterisk"> *</span>
+                                                <label for="sets_{{ ejercicio.id_dia_ejercicio }}" title="¿Cuántas series pudiste hacer?">¿Cuántas series pudiste hacer?</label><span class="asterisk" title="Campo obligatorio"> *</span>
                                             {% endif %}
 
-                                            <input type="number" name="series_realizadas" value="{{ ejercicio.series_realizadas }}" min="0" required>
+                                            <input type="number" name="series_realizadas" value="{{ ejercicio.series_realizadas }}" min="0" required title="Cantidad de series realizadas">
                                         </div>
                                 
                                         <div>
                                             {% if session.get('rol') == 2 %}
-                                                <label for="reps_{{ ejercicio.id_dia_ejercicio }}">Repeticiones Realizadas</label>
+                                                <label for="reps_{{ ejercicio.id_dia_ejercicio }}" title="Repeticiones realizadas por el alumno">Repeticiones Realizadas</label>
                                             {% else %}
-                                                <label for="reps_{{ ejercicio.id_dia_ejercicio }}">¿Cuántas repeticiones pudiste hacer?</label><span class="asterisk"> *</span>
+                                                <label for="reps_{{ ejercicio.id_dia_ejercicio }}" title="¿Cuántas repeticiones pudiste hacer?">¿Cuántas repeticiones pudiste hacer?</label><span class="asterisk" title="Campo obligatorio"> *</span>
                                             {% endif %}
 
-                                            <input type="number" name="repeticiones_realizadas" value="{{ ejercicio.repeticiones_realizadas }}" min="0" required>
+                                            <input type="number" name="repeticiones_realizadas" value="{{ ejercicio.repeticiones_realizadas }}" min="0" required title="Cantidad de repeticiones realizadas">
                                         </div>
                                 
                                         <div>
                                             {% if session.get('rol') == 2 %}
-                                                <label for="weight_{{ ejercicio.id_dia_ejercicio }}">Peso Utilizado (Kg)</label>
+                                                <label for="weight_{{ ejercicio.id_dia_ejercicio }}" title="Peso utilizado por el alumno">Peso Utilizado (Kg)</label>
                                             {% else %}
-                                                <label for="weight_{{ ejercicio.id_dia_ejercicio }}">¿Cuánto peso utilizaste?</label><span class="asterisk"> *</span>
+                                                <label for="weight_{{ ejercicio.id_dia_ejercicio }}" title="¿Cuánto peso utilizaste?">¿Cuánto peso utilizaste?</label><span class="asterisk" title="Campo obligatorio"> *</span>
                                             {% endif %}
                                             
-                                            <input type="number" name="peso_utilizado" value="{{ ejercicio.peso_utilizado }}" step="0.1" required>
+                                            <input type="number" name="peso_utilizado" value="{{ ejercicio.peso_utilizado }}" step="0.1" required title="Peso utilizado en kilogramos">
                                         </div>
                                     </div>
                                 
                                     <label id="observations" for="observations_{{ ejercicio.id_dia_ejercicio }}">Observaciones</label>
-                                    <textarea name="observaciones">{{ ejercicio.observaciones }}</textarea>
+                                    <label id="observations" for="observations_{{ ejercicio.id_dia_ejercicio }}" title="Observaciones sobre el ejercicio">Observaciones</label>
+                                    <textarea name="observaciones" title="Escribe tus observaciones sobre el ejercicio realizado">{{ ejercicio.observaciones }}</textarea>
 
                                     <!--Si el rol del usuario en la sesion es 2, ocultar el boton-->
                                     {% if session.get('rol') == 1 %}
-                                        <button type="submit" class="btn-see-exercise save-day">Guardar Registro</button>
+                                        <button type="submit" class="btn-see-exercise save-day" title="Guardar el registro de progreso">Guardar Registro</button>
                                     {% endif %}
                                 </form>                                        
                             </div>
@@ -140,28 +141,28 @@
                         <input type="hidden" name="id_semana" value="{{ semana.id_semana }}">
                         
                         <div class="photo">
-                            <strong>Fotografía del Progreso</strong>
-                            <p>Adjunta una fotografía de tu físico actual.</p>
+                            <strong title="Fotografía semanal de progreso">Fotografía del Progreso</strong>
+                            <p title="Adjunta una foto de tu físico actual">Adjunta una fotografía de tu físico actual.</p>
 
-                            <input type="file" required name="progress-file" id="progress-file-{{ semana.id_semana }}" accept=".jpg, .jpeg, .png">
+                            <input type="file" required name="progress-file" id="progress-file-{{ semana.id_semana }}" accept=".jpg, .jpeg, .png" title="Selecciona una imagen de progreso semanal">
 
-                            <div class="photo-container">
+                            <div class="photo-container" title="Contenedor de la foto semanal">
                                 {% if semana.progreso and semana.progreso.foto_fisico %}
                                     <img src="{{ url_for('static', filename='uploads/weekly_progress/' + semana.progreso.foto_fisico) }}" 
-                                        alt="Fotografia Semanal">
+                                        alt="Fotografia Semanal" title="Foto semanal subida">
                                 {% else %}
-                                    <p>No se ha adjuntado ninguna fotografía.</p>
+                                    <p title="Sin fotografía">No se ha adjuntado ninguna fotografía.</p>
                                 {% endif %}
                             </div>
                         </div>
 
                         <div class="sensations">
-                            <strong>Observaciones</strong>
-                            <p>Registra tus sensaciones (máx. 200 caracteres)</p>
+                            <strong title="Observaciones semanales">Observaciones</strong>
+                            <p title="Registra tus sensaciones de la semana">Registra tus sensaciones (máx. 200 caracteres)</p>
 
-                            <textarea required maxlength="200" name="sensations" id="sensations-{{ semana.id_semana }}" placeholder="Escribe tus sensaciones durante esta semana">{% if semana.progreso %}{{ semana.progreso.observaciones }}{% endif %}</textarea>
+                            <textarea required maxlength="200" name="sensations" id="sensations-{{ semana.id_semana }}" placeholder="Escribe tus sensaciones durante esta semana" title="Escribe tus sensaciones durante la semana">{% if semana.progreso %}{{ semana.progreso.observaciones }}{% endif %}</textarea>
 
-                            <button type="submit">Guardar Progreso Semanal</button>
+                            <button type="submit" title="Guardar el progreso semanal">Guardar Progreso Semanal</button>
                         </div>
                     </form>
 
@@ -169,27 +170,27 @@
                     {% if semana.progreso %}
                         <div class="week-progress-container">
                             <div class="photo">
-                                <strong>Fotografía del Progreso</strong>
-                                <p>Fecha: {{ semana.progreso.fecha.strftime('%d/%m/%Y') if semana.progreso.fecha else 'No especificada' }}</p>
+                                <strong title="Fotografía semanal de progreso">Fotografía del Progreso</strong>
+                                <p title="Fecha de la fotografía">Fecha: {{ semana.progreso.fecha.strftime('%d/%m/%Y') if semana.progreso.fecha else 'No especificada' }}</p>
 
-                                <div class="photo-container">
+                                <div class="photo-container" title="Contenedor de la foto semanal">
                                     <img src="{{ url_for('static', filename='uploads/weekly_progress/' + semana.progreso.foto_fisico) if semana.progreso.foto_fisico else 'https://via.placeholder.com/300x400?text=Sin+imagen' }}" 
-                                        alt="Fotografia Semanal">
+                                        alt="Fotografia Semanal" title="Foto semanal subida">
                                 </div>
                             </div>
 
                             <div class="sensations">
-                                <strong>Observaciones del Alumno</strong>
-                                <p>Sensaciones registradas</p>
+                                <strong title="Observaciones del alumno">Observaciones del Alumno</strong>
+                                <p title="Sensaciones registradas por el alumno">Sensaciones registradas</p>
 
-                                <div class="observations">
+                                <div class="observations" title="Texto de las observaciones semanales">
                                     {{ semana.progreso.observaciones or 'No hay observaciones registradas' }}
                                 </div>
                             </div>
                         </div>
                     {% else %}
                         <div class="week-progress-container week-no-progress-container">
-                            <p>No hay progreso registrado para esta semana.</p>
+                            <p title="Sin progreso semanal">No hay progreso registrado para esta semana.</p>
                         </div>
                     {% endif %}
                 {% endif %}

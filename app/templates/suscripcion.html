@@ -16,19 +16,19 @@
         <div class="spinner"></div>
     </div>
 
-    <main>
-        <div class="subscription-container">
-            <div class="subscription-title">
-                <h1>Suscripción Mensual</h1>
-                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Training+ Logo">
+    <main title="Contenido principal de la página de suscripción">
+        <div class="subscription-container" title="Contenedor del proceso de suscripción">
+            <div class="subscription-title" title="Título y logo de la suscripción">
+                <h1 title="Título de la página">Suscripción Mensual</h1>
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Training+ Logo" title="Logo de Training+">
             </div>
                 
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
-                    <ul class="flash-messages">
+                    <ul class="flash-messages" title="Mensajes del sistema">
                         {% for category, message in messages %}
-                            <li class="flash {{ category }}">
-                                <i class="{{ 'bx bxs-error-circle' if category == 'error' else 'bx bxs-check-circle' }}"></i>
+                            <li class="flash {{ category }}" title="Mensaje {{ category }}">
+                                <i class="{{ 'bx bxs-error-circle' if category == 'error' else 'bx bxs-check-circle' }}" title="Icono de {{ category }}"></i>
                                 {{ message }}
                             </li>
                         {% endfor %}
@@ -37,169 +37,169 @@
             {% endwith %}
 
             <!-- Progress Bar -->
-            <div class="progress-container">
-                <div class="progress-steps">
-                    <div class="progress-step active" data-step="1">
-                        <div class="step-number">1</div>
-                        <div class="step-name">Plan</div>
+            <div class="progress-container" title="Barra de progreso del proceso de suscripción">
+                <div class="progress-steps" title="Pasos del proceso de suscripción">
+                    <div class="progress-step active" data-step="1" title="Paso 1: Selección de plan">
+                        <div class="step-number" title="Número del paso">1</div>
+                        <div class="step-name" title="Nombre del paso">Plan</div>
                     </div>
-                    <div class="progress-step" data-step="2">
-                        <div class="step-number">2</div>
-                        <div class="step-name">Facturación</div>
+                    <div class="progress-step" data-step="2" title="Paso 2: Información de facturación">
+                        <div class="step-number" title="Número del paso">2</div>
+                        <div class="step-name" title="Nombre del paso">Facturación</div>
                     </div>
-                    <div class="progress-step" data-step="3">
-                        <div class="step-number">3</div>
-                        <div class="step-name">Pago</div>
+                    <div class="progress-step" data-step="3" title="Paso 3: Método de pago">
+                        <div class="step-number" title="Número del paso">3</div>
+                        <div class="step-name" title="Nombre del paso">Pago</div>
                     </div>
-                    <div class="progress-step" data-step="4">
-                        <div class="step-number">4</div>
-                        <div class="step-name">Revisión</div>
+                    <div class="progress-step" data-step="4" title="Paso 4: Revisión final">
+                        <div class="step-number" title="Número del paso">4</div>
+                        <div class="step-name" title="Nombre del paso">Revisión</div>
                     </div>
                 </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 25%;"></div>
+                <div class="progress-bar" title="Barra de progreso visual">
+                    <div class="progress-fill" style="width: 25%;" title="Progreso actual del proceso"></div>
                 </div>
             </div>
             
             <!-- Step 1: Plan Selection -->
-            <div class="subscription-step active" id="step-1">
-                <h2>Plan a Pagar</h2>
-                <div class="plan-options">
-                    <div class="plan-card selected">
-                        <h3>Entrenador <i class='bx bxs-medal'></i></h3>
-                        <div class="plan-price">$9.99<span>/mes</span></div>
-                        <ul class="plan-features">
-                            <li><i class='bx bx-check'></i> Vínculo y gestión completa de alumnos</li>
-                            <li><i class='bx bx-check'></i> Creación y edición de rutinas personalizadas</li>
-                            <li><i class='bx bx-check'></i> Panel de control para entrenadores</li>
-                            <li><i class='bx bx-check'></i> Seguimiento del progreso de sus alumnos</li>
-                            <li><i class='bx bx-check'></i> Perfil profesional visible para los usuarios</li>
-                            <li><i class='bx bx-check'></i> Control total sobre sus conexiones</li>
-                            <li><i class='bx bx-check'></i> Edición y actualización de perfil</li>
+            <div class="subscription-step active" id="step-1" title="Paso 1: Selección de plan de suscripción">
+                <h2 title="Título del paso actual">Plan a Pagar</h2>
+                <div class="plan-options" title="Opciones de planes disponibles">
+                    <div class="plan-card selected" title="Plan de Entrenador seleccionado">
+                        <h3 title="Nombre del plan">Entrenador <i class='bx bxs-medal' title="Icono de medalla"></i></h3>
+                        <div class="plan-price" title="Precio del plan">$9.99<span title="Frecuencia de pago">/mes</span></div>
+                        <ul class="plan-features" title="Características del plan">
+                            <li title="Característica del plan"><i class='bx bx-check' title="Icono de verificación"></i> Vínculo y gestión completa de alumnos</li>
+                            <li title="Característica del plan"><i class='bx bx-check' title="Icono de verificación"></i> Creación y edición de rutinas personalizadas</li>
+                            <li title="Característica del plan"><i class='bx bx-check' title="Icono de verificación"></i> Panel de control para entrenadores</li>
+                            <li title="Característica del plan"><i class='bx bx-check' title="Icono de verificación"></i> Seguimiento del progreso de sus alumnos</li>
+                            <li title="Característica del plan"><i class='bx bx-check' title="Icono de verificación"></i> Perfil profesional visible para los usuarios</li>
+                            <li title="Característica del plan"><i class='bx bx-check' title="Icono de verificación"></i> Control total sobre sus conexiones</li>
+                            <li title="Característica del plan"><i class='bx bx-check' title="Icono de verificación"></i> Edición y actualización de perfil</li>
                         </ul>
                     </div>
                 </div>
                 
-                <div class="step-actions">
-                    <button class="btn-next" onclick="nextStep(1)">Continuar</button>
+                <div class="step-actions" title="Acciones para avanzar en el proceso">
+                    <button class="btn-next" onclick="nextStep(1)" title="Continuar al siguiente paso">Continuar</button>
                 </div>
             </div>
             
             <!-- Step 2: Billing Information -->
-            <div class="subscription-step" id="step-2">
-                <h2>Información de Facturación</h2>
-                <form class="billing-form">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="first-name">Nombre <span class="billing-asterisk">*</span></label>
-                            <input type="text" id="first-name">
+            <div class="subscription-step" id="step-2" title="Paso 2: Información de facturación">
+                <h2 title="Título del paso actual">Información de Facturación</h2>
+                <form class="billing-form" title="Formulario de información de facturación">
+                    <div class="form-row" title="Fila de campos del formulario">
+                        <div class="form-group" title="Campo de nombre">
+                            <label for="first-name" title="Etiqueta para el campo de nombre">Nombre <span class="billing-asterisk" title="Campo obligatorio">*</span></label>
+                            <input type="text" id="first-name" title="Ingresa tu nombre">
                         </div>
-                        <div class="form-group">
-                            <label for="last-name">Apellido <span class="billing-asterisk">*</span></label>
-                            <input type="text" id="last-name">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Correo Electrónico <span class="billing-asterisk">*</span></label>
-                        <input type="email" id="email">
-                    </div>
-                    <div class="form-group">
-                        <label for="address">Dirección <span class="billing-asterisk">*</span></label>
-                        <input type="text" id="address">
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="city">Ciudad <span class="billing-asterisk">*</span></label>
-                            <input type="text" id="city">
-                        </div>
-                        <div class="form-group">
-                            <label for="zip-code">Código Postal <span class="billing-asterisk">*</span></label>
-                            <input type="text" id="zip-code">
+                        <div class="form-group" title="Campo de apellido">
+                            <label for="last-name" title="Etiqueta para el campo de apellido">Apellido <span class="billing-asterisk" title="Campo obligatorio">*</span></label>
+                            <input type="text" id="last-name" title="Ingresa tu apellido">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="country">País <span class="billing-asterisk">*</span></label>
-                        <select id="country" name="country">
-                            <option value="" disabled selected>Seleccionar País</option>
+                    <div class="form-group" title="Campo de correo electrónico">
+                        <label for="email" title="Etiqueta para el campo de correo electrónico">Correo Electrónico <span class="billing-asterisk" title="Campo obligatorio">*</span></label>
+                        <input type="email" id="email" title="Ingresa tu correo electrónico">
+                    </div>
+                    <div class="form-group" title="Campo de dirección">
+                        <label for="address" title="Etiqueta para el campo de dirección">Dirección <span class="billing-asterisk" title="Campo obligatorio">*</span></label>
+                        <input type="text" id="address" title="Ingresa tu dirección">
+                    </div>
+                    <div class="form-row" title="Fila de campos del formulario">
+                        <div class="form-group" title="Campo de ciudad">
+                            <label for="city" title="Etiqueta para el campo de ciudad">Ciudad <span class="billing-asterisk" title="Campo obligatorio">*</span></label>
+                            <input type="text" id="city" title="Ingresa tu ciudad">
+                        </div>
+                        <div class="form-group" title="Campo de código postal">
+                            <label for="zip-code" title="Etiqueta para el campo de código postal">Código Postal <span class="billing-asterisk" title="Campo obligatorio">*</span></label>
+                            <input type="text" id="zip-code" title="Ingresa tu código postal">
+                        </div>
+                    </div>
+                    <div class="form-group" title="Campo de país">
+                        <label for="country" title="Etiqueta para el campo de país">País <span class="billing-asterisk" title="Campo obligatorio">*</span></label>
+                        <select id="country" name="country" title="Selecciona tu país">
+                            <option value="" disabled selected title="Opción por defecto">Seleccionar País</option>
                             {% for id_pais, nombre_pais in paises %}
-                                <option value="{{ id_pais }}">{{ nombre_pais }}</option>
+                                <option value="{{ id_pais }}" title="Opción de país">{{ nombre_pais }}</option>
                             {% endfor %}
                         </select>
                     </div>
                 </form>
                 
-                <div class="step-actions">
-                    <button class="btn-prev" onclick="prevStep(2)">Atrás</button>
-                    <button class="btn-next" onclick="nextStep(2)">Continuar</button>
+                <div class="step-actions" title="Acciones para navegar entre pasos">
+                    <button class="btn-prev" onclick="prevStep(2)" title="Volver al paso anterior">Atrás</button>
+                    <button class="btn-next" onclick="nextStep(2)" title="Continuar al siguiente paso">Continuar</button>
                 </div>
             </div>
             
             <!-- Step 3: Payment Method -->
-            <div class="subscription-step" id="step-3">
-                <h2>Método de Pago</h2>
-                <div class="payment-methods">
-                    <div class="payment-method selected">
-                        <div class="payment-logo">
-                            <i class='bx bxl-paypal'></i>
+            <div class="subscription-step" id="step-3" title="Paso 3: Selección de método de pago">
+                <h2 title="Título del paso actual">Método de Pago</h2>
+                <div class="payment-methods" title="Opciones de métodos de pago">
+                    <div class="payment-method selected" title="Método de pago PayPal seleccionado">
+                        <div class="payment-logo" title="Logo de PayPal">
+                            <i class='bx bxl-paypal' title="Icono de PayPal"></i>
                         </div>
-                        <div class="payment-info">
-                            <h3>PayPal</h3>
-                            <p>Paga de forma segura con tu cuenta de PayPal</p>
+                        <div class="payment-info" title="Información del método de pago">
+                            <h3 title="Nombre del método de pago">PayPal</h3>
+                            <p title="Descripción del método de pago">Paga de forma segura con tu cuenta de PayPal</p>
                         </div>
                     </div>
                 </div>
                 
-                <div class="step-actions">
-                    <button class="btn-prev" onclick="prevStep(3)">Atrás</button>
-                    <button class="btn-next" onclick="nextStep(3)">Continuar</button>
+                <div class="step-actions" title="Acciones para navegar entre pasos">
+                    <button class="btn-prev" onclick="prevStep(3)" title="Volver al paso anterior">Atrás</button>
+                    <button class="btn-next" onclick="nextStep(3)" title="Continuar al siguiente paso">Continuar</button>
                 </div>
             </div>
             
             <!-- Step 4: Review -->
-            <div class="subscription-step" id="step-4">
-                <h2>Revisa tu Suscripción</h2>
-                <div class="review-summary">
-                    <div class="review-section">
-                        <h3>Plan Seleccionado</h3>
-                        <div class="review-item">
-                            <span>Entrenador</span>
-                            <span class="review-span">$9.99/mes</span>
+            <div class="subscription-step" id="step-4" title="Paso 4: Revisión final de la suscripción">
+                <h2 title="Título del paso actual">Revisa tu Suscripción</h2>
+                <div class="review-summary" title="Resumen de la suscripción">
+                    <div class="review-section" title="Sección de revisión del plan">
+                        <h3 title="Título de la sección">Plan Seleccionado</h3>
+                        <div class="review-item" title="Detalle del plan">
+                            <span title="Nombre del plan">Entrenador</span>
+                            <span class="review-span" title="Precio del plan">$9.99/mes</span>
                         </div>
                     </div>
                     
-                    <div class="review-section">
-                        <h3>Información de Facturación</h3>
-                        <div class="review-item">
-                            <span>Nombre:</span>
-                            <span class="review-span" id="review-name">-</span>
+                    <div class="review-section" title="Sección de revisión de información de facturación">
+                        <h3 title="Título de la sección">Información de Facturación</h3>
+                        <div class="review-item" title="Detalle del nombre">
+                            <span title="Campo">Nombre:</span>
+                            <span class="review-span" id="review-name" title="Valor del campo">-</span>
                         </div>
-                        <div class="review-item">
-                            <span>Correo:</span>
-                            <span class="review-span" id="review-email">-</span>
+                        <div class="review-item" title="Detalle del correo electrónico">
+                            <span title="Campo">Correo:</span>
+                            <span class="review-span" id="review-email" title="Valor del campo">-</span>
                         </div>
-                        <div class="review-item">
-                            <span>Dirección:</span>
-                            <span class="review-span" id="review-address">-</span>
+                        <div class="review-item" title="Detalle de la dirección">
+                            <span title="Campo">Dirección:</span>
+                            <span class="review-span" id="review-address" title="Valor del campo">-</span>
                         </div>
                     </div>
                     
-                    <div class="review-section">
-                        <h3>Método de Pago</h3>
-                        <div class="review-item">
-                            <span>PayPal</span>
-                            <i class='bx bxl-paypal'></i>
+                    <div class="review-section" title="Sección de revisión del método de pago">
+                        <h3 title="Título de la sección">Método de Pago</h3>
+                        <div class="review-item" title="Detalle del método de pago">
+                            <span title="Método de pago">PayPal</span>
+                            <i class='bx bxl-paypal' title="Icono de PayPal"></i>
                         </div>
                     </div>
                 </div>
 
-                <div class="step-actions">
-                    <button class="btn-prev" onclick="prevStep(4)">Atrás</button>
-                    <form action="{{ url_for('suscripcion.suscripcion') }}" method="POST" style="display: inline;">
-                        <button type="submit" class="btn-confirm">Confirmar Suscripción</button>
+                <div class="step-actions" title="Acciones finales del proceso">
+                    <button class="btn-prev" onclick="prevStep(4)" title="Volver al paso anterior">Atrás</button>
+                    <form action="{{ url_for('suscripcion.suscripcion') }}" method="POST" style="display: inline;" title="Formulario de confirmación final">
+                        <button type="submit" class="btn-confirm" title="Confirmar y completar la suscripción">Confirmar Suscripción</button>
                     </form>
                 </div>
             </div>
-            <p class="terms-notice">Al suscribirte, aceptas nuestros <a href="#">Términos y Condiciones</a> y nuestra <a href="#">Política de Privacidad</a>.</p>
+            <p class="terms-notice" title="Aviso de términos y condiciones">Al suscribirte, aceptas nuestros <a href="#" title="Leer términos y condiciones">Términos y Condiciones</a> y nuestra <a href="#" title="Leer política de privacidad">Política de Privacidad</a>.</p>
         </div>
     </main>
     

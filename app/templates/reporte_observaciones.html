@@ -7,35 +7,35 @@
 {% block content %}
 
     <div class="title" data-aos="fade-right">
-        <h1>Observaciones de {{ alumno.nombre }} {{ alumno.apellido }}</h1>
-        <p>Revisa todas las observaciones realizadas por el alumno durante sus entrenamientos.</p>
+        <h1 title="Gestiona las observaciones del alumno">Observaciones de {{ alumno.nombre }} {{ alumno.apellido }}</h1>
+        <p title="Descripción de la sección">Revisa todas las observaciones realizadas por el alumno durante sus entrenamientos.</p>
     </div>
 
     <section class="filtros-container">
         <div class="title">
-            <i class='bx bx-filter-alt'></i>
-            <h2>Filtros</h2>
+            <i class='bx bx-filter-alt' title="Ícono de filtros"></i>
+            <h2 title="Sección de filtros">Filtros</h2>
         </div>
 
         <div class="filtros">
             <div class="filtro">
-                <label for="">Tipo de Movimiento</label>
-                <select name="tipo_movimiento" id="tipo_movimiento">
-                    <option value="">Todos</option>
-                    <option value="Empuje">Empuje</option>
-                    <option value="Jale">Jale</option>
-                    <option value="Resistencia">Resistencia</option>
+                <label for="tipo_movimiento" title="Filtrar por tipo de movimiento">Tipo de Movimiento</label>
+                <select name="tipo_movimiento" id="tipo_movimiento" title="Selecciona el tipo de movimiento para filtrar">
+                    <option value="" title="Mostrar todos los movimientos">Todos</option>
+                    <option value="Empuje" title="Filtrar por empuje">Empuje</option>
+                    <option value="Jale" title="Filtrar por jale">Jale</option>
+                    <option value="Resistencia" title="Filtrar por resistencia">Resistencia</option>
                 </select>
             </div>
 
             <div class="filtro">
-                <label for="">Fecha Inicio</label>
-                <input type="date" name="fecha_inicio" id="fecha_inicio">
+                <label for="fecha_inicio" title="Filtrar por fecha de inicio">Fecha Inicio</label>
+                <input type="date" name="fecha_inicio" id="fecha_inicio" title="Selecciona la fecha inicial para filtrar">
             </div>
 
             <div class="filtro">
-                <label for="">Fecha Fin</label>
-                <input type="date" name="fecha_fin" id="fecha_fin">
+                <label for="fecha_fin" title="Filtrar por fecha de fin">Fecha Fin</label>
+                <input type="date" name="fecha_fin" id="fecha_fin" title="Selecciona la fecha final para filtrar">
             </div>
 
         </div>
@@ -43,10 +43,10 @@
 
     <section class="observaciones-container">
         <div class="title">
-            <h2><i class='bx bxs-edit'></i> Observaciones</h2>
+            <h2 title="Sección de observaciones"><i class='bx bxs-edit' title="Ícono de edición"></i> Observaciones</h2>
 
-            <button class="btn-generar-reporte-observaciones" id="btn-exportar-pdf">
-                <i class='bx bxs-file'></i>
+            <button class="btn-generar-reporte-observaciones" id="btn-exportar-pdf" title="Exportar las observaciones a PDF">
+                <i class='bx bxs-file' title="Ícono de archivo PDF"></i>
                 Exportar PDF
             </button>
         </div>
@@ -55,27 +55,27 @@
             <table class="observaciones-table" id="tabla-observaciones">
                 <thead>
                     <tr>
-                        <th scope="col">Fecha</th>
-                        <th scope="col">Semana/Día</th>
-                        <th scope="col">Ejercicio</th>
-                        <th scope="col">Movimiento</th>
-                        <th scope="col">Observación</th>
+                        <th scope="col" title="Fecha de la observación">Fecha</th>
+                        <th scope="col" title="Semana y día de la observación">Semana/Día</th>
+                        <th scope="col" title="Ejercicio realizado">Ejercicio</th>
+                        <th scope="col" title="Tipo de movimiento">Movimiento</th>
+                        <th scope="col" title="Texto de la observación">Observación</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% if observaciones %}
                         {% for item in observaciones %}
-                            <tr>
-                                <td data-label="Fecha"><i class='bx bx-calendar'></i> {{ item.fecha }}</td>
-                                <td data-label="Semana/Día">S{{ item.semana }} - D{{ item.dia }}</td>
-                                <td data-label="Ejercicio">{{ item.ejercicio }}</td>
-                                <td data-label="Movimiento">{{ item.movimiento }}</td>
-                                <td data-label="Observación">{{ item.observacion }}</td>
+                            <tr title="Fila de observación">
+                                <td data-label="Fecha" title="Fecha de la observación"><i class='bx bx-calendar' title="Ícono de calendario"></i> {{ item.fecha }}</td>
+                                <td data-label="Semana/Día" title="Semana y día">S{{ item.semana }} - D{{ item.dia }}</td>
+                                <td data-label="Ejercicio" title="Ejercicio realizado">{{ item.ejercicio }}</td>
+                                <td data-label="Movimiento" title="Tipo de movimiento realizado">{{ item.movimiento }}</td>
+                                <td data-label="Observación" title="Texto de la observación">{{ item.observacion }}</td>
                             </tr>
                         {% endfor %}
                     {% else %}
                         <tr>
-                            <td colspan="5">No hay observaciones registradas.</td>
+                            <td colspan="5" title="Sin observaciones">No hay observaciones registradas.</td>
                         </tr>
                     {% endif %}
                 </tbody>

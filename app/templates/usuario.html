@@ -20,197 +20,196 @@
             {% endif %}
         {% endwith %}
 
-        <div class="section-1">
-            <div class="photo-container" data-aos="fade-in">
-                <img src="{{ url_for('static', filename='uploads/users/' + (info.foto_perfil if info.foto_perfil else 'profile.webp')) }}" alt="Foto de perfil">
-            </div>
-
-            <div class="user-name" data-aos="fade-down">
-                <h1 data-aos="fade-down">{{ info.nombre.upper() }} {{ info.apellido.upper() }}</h1>
-                <p data-aos="fade-down">@{{ usuario.nombre_usuario }}</p>
-                <span class="user-type">
-                    {% if usuario.rol == 1 %}
-                        <i class='bx bxs-user'></i> 
-                        Usuario
-                    {% elif usuario.rol == 2 %}
-                        <i class='bx bxs-medal'></i> 
-                        Entrenador
-                    {% else %}
-                        Desconocido
-                    {% endif %}
-                </span>
-            </div>
+    <div class="section-1" title="Sección de información principal del perfil">
+        <div class="photo-container" data-aos="fade-in" title="Contenedor de la foto de perfil">
+            <img src="{{ url_for('static', filename='uploads/users/' + (info.foto_perfil if info.foto_perfil else 'profile.webp')) }}" alt="Foto de perfil" title="Foto de perfil del usuario">
         </div>
 
-        <div class="section-2">
-            <div class="biography" data-aos="fade-down" data-aos-delay="100">
-                <h3><i class='bx bxs-message-dots'></i> Biografía</h3>
-                <p><i>"{{ info.biografia or 'No se ha proporcionado biografía.' }}"</i></p>
-            </div>
-
-            <div class="user-info" data-aos="fade-down" data-aos-delay="200">
+        <div class="user-name" data-aos="fade-down" title="Nombre y detalles del usuario">
+            <h1 data-aos="fade-down" title="Nombre completo del usuario">{{ info.nombre.upper() }} {{ info.apellido.upper() }}</h1>
+            <p data-aos="fade-down" title="Nombre de usuario">@{{ usuario.nombre_usuario }}</p>
+            <span class="user-type" title="Tipo de usuario">
                 {% if usuario.rol == 1 %}
-                    <div class="side-1">
-                        <div class="info-item">
-                            <i class='bx bxs-map'></i>
-                            <div class="item">
-                                <h3>País</h3>
-                                <p>{{ info.id_pais }}</p>
-                            </div>
-                        </div>
-
-                        <div class="info-item">
-                            <i class='bx bxs-envelope'></i>
-                            <div class="item">
-                                <h3>Email</h3>
-                                <p>{{ usuario.email }}</p>
-                            </div>
-                        </div>
-
-                        <div class="info-item">
-                            {% if info.sexo|lower == 'masculino' %}
-                                <i class='bx bx-male-sign'></i>
-                            {% else %}
-                                <i class='bx bx-female-sign'></i>
-                            {% endif %}
-                            <div class="item">
-                                <h3>Género</h3>
-                                <p>{{ info.sexo|capitalize }}</p>
-                            </div>
-                        </div>
-
-                        <div class="info-item">
-                            <i class='bx bxs-cake'></i>
-                            <div class="item">
-                                <h3>Fecha de Nacimiento</h3>
-                                <p>{{ info.fecha_nacimiento }}</p>
-                            </div>
-                        </div>
-                    </div>
+                    <i class='bx bxs-user' title="Icono de usuario normal"></i> 
+                    Usuario
+                {% elif usuario.rol == 2 %}
+                    <i class='bx bxs-medal' title="Icono de entrenador"></i> 
+                    Entrenador
                 {% else %}
-                    <div class="side-1">
-                        <div class="info-item">
-                            <i class='bx bxs-map'></i>
-                            <div class="item">
-                                <h3>País</h3>
-                                <p>{{ info.id_pais }}</p>
-                            </div>
-                        </div>
-
-                        <div class="info-item">
-                            <i class='bx bxs-envelope'></i>
-                            <div class="item">
-                                <h3>Email</h3>
-                                <p>{{ usuario.email }}</p>
-                            </div>
-                        </div>
-
-                        <div class="info-item">
-                            {% if info.sexo|lower == 'masculino' %}
-                                <i class='bx bx-male-sign'></i>
-                            {% else %}
-                                <i class='bx bx-female-sign'></i>
-                            {% endif %}
-                            <div class="item">
-                                <h3>Género</h3>
-                                <p>{{ info.sexo|capitalize }}</p>
-                            </div>
-                        </div>
-
-                        <div class="info-item">
-                            <i class='bx bxs-cake'></i>
-                            <div class="item">
-                                <h3>Fecha de Nacimiento</h3>
-                                <p>{{ info.fecha_nacimiento }}</p>
-                            </div>
-                        </div>
-
-                        <div class="info-item">
-                            <i class='bx bxs-medal'></i>
-                            <div class="item">
-                                <h3>Especialización</h3>
-                                <p>{{ info.especializacion }}</p>
-                            </div>
-                        </div>
-
-                        <div class="info-item">
-                            <i class='bx bxs-briefcase'></i>
-                            <div class="item">
-                                <h3>Experiencia</h3>
-                                <p>{{ info.experiencia }}</p>
-                            </div>
-                        </div>
-
-                        <div class="info-item">
-                            <i class='bx bxs-graduation'></i>
-                            <div class="item">
-                                <h3>Títulación/Certificación</h3>
-                                <p>{{ info.titulo }} - <span style="font-weight: 300;">{{ info.instituto }}</span></p>
-                            </div>
-                        </div>
-                    </div>
+                    Desconocido
                 {% endif %}
-            </div>
+            </span>
+        </div>
+    </div>
 
-            <div class="connect-container">
-                <div class="links">
-                    <div class="link-items" data-aos="fade-in" data-aos-delay="300">
-                        <a class="instagram" href="{{ info.instagram if info.instagram else '' }}" {% if info.instagram %}target="_blank"{% endif %}>
-                            <i class='bx bxl-instagram'></i>
-                        </a>
+    <div class="section-2" title="Sección secundaria con detalles del perfil">
+        <div class="biography" data-aos="fade-down" data-aos-delay="100" title="Biografía del usuario">
+            <h3 title="Título de la biografía"><i class='bx bxs-message-dots' title="Icono de biografía"></i> Biografía</h3>
+            <p title="Contenido de la biografía"><i>"{{ info.biografia or 'No se ha proporcionado biografía.' }}"</i></p>
+        </div>
+
+        <div class="user-info" data-aos="fade-down" data-aos-delay="200" title="Información detallada del usuario">
+            {% if usuario.rol == 1 %}
+                <div class="side-1" title="Información para usuarios normales">
+                    <div class="info-item" title="Información de país">
+                        <i class='bx bxs-map' title="Icono de ubicación"></i>
+                        <div class="item">
+                            <h3 title="Título del campo">País</h3>
+                            <p title="País del usuario">{{ info.id_pais }}</p>
+                        </div>
                     </div>
 
-                    <div class="link-items">
-                        <a class="facebook" data-aos="fade-in" data-aos-delay="400" href="{{ info.facebook if info.facebook else '' }}" {% if info.instagram %}target="_blank"{% endif %}>
-                            <i class='bx bxl-facebook'></i>
-                        </a>
+                    <div class="info-item" title="Información de correo electrónico">
+                        <i class='bx bxs-envelope' title="Icono de correo"></i>
+                        <div class="item">
+                            <h3 title="Título del campo">Email</h3>
+                            <p title="Correo electrónico del usuario">{{ usuario.email }}</p>
+                        </div>
                     </div>
 
-                    <div class="link-items">
-                        <a class="phone" data-aos="fade-in" data-aos-delay="500" href="{{ info.telefono if info.telefono else '' }}">
-                            <i class='bx bxl-whatsapp'></i>
-                        </a>
+                    <div class="info-item" title="Información de género">
+                        {% if info.sexo|lower == 'masculino' %}
+                            <i class='bx bx-male-sign' title="Icono de género masculino"></i>
+                        {% else %}
+                            <i class='bx bx-female-sign' title="Icono de género femenino"></i>
+                        {% endif %}
+                        <div class="item">
+                            <h3 title="Título del campo">Género</h3>
+                            <p title="Género del usuario">{{ info.sexo|capitalize }}</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item" title="Información de fecha de nacimiento">
+                        <i class='bx bxs-cake' title="Icono de cumpleaños"></i>
+                        <div class="item">
+                            <h3 title="Título del campo">Fecha de Nacimiento</h3>
+                            <p title="Fecha de nacimiento del usuario">{{ info.fecha_nacimiento }}</p>
+                        </div>
                     </div>
                 </div>
-
-                {% if es_entrenador_perfil %}
-                    <button class="btn-certificacion" data-imagen="{{ titulo_foto }}" data-aos="fade-up" data-aos-delay="200">
-                        <i class='bx bx-certification'></i> Ver Certificación
-                    </button>
-
-                    <dialog class="certification-modal" id="certification-modal">
-                        <div class="modal-content">
-                            {% if titulo_foto %}
-                                <img src="{{ url_for('static', filename='uploads/titles/' + titulo_foto) }}" alt="Certificado">
-                            {% else %}
-                                <p>No hay certificado disponible</p>
-                            {% endif %}
-
-                            <span class="close-modal">
-                                <i class='bx bx-x'></i>
-                            </span>
+            {% else %}
+                <div class="side-1" title="Información adicional para entrenadores">
+                    <div class="info-item" title="Información de país">
+                        <i class='bx bxs-map' title="Icono de ubicación"></i>
+                        <div class="item">
+                            <h3 title="Título del campo">País</h3>
+                            <p title="País del entrenador">{{ info.id_pais }}</p>
                         </div>
-                    </dialog>
-                {% endif %}
-
-                {% if es_entrenador and usuario.id_usuario != id_usuario_sesion and not es_entrenador_perfil %}
-                    <div class="connection-buttons">
-                        {% if estado_conexion == 'pendiente' %}
-                            <form action="{{ url_for('notificaciones.cancelar_solicitud', id_usuario_destino=usuario.id_usuario) }}" method="POST">
-                                <button type="submit" class="btn-pendiente"></button>
-                            </form>
-                        {% elif estado_conexion == 'aceptada' %}
-                            <form action="{{ url_for('notificaciones.eliminar_conexion', id_usuario_destino=usuario.id_usuario) }}" method="POST">
-                                <button type="submit" class="btn-conectado"></button>
-                            </form>
-                        {% else %}
-                            <form action="{{ url_for('notificaciones.enviar_solicitud', id_usuario_destino=usuario.id_usuario) }}" method="POST">
-                                <button type="submit" class="btn-conectar"><i class='bx bxs-group'></i> Conectar</button>
-                            </form>
-                        {% endif %}
                     </div>
-                {% endif %}
+
+                    <div class="info-item" title="Información de correo electrónico">
+                        <i class='bx bxs-envelope' title="Icono de correo"></i>
+                        <div class="item">
+                            <h3 title="Título del campo">Email</h3>
+                            <p title="Correo electrónico del entrenador">{{ usuario.email }}</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item" title="Información de género">
+                        {% if info.sexo|lower == 'masculino' %}
+                            <i class='bx bx-male-sign' title="Icono de género masculino"></i>
+                        {% else %}
+                            <i class='bx bx-female-sign' title="Icono de género femenino"></i>
+                        {% endif %}
+                        <div class="item">
+                            <h3 title="Título del campo">Género</h3>
+                            <p title="Género del entrenador">{{ info.sexo|capitalize }}</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item" title="Información de fecha de nacimiento">
+                        <i class='bx bxs-cake' title="Icono de cumpleaños"></i>
+                        <div class="item">
+                            <h3 title="Título del campo">Fecha de Nacimiento</h3>
+                            <p title="Fecha de nacimiento del entrenador">{{ info.fecha_nacimiento }}</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item" title="Información de especialización">
+                        <i class='bx bxs-medal' title="Icono de especialización"></i>
+                        <div class="item">
+                            <h3 title="Título del campo">Especialización</h3>
+                            <p title="Área de especialización">{{ info.especializacion }}</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item" title="Información de experiencia">
+                        <i class='bx bxs-briefcase' title="Icono de experiencia"></i>
+                        <div class="item">
+                            <h3 title="Título del campo">Experiencia</h3>
+                            <p title="Años de experiencia">{{ info.experiencia }}</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item" title="Información de titulación/certificación">
+                        <i class='bx bxs-graduation' title="Icono de certificación"></i>
+                        <div class="item">
+                            <h3 title="Título del campo">Títulación/Certificación</h3>
+                            <p title="Detalles de certificación">{{ info.titulo }} - <span style="font-weight: 300;">{{ info.instituto }}</span></p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="connect-container" title="Sección de conexión y redes sociales">
+            <div class="links" title="Enlaces a redes sociales">
+                <div class="link-items" data-aos="fade-in" data-aos-delay="300" title="Enlace a Instagram">
+                    <a class="instagram" href="{{ info.instagram if info.instagram else '' }}" {% if info.instagram %}target="_blank"{% endif %} title="Perfil de Instagram">
+                        <i class='bx bxl-instagram' title="Icono de Instagram"></i>
+                    </a>
+                </div>
+
+                <div class="link-items" title="Enlace a Facebook">
+                    <a class="facebook" data-aos="fade-in" data-aos-delay="400" href="{{ info.facebook if info.facebook else '' }}" {% if info.instagram %}target="_blank"{% endif %} title="Perfil de Facebook">
+                        <i class='bx bxl-facebook' title="Icono de Facebook"></i>
+                    </a>
+                </div>
+
+                <div class="link-items" title="Enlace de contacto por WhatsApp">
+                    <a class="phone" data-aos="fade-in" data-aos-delay="500" href="{{ info.telefono if info.telefono else '' }}" title="Contactar por WhatsApp">
+                        <i class='bx bxl-whatsapp' title="Icono de WhatsApp"></i>
+                    </a>
+                </div>
             </div>
+
+            {% if es_entrenador_perfil %}
+                <button class="btn-certificacion" data-imagen="{{ titulo_foto }}" data-aos="fade-up" data-aos-delay="200" title="Ver certificación del entrenador">
+                    <i class='bx bx-certification' title="Icono de certificación"></i> Ver Certificación
+                </button>
+
+                <dialog class="certification-modal" id="certification-modal" title="Modal de certificación">
+                    <div class="modal-content" title="Contenido del modal">
+                        {% if titulo_foto %}
+                            <img src="{{ url_for('static', filename='uploads/titles/' + titulo_foto) }}" alt="Certificado" title="Certificación del entrenador">
+                        {% else %}
+                            <p title="Mensaje de no disponible">No hay certificado disponible</p>
+                        {% endif %}
+
+                        <span class="close-modal" title="Cerrar modal">
+                            <i class='bx bx-x' title="Icono de cerrar"></i>
+                        </span>
+                    </div>
+                </dialog>
+            {% endif %}
+
+            {% if es_entrenador and usuario.id_usuario != id_usuario_sesion and not es_entrenador_perfil %}
+                <div class="connection-buttons" title="Botones de conexión con el entrenador">
+                    {% if estado_conexion == 'pendiente' %}
+                        <form action="{{ url_for('notificaciones.cancelar_solicitud', id_usuario_destino=usuario.id_usuario) }}" method="POST" title="Formulario para cancelar solicitud">
+                            <button type="submit" class="btn-pendiente" title="Solicitud pendiente"></button>
+                        </form>
+                    {% elif estado_conexion == 'aceptada' %}
+                        <form action="{{ url_for('notificaciones.eliminar_conexion', id_usuario_destino=usuario.id_usuario) }}" method="POST" title="Formulario para eliminar conexión">
+                            <button type="submit" class="btn-conectado" title="Eliminar conexión"></button>
+                        </form>
+                    {% else %}
+                        <form action="{{ url_for('notificaciones.enviar_solicitud', id_usuario_destino=usuario.id_usuario) }}" method="POST" title="Formulario para conectar">
+                            <button type="submit" class="btn-conectar" title="Solicitar conexión"><i class='bx bxs-group' title="Icono de conexión"></i> Conectar</button>
+                        </form>
+                    {% endif %}
+                </div>
+            {% endif %}
         </div>
     </div>
 

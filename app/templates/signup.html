@@ -12,29 +12,29 @@
 </head>
 <body>
     <!-- Loading Screen -->
-    <div id="loading-screen">
-        <div class="spinner"></div>
+    <div id="loading-screen" title="Pantalla de carga. Por favor espere...">
+        <div class="spinner" title="Indicador de carga"></div>
     </div>
 
-    <div class="signup-container">
-        <div class="signup-form">
-            <form action="{{ url_for('auth.signup') }}" method="POST">
-                <div class="logo-image">
-                    <img src="/static/images/logo.png" alt="Training+ Logo" data-aos="fade-in" data-aos-duration="1000">
+    <div class="signup-container" title="Contenedor principal del formulario de registro">
+        <div class="signup-form" title="Formulario de registro de usuario">
+            <form action="{{ url_for('auth.signup') }}" method="POST" title="Formulario para crear una nueva cuenta">
+                <div class="logo-image" title="Logo de Training+">
+                    <img src="/static/images/logo.png" alt="Training+ Logo" data-aos="fade-in" data-aos-duration="1000" title="Logo de la aplicación Training+">
                 </div>
                 
-                <div class="title" data-aos="fade-right">
-                    <h1>Registro</h1>
-                    <p>Crea tu cuenta de <span>Training+</span></p>
+                <div class="title" data-aos="fade-right" title="Título y descripción del formulario de registro">
+                    <h1 title="Título del formulario">Registro</h1>
+                    <p title="Instrucción para crear cuenta">Crea tu cuenta de <span title="Nombre de la aplicación">Training+</span></p>
                 </div>
-    
+
                 <!-- Mensajes Flash -->
                 {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
-                    <ul class="flash-messages">
+                    <ul class="flash-messages" title="Mensajes del sistema">
                     {% for category, message in messages %}
-                        <li class="flash {{ category }}">
-                        <i class="{{ 'bx bxs-error-circle' if category == 'error' else 'bx bxs-check-circle' }}"></i>
+                        <li class="flash {{ category }}" title="Mensaje {{ category }}">
+                        <i class="{{ 'bx bxs-error-circle' if category == 'error' else 'bx bxs-check-circle' }}" title="Icono de {{ category }}"></i>
                         {{ message }}
                         </li>
                     {% endfor %}
@@ -43,39 +43,39 @@
                 {% endwith %}
 
 
-                <div class="input-box" data-aos="fade-right" data-aos-delay="100">
-                    <input type="text" name="email" placeholder="Tu Email" required>
-                    <i class='bx bxs-envelope'></i>
+                <div class="input-box" data-aos="fade-right" data-aos-delay="100" title="Campo para ingresar el correo electrónico">
+                    <input type="text" name="email" placeholder="Tu Email" required title="Ingresa tu dirección de correo electrónico">
+                    <i class='bx bxs-envelope' title="Icono de correo electrónico"></i>
                 </div>
 
-                <div class="input-box" data-aos="fade-right" data-aos-delay="200">
-                    <input type="text" name="nombre_usuario" placeholder="Tu Usuario" maxlength="16" oninput="eliminarEspacios(this)" required>
-                    <i class='bx bxs-user'></i>
-                </div>
-    
-                <div class="input-box" data-aos="fade-right" data-aos-delay="300">
-                    <input type="password" name="contrasena" placeholder="Tu Contraseña" required>
-                    <i class='bx bxs-lock-alt'></i>
+                <div class="input-box" data-aos="fade-right" data-aos-delay="200" title="Campo para ingresar nombre de usuario">
+                    <input type="text" name="nombre_usuario" placeholder="Tu Usuario" maxlength="16" oninput="eliminarEspacios(this)" required title="Ingresa tu nombre de usuario (máximo 16 caracteres, sin espacios)">
+                    <i class='bx bxs-user' title="Icono de usuario"></i>
                 </div>
 
-                <div class="input-box" data-aos="fade-right" data-aos-delay="400" data-aos-offset="0">
-                    <select name="rol" id="rol" required placeholder="Seleccionar Rol">
-                        <option value="">Seleccionar Rol</option>
-                        <option value="2">Entrenador</option>
-                        <option value="1">Usuario</option>
+                <div class="input-box" data-aos="fade-right" data-aos-delay="300" title="Campo para ingresar contraseña">
+                    <input type="password" name="contrasena" placeholder="Tu Contraseña" required title="Ingresa tu contraseña">
+                    <i class='bx bxs-lock-alt' title="Icono de contraseña"></i>
+                </div>
+
+                <div class="input-box" data-aos="fade-right" data-aos-delay="400" data-aos-offset="0" title="Selección de tipo de usuario">
+                    <select name="rol" id="rol" required placeholder="Seleccionar Rol" title="Selecciona tu rol en la plataforma">
+                        <option value="" title="Opción por defecto">Seleccionar Rol</option>
+                        <option value="2" title="Rol para entrenadores">Entrenador</option>
+                        <option value="1" title="Rol para usuarios regulares">Usuario</option>
                     </select>
-                    <i class='bx bx-chevron-down arrow'></i>
+                    <i class='bx bx-chevron-down arrow' title="Icono de desplegable"></i>
                 </div>
-    
-                <button type="submit" class="btn" data-aos="fade-right" data-aos-delay="500" data-aos-offset="0">Registrarse</button>
-    
-                <div class="login" data-aos="fade-right" data-aos-delay="600" data-aos-offset="0">
-                    <p>¿Ya tienes una cuenta? <a href="{{ url_for('auth.login') }}">Ingresa</a></p>
+
+                <button type="submit" class="btn" data-aos="fade-right" data-aos-delay="500" data-aos-offset="0" title="Botón para enviar el formulario de registro">Registrarse</button>
+
+                <div class="login" data-aos="fade-right" data-aos-delay="600" data-aos-offset="0" title="Enlace para usuarios existentes">
+                    <p title="Texto de redirección">¿Ya tienes una cuenta? <a href="{{ url_for('auth.login') }}" title="Ir al formulario de inicio de sesión">Ingresa</a></p>
                 </div>
             </form>
         </div>
         
-        <div class="image" data-aos="fade-left" data-aos-duration="1000">
+        <div class="image" data-aos="fade-left" data-aos-duration="1000" title="Imagen decorativa del formulario">
             <!--  Imagen de Fondo  -->
         </div>
     </div>
