@@ -175,7 +175,7 @@ def listar_solicitudes():
         'notificaciones.html',
         solicitudes=solicitudes_formateadas,
         notificaciones=notificaciones_formateadas,
-        orden_actual=orden  # Pasar el orden actual al template
+        orden_actual=orden
     )
 
 

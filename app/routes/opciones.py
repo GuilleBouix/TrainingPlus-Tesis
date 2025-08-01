@@ -12,6 +12,7 @@ import os
 load_dotenv()
 
 
+# Configuración del correo electrónico
 EMAIL_DESTINO = os.getenv("EMAIL_GMAIL")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 

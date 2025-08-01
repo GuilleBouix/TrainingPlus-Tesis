@@ -9,12 +9,12 @@ import sqlite3
 def login_required(f):
     @wraps(f)
     def funcion_decorador(*args, **kwargs):
-        # Verificamos si hay una sesión activa
+        # Verifica si hay una sesión activa
         if 'id_usuario' not in session:
             flash('Inicia sesión para acceder a esta página.', 'error')
-            return redirect(url_for('auth.login'))  # Redirigimos al login si no hay sesión
+            return redirect(url_for('auth.login'))  # Redirige al login si no hay sesión
         
-        return f(*args, **kwargs)  # Continuamos con la ejecución de la ruta
+        return f(*args, **kwargs)
     return funcion_decorador
 
 
@@ -39,6 +39,7 @@ def cuestionario_completo_required(f):
         conn.close()
         
         return f(*args, **kwargs) if tiene_cuestionario else redirect(url_for('cuestionario.cuestionario'))
+    
     return decorated_function
 
 # Decorador para verificar si el usuario es un entrenador

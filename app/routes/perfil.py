@@ -236,8 +236,6 @@ def perfil(nombre_usuario):
                             WHERE id_usuario = ?
                         """, (titulo_foto_filename, id_usuario))
                         conn.commit()
-
-
             try:
                 # Actualizar los datos del usuario
                 cursor.execute("""

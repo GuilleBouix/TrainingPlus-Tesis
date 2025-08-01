@@ -280,6 +280,7 @@ def guardar_progreso_semanal():
     DB.commit()
     DB.close()
     flash('Progreso semanal guardado correctamente', 'success')
+    
     return redirect(url_for('rutina.rutina', id_entrenamiento=id_entrenamiento))
 
 

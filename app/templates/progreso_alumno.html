@@ -176,8 +176,7 @@
                             <span class="nota-adicional" title="Notas personales o comentarios extra">{{ cuestionario.nota_adicional if cuestionario.nota_adicional else 'No hay notas adicionales.' }}</span>
                         </div>
 
-                        <a class="descargar-pdf" href="{{ url_for('dashboard.descargar_ficha_pdf', alumno_id=alumno.id_alumno) }}">Descargar PDF</a>
-                <a class="descargar-pdf" href="{{ url_for('dashboard.descargar_ficha_pdf', alumno_id=alumno.id_alumno) }}" title="Descargar la ficha completa en PDF">Descargar PDF</a>
+                        <a class="descargar-pdf" href="{{ url_for('dashboard.descargar_ficha_pdf', alumno_id=alumno.id_alumno) }}" title="Descargar la ficha completa en PDF">Descargar PDF</a>
                     </div>
                 </div>
             </div>

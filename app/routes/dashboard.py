@@ -701,12 +701,12 @@ def obtener_progreso_semanal(alumno_id, id_entrenamiento):
                 'foto': f"/static/uploads/weekly_progress/{foto}" if foto else None
             })
         
-        print(f"Datos obtenidos: {observaciones_semanales}")  # Para depuración
+        print(f"Datos obtenidos: {observaciones_semanales}")
         return observaciones_semanales
         
     except Exception as e:
         print(f"Error al obtener progreso semanal: {str(e)}")
-        return []  # Devuelve lista vacía si hay error
+        return []
     finally:
         if conn:
             conn.close()
