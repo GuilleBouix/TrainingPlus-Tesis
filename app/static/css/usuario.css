@@ -1,3 +1,11 @@
+/* MAIN */
+main {
+    font-size: 24px;
+    height: 100vh;
+    margin-top: 70px;
+    padding: 0 200px;
+    z-index: -1;
+}
 
 .flash-messages {
     list-style-type: none;
@@ -36,11 +44,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 100vh;
+    border-radius: 10px;
     border: 1px solid var(--color-border);
-    border-top-right-radius: 10px;
-    border-top-left-radius: 10px;
-    padding: 1rem 5rem;
-    margin-top: 1rem !important;
+    padding: 1rem 3rem;
 }
 
 .usuario-container .section-1,
@@ -49,7 +56,6 @@
     width: 100%;
     display: flex;
     align-items: center;
-    gap: 1rem;
 }
 
 
@@ -62,10 +68,10 @@
     width: 150px;
     height: 150px;
     border-radius: 50%;
-    border: 1px solid var(--color-border);
 }
 
 .usuario-container .section-1 .user-name {
+    margin-left: 1.5rem;
     color: var(--color-text-primary);
 }
 .user-name h1 {
@@ -107,13 +113,13 @@
 }
 
 .section-2 .biography {
-    border-radius: 5px;
+    border-top: 1px solid var(--color-border);
     width: 100%;
 }
 .section-2 .biography h3 {
     font-size: 1rem;
     font-weight: 500;
-    color: var(--color-text-secondary);
+    color: #909090;
     margin: 1rem 0;
     display: flex;
     align-items: center;
@@ -135,17 +141,17 @@
 
 .section-2 .user-info {
     display: flex;
-    flex-direction: column;
-    gap: 1rem;
     width: 100%;
     margin-bottom: 1rem;
-    border-radius: 5px;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-border);
 }
 
-.side-1 .info-item {
+.side-1 .info-item,
+.side-2 .info-item  {
     display: flex;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-bottom: .5rem;
 }
 
 .item-1 {
@@ -164,8 +170,8 @@
 .info-item .item h3 {
     font-size: 1rem;
     font-weight: 500;
-    color: var(--color-text-secondary);
-    opacity: 0.65;
+    color: var(--color-text-primary);
+    opacity: 50%;
 }
 .info-item .item p {
     font-size: 1rem;
@@ -174,11 +180,17 @@
     position: relative;
 }
 
+.user-info .side-2 {
+    margin-left: 15rem !important;
+}
+
 .section-2 .connect-container {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    border-top: 1px solid var(--color-border);
+    padding-top: 1rem;
 }
 
 .links {
@@ -195,7 +207,7 @@
     border-radius: 50%;
     background-color: transparent;
     text-decoration: none;
-    transition: all 0.1s ease;
+    transition: all 0.3s ease;
     border: 1px solid var(--color-border);
     outline: none;
     font-size: 1.75rem;
@@ -235,7 +247,7 @@
     margin: 0;
 }
 
-
+/* Estilos base para todos los botones de conexión */
 .connect-container form button {
     display: flex;
     justify-content: center;
@@ -251,11 +263,13 @@
     cursor: pointer;
 }
 
+/* Iconos dentro de los botones */
 .connect-container form button i {
     font-size: 1.3rem;
     margin-right: .3rem;
 }
 
+/* Botón Conectar */
 .connect-container form .btn-conectar {
     background-color: var(--color-button-primary);
 }
@@ -268,6 +282,7 @@
     background-color: var(--color-button-active);
 }
 
+/* Botón Pendiente */
 .btn-pendiente {
     position: relative;
     display: flex;
@@ -313,6 +328,7 @@
     opacity: 1;
 }
 
+/* Botón Conectado */
 .btn-conectado {
     position: relative;
     display: flex;
@@ -393,6 +409,7 @@
     margin-right: .3rem;
 }
 
+/* Estilos para el modal */
 .certification-modal {
     position: fixed;
     top: 50%;
@@ -411,18 +428,21 @@
     background-color: rgba(0, 0, 0, 0.5);
 }
 
+/* Clase para el efecto fade-in cuando se abre */
 .certification-modal[open] {
     opacity: 1;
     visibility: visible;
 }
 
+/* Contenido del modal */
 .certification-modal .modal-content {
     position: relative;
     background-color: white;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    overflow: hidden;
+    overflow: hidden;    /* Previene scroll en el contenido */
 }
 
+/* Botón de cerrar (X) */
 .certification-modal .modal-content .close-modal {
     position: absolute;
     top: 10px;
@@ -430,7 +450,7 @@
     cursor: pointer;
     font-size: 24px;
     color: var(--color-text-primary);
-    z-index: 10000;
+    z-index: 10000;      /* Asegura que esté por encima */
     transition: all 0.2s ease-in-out;
 }
 .certification-modal .modal-content .close-modal:hover {
@@ -438,6 +458,7 @@
     transform: scale(1.1);
 }
 
+/* Estilo para la imagen dentro del modal */
 .certification-modal .modal-content img {
     max-width: 100%;
     max-height: 100%;
@@ -445,6 +466,7 @@
     object-fit: contain;
 }
 
+/* Prevenir scroll en el body cuando el modal está abierto */
 body.modal-open {
     overflow: hidden;
 }
@@ -481,19 +503,12 @@ body.modal-open {
     .usuario-container .section-1 {
         flex-direction: column;
         align-items: center;
-        border: 1px solid var(--color-border);
-        margin: 1rem 0;
-        border-radius: 10px;
-    }
-
-    .usuario-container .section-2 {
-        padding: 0;
     }
 
     .section-1 .user-name {
         display: flex;
-        flex-direction: column;
         align-items: center;
+        flex-direction: column;
         text-align: center;
         margin-left: 0;
     }
@@ -507,20 +522,12 @@ body.modal-open {
         font-size: 1rem;
     }
 
-    .section-2 .user-info {
+    .user-info {
         display: flex;
         flex-direction: column;
         border-top: 1px solid var(--color-border);
-        padding: 0 1rem;
-        border-radius: 10px;
     }
 
-    .section-2 .biography {
-        border-radius: 10px;
-    }
-
-
-    
     .side-1 .info-item,
     .side-2 .info-item  {
         display: flex;
@@ -578,11 +585,6 @@ body.modal-open {
         font-size: 2rem;
     }
 
-    .connection-buttons {
-        width: 100%;
-        margin-bottom: 1rem;
-    }
-
     .btn-certificacion,
     .btn-pendiente,
     .btn-conectado,
@@ -590,10 +592,11 @@ body.modal-open {
         margin: 1rem 0;
         width: 100%;
     }
+
 }
 
 @media screen and (max-width: 480px) {
     .usuario-container  {
-        padding: 0rem 0;
+        padding: 1rem 0;
     }
 }

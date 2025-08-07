@@ -11,6 +11,20 @@
         <p title="Descripción del dashboard">Gestiona y visualiza el progreso de tus alumnos.</p>
     </div>
 
+    <!-- Mensajes Flash -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flash-messages">
+            {% for category, message in messages %}
+                <li class="flash {{ category }}">
+                <i class="{{ 'bx bxs-error-circle' if category == 'error' else 'bx bxs-check-circle' }}"></i>
+                {{ message }}
+                </li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
     <!-- Resumen en general -->
     <section class="resumen-general">
         <div class="card" data-aos="fade-in" data-aos-delay="150" title="Promedio de cumplimiento de rutinas">

@@ -6,6 +6,11 @@
 
 {% block content %}
 
+    <!-- Modal de ficha -->
+    <dialog class="cuestionario-dialog" id="cuestionario-modal">
+        MODAL
+    </dialog>
+
     <div class="usuario-container">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -200,6 +205,11 @@
                             <button type="submit" class="btn-pendiente" title="Solicitud pendiente"></button>
                         </form>
                     {% elif estado_conexion == 'aceptada' %}
+                        <button class="btn-open-cuestionario" id="abrir-cuestionario" title="Ver todos los datos del alumno en detalle">
+                            <i class='bx bxs-file'></i>
+                            Ver Ficha Completa
+                        </button>
+
                         <form action="{{ url_for('notificaciones.eliminar_conexion', id_usuario_destino=usuario.id_usuario) }}" method="POST" title="Formulario para eliminar conexión">
                             <button type="submit" class="btn-conectado" title="Eliminar conexión"></button>
                         </form>
@@ -243,6 +253,32 @@
                     dialog.close();
                 }
             }
+        });
+    </script>
+
+    <!-- Script para abrir y cerrar el modal de ficha de alumno -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const modal = document.getElementById("cuestionario-modal");
+            const abrirBtn = document.querySelector(".btn-open-cuestionario");
+            const cerrarBtn = modal.querySelector(".close-modal");
+        
+            // Abrir modal
+            abrirBtn.addEventListener("click", () => {
+                modal.showModal();
+            });
+        
+            // Cerrar con el icono <i>
+            cerrarBtn.addEventListener("click", () => {
+                modal.close();
+            });
+        
+            // Cerrar haciendo clic afuera del contenido
+            modal.addEventListener("click", (e) => {
+                if (e.target === modal) {
+                    modal.close();
+                }
+            });
         });
     </script>
 

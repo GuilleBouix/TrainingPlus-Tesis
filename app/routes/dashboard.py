@@ -854,6 +854,11 @@ def progreso_alumno(alumno_id):
 
     # Obtener entrenamiento asociado al entrenador de la sesión
     entrenamiento = obtener_entrenamiento(alumno_id, id_entrenador)
+    if not entrenamiento:
+        flash("No hay rutina asignada para este alumno.", "error")
+        
+        return redirect(url_for('dashboard.dashboard'))
+
     id_entrenamiento = entrenamiento['id_entrenamiento']
     porcentaje_progreso = obtener_porcentaje_progreso(alumno_id, id_entrenamiento)
 
@@ -866,11 +871,10 @@ def progreso_alumno(alumno_id):
     progreso_fuerza = obtener_progreso_fuerza(alumno_id, id_entrenamiento)
     print(f"Progreso de fuerza: {progreso_fuerza}")
 
-    mejores_marcas = obtener_mejores_marcas(entrenamiento['id_entrenamiento'], alumno_id)
+    mejores_marcas = obtener_mejores_marcas(id_entrenamiento, alumno_id)
 
     observaciones_semanales = obtener_progreso_semanal(alumno_id, id_entrenamiento)
     print(f"Observaciones semanales: {observaciones_semanales}")
-
 
     return render_template('progreso_alumno.html',
                            alumno=datos_alumno,
