@@ -30,6 +30,20 @@ def verificar_estado_conexion(id_entrenador, id_alumno, cursor):
     return resultado[0] if resultado else None
 
 
+# Función para obtener datos del cuestionario del alumno
+def obtener_cuestionario_alumno(id_alumno, cursor):
+    cursor.execute("""
+        SELECT objetivo_general, edad, altura, peso, nivel_actividad, experiencia,
+               frecuencia_entreno, duracion_sesion, estado_salud, lesiones,
+               condicion_cardio, nivel_estres, notas_alumno as nota_adicional
+        FROM cuestionario
+        WHERE id_alumno = ?
+    """, (id_alumno,))
+    
+    cuestionario_data = cursor.fetchone()
+    return dict(cuestionario_data) if cuestionario_data else None
+
+
 # Ruta de Usuario
 @usuario_bp.route('/usuario/<int:id_usuario>')
 @login_required
@@ -115,10 +129,11 @@ def usuario(id_usuario):
     sesion_data = cursor.fetchone()
     es_entrenador = sesion_data and sesion_data['rol'] == 2
 
-    # Verificar si el usuario de la sesión actual es un entrenador
+    # Verificar si el usuario del perfil es un entrenador
     es_entrenador_perfil = usuario_data['rol'] == 2
     
     titulo_foto = None
+    cuestionario_data = None
 
     if es_entrenador_perfil:
         cursor.execute("""
@@ -133,6 +148,15 @@ def usuario(id_usuario):
     estado_conexion = None
     if es_entrenador and usuario_data['rol'] == 1 and usuario_data['id_usuario'] != id_usuario_sesion:
         estado_conexion = verificar_estado_conexion(id_usuario_sesion, id_usuario, cursor)
+        
+        # Si hay vinculación aceptada, obtener datos del cuestionario del alumno
+        if estado_conexion == 'aceptada':
+            cursor.execute("""
+                SELECT id_alumno FROM alumno WHERE id_usuario = ?
+            """, (id_usuario,))
+            alumno_data = cursor.fetchone()
+            if alumno_data:
+                cuestionario_data = obtener_cuestionario_alumno(alumno_data['id_alumno'], cursor)
 
     # Cerrar la conexión a la base de datos
     cursor.close()
@@ -147,5 +171,7 @@ def usuario(id_usuario):
             es_entrenador=es_entrenador,
             es_entrenador_perfil=es_entrenador_perfil,
             titulo_foto=titulo_foto,
-            estado_conexion=estado_conexion
+            estado_conexion=estado_conexion,
+            cuestionario=cuestionario_data,
+            alumno=usuario_info if usuario_data['rol'] == 1 else None
         )

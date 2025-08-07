@@ -6,10 +6,124 @@
 
 {% block content %}
 
-    <!-- Modal de ficha -->
-    <dialog class="cuestionario-dialog" id="cuestionario-modal">
-        MODAL
-    </dialog>
+    {% if es_entrenador and estado_conexion == 'aceptada' and cuestionario %}
+        <!-- Modal de ficha -->
+        <dialog class="cuestionario-dialog" id="cuestionario-modal">
+            <div class="modal-content">
+                <div class="header">
+                    <div class="title">
+                        <strong>Ficha de {{ info.nombre }} {{ info.apellido }}</strong>
+                        <i class='bx bx-x close-modal' onclick="document.getElementById('cuestionario-modal').close()"></i>
+                    </div>
+                </div>
+
+                <div class="ficha-content">
+                    <!-- Información Personal -->
+                    <div class="container">
+                        <h1 title="Datos personales del alumno">
+                            <i class='bx bx-user'></i> Información Personal
+                        </h1>
+
+                        <div class="datos">
+                            <h3 title="Edad del alumno">Edad</h3>
+                            <span title="Edad en años">{{ cuestionario.edad }} años</span>
+                        </div>
+
+                        <div class="datos">
+                            <h3 title="Nivel de experiencia en entrenamiento">Experiencia</h3>
+                            <span title="Experiencia declarada">{{ cuestionario.experiencia | capitalize }}</span>
+                        </div>
+
+                        <div class="datos">
+                            <h3 title="Objetivo principal del alumno">Objetivo</h3>
+                            <span title="Meta física o de salud">{{ cuestionario.objetivo_general }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Datos Físicos -->
+                    <div class="container container-2">
+                        <h1 title="Datos físicos del alumno">
+                            <i class='bx bx-ruler regla'></i> Datos Físicos
+                        </h1>
+
+                        <div class="datos">
+                            <h3 title="Peso actual">Peso</h3>
+                            <span title="Peso en kilogramos">{{ cuestionario.peso }} kg</span>
+                        </div>
+
+                        <div class="datos">
+                            <h3 title="Altura actual">Altura</h3>
+                            <span title="Altura en centímetros">{{ cuestionario.altura }} cm</span>
+                        </div>
+                    </div>
+
+                    <!-- Entrenamiento -->
+                    <div class="container container-2">
+                        <h1 title="Datos sobre el entrenamiento actual">
+                            <i class='bx bx-dumbbell regla'></i> Entrenamiento
+                        </h1>
+
+                        <div class="datos">
+                            <h3 title="Nivel de actividad física semanal">Nivel de Actividad</h3>
+                            <span title="Nivel de actividad declarado">{{ cuestionario.nivel_actividad | capitalize }}</span>
+                        </div>
+
+                        <div class="datos">
+                            <h3 title="Frecuencia de entrenamiento semanal">Frecuencia</h3>
+                            <span title="Cantidad de entrenamientos por semana">{{ cuestionario.frecuencia_entreno | capitalize }}</span>
+                        </div>
+
+                        <div class="datos">
+                            <h3 title="Duración promedio de cada sesión">Duración de Entrenamiento</h3>
+                            <span title="Duración en minutos">{{ cuestionario.duracion_sesion }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Salud -->
+                    <div class="container container-2">
+                        <h1 title="Información sobre la salud del alumno">
+                            <i class='bx bx-heart'></i> Estado de Salud
+                        </h1>
+
+                        <div class="datos">
+                            <h3 title="Estado general de salud">Estado General</h3>
+                            <span title="Salud declarada">{{ cuestionario.estado_salud | capitalize }}</span>
+                        </div>
+
+                        <div class="datos">
+                            <h3 title="Lesiones previas o actuales">Lesiones</h3>
+                            <span title="Lesiones declaradas">{{ cuestionario.lesiones | capitalize }}</span>
+                        </div>
+
+                        <div class="datos">
+                            <h3 title="Condición cardiovascular">Condición Cardiovascular</h3>
+                            <span title="Estado cardiovascular declarado">{{ cuestionario.condicion_cardio | capitalize }}</span>
+                        </div>
+
+                        <div class="datos">
+                            <h3 title="Nivel de estrés actual">Nivel de Estrés</h3>
+                            <span title="Estrés declarado">{{ cuestionario.nivel_estres | capitalize }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Notas adicionales -->
+                    <div class="container container-2">
+                        <h1 title="Notas adicionales registradas por el alumno">
+                            <i class='bx bx-comment'></i> Notas Adicionales
+                        </h1>
+
+                        <div class="datos">
+                            <span class="nota-adicional" title="Notas personales o comentarios extra">{{ cuestionario.nota_adicional if cuestionario.nota_adicional else 'No hay notas adicionales.' }}</span>
+                        </div>
+
+                        {% if alumno %}
+                            <a class="descargar-pdf" href="{{ url_for('dashboard.descargar_ficha_pdf', alumno_id=alumno.id_alumno) }}" title="Descargar la ficha completa en PDF">Descargar PDF</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </dialog>
+    {% endif %}
 
     <div class="usuario-container">
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -205,9 +319,9 @@
                             <button type="submit" class="btn-pendiente" title="Solicitud pendiente"></button>
                         </form>
                     {% elif estado_conexion == 'aceptada' %}
-                        <button class="btn-open-cuestionario" id="abrir-cuestionario" title="Ver todos los datos del alumno en detalle">
-                            <i class='bx bxs-file'></i>
-                            Ver Ficha Completa
+                        <!-- Botón para abrir la modal de ficha -->
+                        <button class="btn-ver-ficha" onclick="document.getElementById('cuestionario-modal').showModal()">
+                            <i class='bx bxs-file'></i> Ver Ficha
                         </button>
 
                         <form action="{{ url_for('notificaciones.eliminar_conexion', id_usuario_destino=usuario.id_usuario) }}" method="POST" title="Formulario para eliminar conexión">
