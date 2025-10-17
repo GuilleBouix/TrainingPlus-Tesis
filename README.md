@@ -1,6 +1,6 @@
 ![Training+](https://github.com/user-attachments/assets/2c2e80ec-d4f4-4cb1-b8b1-48f4e34c01b9)
 
-# Training+ | Sistema de Gestión y Supervisión de Entrenamientos
+# Training+ | Sistema de Gestión y Supervisión de Entrenamientos Personalizados
 
 **Plataforma web para la gestión integral de entrenamientos personalizados**
 
